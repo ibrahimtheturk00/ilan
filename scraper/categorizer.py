@@ -35,33 +35,45 @@ POST_TYPE_PATTERNS = {
     ]
 }
 
-# Kategori Belirleme Kuralları
+# Kategori Belirleme Kuralları (Öncelik ve Tam Kelime Eşleşmeli)
 CATEGORY_PATTERNS = {
+    'maliye': [
+        r'\bmuhasebe\b', r'\bmaliye\b', r'\bgelir\s+uzman', r'\bvergi\b', r'\bdenetmen\b',
+        r'\bdenetçi\b', r'\bdenetci\b', r'\bsayman\b', r'\biktisat\b', r'\bekonomist\b',
+        r'\bfon\b', r'\bbankacılık\b', r'\bbankacilik\b', r'\bfinans\b', r'\bbütçe\b',
+        r'\bbutce\b', r'\bisletme\b', r'\bişletme\b', r'\bbddk\b', r'\bspk\b', r'\btmsf\b',
+        r'\bhazine\b', r'\bkalkınma\s+ajans', r'\bkalkinma\s+ajans'
+    ],
     'bilisim': [
-        r'yazılım', r'bilişim', r'programcı', r'sistem\s+yöneticisi', r'veritabanı',
-        r'ağ\s+uzmanı', r'cyber', r'siber', r'bilgisayar', r'çözümleyici', r'veri\s+analist',
-        r'teknoloji', r'yapay\s+zeka', r'web\s+tasarım'
-    ],
-    'saglik': [
-        r'doktor', r'tabip', r'hemşire', r'ebe', r'sağlık\s+teknikeri', r'eczacı',
-        r'biyolog', r'psikolog', r'fizyoterapist', r'hastane', r'sağlık', r'veteriner',
-        r'laborant', r'diyetisyen', r'acil\s+tıp'
-    ],
-    'egitim': [
-        r'öğretmen', r'eğitmen', r'öğretim', r'akademisyen', r'anaokulu', r'pedagog',
-        r'profesör', r'doçent', r'üniversite', r'eğitim'
-    ],
-    'muhendislik': [
-        r'mühendis', r'mimar', r'şehir\s+plancısı', r'tekniker', r'harita',
-        r'inşaat', r'makine', r'elektrik', r'elektronik', r'ziraat\s+mühendis'
+        r'\byazılım\b', r'\byazilim\b', r'\bbilişim\b', r'\bbilisim\b', r'\bprogramcı\b',
+        r'\bprogramci\b', r'\bsistem\s+yöneticisi', r'\bveritabanı\b', r'\bağ\s+uzmanı',
+        r'\bcyber\b', r'\bsiber\b', r'\bbilgisayar\b', r'\bçözümleyici\b', r'\bcozumleyici\b',
+        r'\bveri\s+analist', r'\byapay\s+zeka', r'\bweb\s+tasarım'
     ],
     'hukuk': [
-        r'avukat', r'hukuk', r'hakim', r'savcı', r'icra\s+müdürü', r'icra', r'adli',
-        r'arabulucu', r'noter', r'zabıt\s+katibi'
+        r'\bavukat\b', r'\bhukuk\b', r'\bhakim\b', r'\bsavcı\b', r'\bsavci\b',
+        r'\bicra\s+müdür', r'\bicra\b', r'\badli\b', r'\barabulucu\b', r'\bnoter\b',
+        r'\bzabıt\s+katibi', r'\byargıtay\b', r'\byargitay\b'
     ],
-    'maliye': [
-        r'muhasebe', r'maliye', r'gelir\s+uzmanı', r'vergi', r'denetmen', r'sayman',
-        r'iktisat', r'ekonomist', r'fon', r'bankacılık', r'finans', r'bütçe'
+    'muhendislik': [
+        r'\bmühendis\b', r'\bmuhendis\b', r'\bmühendisliği\b', r'\bmuhendisligi\b',
+        r'\bmühendisi\b', r'\bmuhendisi\b', r'\bmimar\b', r'\bmimarlık\b',
+        r'\bşehir\s+plancısı', r'\btekniker\b', r'\bteknisyen\b', r'\bharita\b',
+        r'\binşaat\b', r'\binsaat\b', r'\bmakine\b', r'\belektrik\b', r'\belektronik\b',
+        r'\bjeoloji\b', r'\bmaden\b', r'\bendüstri\b'
+    ],
+    'saglik': [
+        r'\bdoktor\b', r'\btabip\b', r'\bhekim\b', r'\bhemşire\b', r'\bhemsire\b',
+        r'\bebe\b', r'\bsağlık\s+teknikeri', r'\bsaglik\s+teknikeri', r'\beczacı\b',
+        r'\beczaci\b', r'\bbiyolog\b', r'\bpsikolog\b', r'\bfizyoterapist\b',
+        r'\bhastane\b', r'\bsağlık\b', r'\bsaglik\b', r'\blaborant\b', r'\bdiyetisyen\b',
+        r'\bacil\s+tıp'
+    ],
+    'egitim': [
+        r'\böğretim\s+üyesi', r'\bogretim\s+uyesi', r'\böğretim\s+elemanı',
+        r'\baraştırma\s+görevlisi', r'\böğretmen\b', r'\bogretmen\b', r'\beğitmen\b',
+        r'\bakademisyen\b', r'\bpedagog\b', r'\bprofesör\b', r'\bdoçent\b',
+        r'\büniversite\b', r'\brektörlük\b'
     ]
 }
 
@@ -76,11 +88,21 @@ def detect_post_type(title: str, text: str = "") -> str:
 
 def detect_category(title: str, text: str = "") -> str:
     """İlan başlığı ve içeriğinden meslek kategorisini tespit eder."""
-    combined = turkish_lower(f"{title} {text}")
+    title_lower = turkish_lower(title)
+    text_lower = turkish_lower(text)
+
+    # 1. Önce sadece BAŞLIKTA ara (başlık her zaman en belirleyici alandır)
     for category, patterns in CATEGORY_PATTERNS.items():
         for pat in patterns:
-            if re.search(pat, combined):
+            if re.search(pat, title_lower):
                 return category
+
+    # 2. Başlıkta bulunamadıysa açıklamada ara
+    for category, patterns in CATEGORY_PATTERNS.items():
+        for pat in patterns:
+            if re.search(pat, text_lower):
+                return category
+
     return 'diger'
 
 def categorize_job(title: str, text: str = "") -> Tuple[str, str]:
