@@ -50,6 +50,13 @@ export interface ScrapeLog {
   sources?: Source;
 }
 
+export type SortOption =
+  | "deadline_asc"   // Son gün yaklaşanlar önce (kalan gün azalan)
+  | "deadline_desc"  // Son gün uzak olanlar önce
+  | "published_desc" // En yeni eklenenler önce
+  | "title_asc"      // İlan Başlığı (A'dan Z'ye)
+  | "title_desc";    // İlan Başlığı (Z'den A'ya)
+
 export interface FilterState {
   searchQuery: string;
   city: string;
@@ -58,6 +65,7 @@ export interface FilterState {
   sourceSlug: string;
   onlyActive: boolean;
   page: number;
+  sortBy?: SortOption;
 }
 
 export type JobFilters = FilterState;

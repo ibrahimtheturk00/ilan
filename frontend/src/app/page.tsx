@@ -61,8 +61,8 @@ export default function HomePage() {
       {/* 2. SEÇENEK: Tüm İlanlar Ekranı (Filtreli Feed) */}
       {activeTab === "all" && (
         <div className="space-y-6">
-          {/* Canlı Arama Çubuğu & Hızlı Kadro Filtreleri */}
-          <div className="max-w-2xl mx-auto space-y-4">
+          {/* Canlı Arama Çubuğu & Hızlı Kadro Filtreleri + Sıralama */}
+          <div className="max-w-3xl mx-auto space-y-3.5">
             <SearchBar />
             <PostTypeQuickFilter />
           </div>

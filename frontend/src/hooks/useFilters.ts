@@ -9,6 +9,7 @@ interface FilterStore extends FilterState {
   setSourceSlug: (sourceSlug: string) => void;
   setOnlyActive: (onlyActive: boolean) => void;
   setPage: (page: number) => void;
+  setSortBy: (sort: FilterState["sortBy"]) => void;
   resetFilters: () => void;
 }
 
@@ -20,6 +21,7 @@ const initialState: FilterState = {
   sourceSlug: "",
   onlyActive: true,
   page: 1,
+  sortBy: "deadline_desc",
 };
 
 export const useFilters = create<FilterStore>((set) => ({
@@ -31,5 +33,6 @@ export const useFilters = create<FilterStore>((set) => ({
   setSourceSlug: (sourceSlug) => set({ sourceSlug, page: 1 }),
   setOnlyActive: (onlyActive) => set({ onlyActive, page: 1 }),
   setPage: (page) => set({ page }),
+  setSortBy: (sort) => set({ sortBy: sort, page: 1 }),
   resetFilters: () => set(initialState),
 }));

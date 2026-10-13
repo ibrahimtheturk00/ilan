@@ -187,10 +187,32 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
       const from = (filters.page - 1) * pageSize;
       const to = from + pageSize - 1;
 
-      const { data, count, error } = await query
-        .order("deadline_at", { ascending: false, nullsFirst: false })
-        .order("id", { ascending: false })
-        .range(from, to);
+      // Dinamik Sıralama
+      switch (filters.sortBy) {
+        case "deadline_asc":
+          // Başvuru süresi en az kalanlar / yaklaşanlar önce
+          query = query.order("deadline_at", { ascending: true, nullsFirst: false }).order("id", { ascending: true });
+          break;
+        case "published_desc":
+          // En yeni eklenen / yayınlanan ilanlar önce
+          query = query.order("published_at", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
+          break;
+        case "title_asc":
+          // A'dan Z'ye alfabetik
+          query = query.order("title", { ascending: true }).order("id", { ascending: false });
+          break;
+        case "title_desc":
+          // Z'den A'ya alfabetik
+          query = query.order("title", { ascending: false }).order("id", { ascending: false });
+          break;
+        case "deadline_desc":
+        default:
+          // Varsayılan: Son başvuru tarihi ileri olanlar / güncel
+          query = query.order("deadline_at", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
+          break;
+      }
+
+      const { data, count, error } = await query.range(from, to);
 
       if (!error && data) {
         return { data: data as JobPost[], count: count || data.length };
