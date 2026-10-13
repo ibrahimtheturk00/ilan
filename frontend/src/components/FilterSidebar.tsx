@@ -133,12 +133,6 @@ export function FilterSidebar() {
     );
   };
 
-  // Popüler şehirler (en çok ilana sahip olanlar)
-  const popularCities = Object.entries(cityCounts)
-    .filter(([c]) => c !== "Tüm Türkiye" && CITIES.includes(c))
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5);
-
   return (
     <aside className="w-full lg:w-64 bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-5 shadow-sm space-y-6 transition-colors">
       {/* Üst Başlık & Sıfırla */}
@@ -222,43 +216,6 @@ export function FilterSidebar() {
             );
           })}
         </select>
-
-        {/* Popüler Şehirler Hızlı Butonları (Yeşil Sayaç Rozetleri ile) */}
-        {popularCities.length > 0 && (
-          <div className="pt-1">
-            <span className="block text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1.5">
-              En Çok İlan Olan İller
-            </span>
-            <div className="flex flex-wrap gap-1.5">
-              {popularCities.map(([c, count]) => {
-                const isSelected = city === c;
-                return (
-                  <button
-                    key={c}
-                    type="button"
-                    onClick={() => setCity(isSelected ? "" : c)}
-                    className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-semibold transition-all border ${
-                      isSelected
-                        ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-sm"
-                        : "bg-slate-50 dark:bg-slate-900/40 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700/80 hover:bg-slate-100"
-                    }`}
-                  >
-                    <span>{c}</span>
-                    <span
-                      className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
-                        isSelected
-                          ? "bg-emerald-400 text-slate-900"
-                          : "bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800"
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* KPSS Puan Türü Filtresi */}
