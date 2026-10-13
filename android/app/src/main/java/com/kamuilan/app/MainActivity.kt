@@ -9,6 +9,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 import com.kamuilan.app.notification.JobNotificationHelper
 import com.kamuilan.app.notification.NotificationScheduler
 import com.kamuilan.app.ui.navigation.AppNavigation
@@ -44,6 +46,11 @@ class MainActivity : ComponentActivity() {
 
         // 3. Bildirime tıklanarak açıldıysa ilgili ilanın id'sini al
         val initialJobId = intent?.getLongExtra(JobNotificationHelper.EXTRA_JOB_ID, -1L)?.takeIf { it > 0 }
+
+        // 4. Web sitesindeki tekil sayaç ile entegre mobil açılış kaydı (arka planda bir kez sayar)
+        lifecycleScope.launch {
+            com.kamuilan.app.data.api.VisitorTracker.trackAppLaunch(applicationContext)
+        }
 
         setContent {
             KamuIlanMerkeziTheme {

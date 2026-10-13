@@ -1,18 +1,17 @@
-package com.kamuilan.app.ui.navigation
+﻿package com.kamuilan.app.ui.navigation
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -22,12 +21,16 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -54,10 +57,8 @@ import com.kamuilan.app.ui.screens.personalized.PersonalizedScreen
 import com.kamuilan.app.ui.screens.profile.ProfileScreen
 import com.kamuilan.app.ui.screens.profile.ProfileViewModel
 import com.kamuilan.app.ui.theme.BrandPrimary
-import com.kamuilan.app.ui.theme.BrandSubtle
 import com.kamuilan.app.ui.theme.Slate200
 import com.kamuilan.app.ui.theme.Slate400
-import com.kamuilan.app.ui.theme.Slate50
 
 @Composable
 fun AppNavigation(
@@ -74,7 +75,7 @@ fun AppNavigation(
     val currentRoute = navBackStackEntry?.destination?.route
 
     // Bildirime tıklanıp açıldıysa doğrudan ilanın detayına git
-    androidx.compose.runtime.LaunchedEffect(initialJobId) {
+    LaunchedEffect(initialJobId) {
         if (initialJobId != null && initialJobId > 0) {
             navController.navigate(Screen.Detail.createRoute(initialJobId))
         }
@@ -90,9 +91,42 @@ fun AppNavigation(
 
     val showBottomBar = currentRoute in bottomNavItems.map { it.route }
 
+    // ── Scroll-to-Hide Navigation Mantığı ─────────────────────────────────────
+    val homeListState = rememberLazyListState()
+    var isBottomBarVisible by remember { mutableStateOf(true) }
+    var previousIndex by remember { mutableIntStateOf(0) }
+    var previousScrollOffset by remember { mutableIntStateOf(0) }
+
+    val isScrollingDown by remember {
+        derivedStateOf {
+            val currentIndex = homeListState.firstVisibleItemIndex
+            val currentOffset = homeListState.firstVisibleItemScrollOffset
+            val isDown = when {
+                currentIndex > previousIndex -> true
+                currentIndex < previousIndex -> false
+                else -> currentOffset > previousScrollOffset + 5
+            }
+            previousIndex = currentIndex
+            previousScrollOffset = currentOffset
+            isDown
+        }
+    }
+
+    LaunchedEffect(isScrollingDown) {
+        if (currentRoute == Screen.Home.route) {
+            isBottomBarVisible = !isScrollingDown
+        } else {
+            isBottomBarVisible = true
+        }
+    }
+
     Scaffold(
         bottomBar = {
-            if (showBottomBar) {
+            AnimatedVisibility(
+                visible = showBottomBar && isBottomBarVisible,
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it })
+            ) {
                 // Modern Glassmorphic Bottom Navigation
                 Box(
                     modifier = Modifier
@@ -120,7 +154,7 @@ fun AppNavigation(
                             val iconScale by animateFloatAsState(
                                 targetValue = if (isSelected) 1.12f else 1f,
                                 animationSpec = spring(dampingRatio = 0.55f, stiffness = 400f),
-                                label = "nav_icon_scale_${screen.route}"
+                                label = "nav_icon_scale_"
                             )
 
                             NavigationBarItem(
@@ -128,7 +162,6 @@ fun AppNavigation(
                                     screen.icon?.let { icon ->
                                         Box(contentAlignment = Alignment.Center) {
                                             if (isSelected) {
-                                                // Aktif item için glow arka plan
                                                 Box(
                                                     modifier = Modifier
                                                         .size(36.dp)
@@ -171,7 +204,7 @@ fun AppNavigation(
                                 colors = NavigationBarItemDefaults.colors(
                                     selectedIconColor = BrandPrimary,
                                     selectedTextColor = BrandPrimary,
-                                    indicatorColor = Color.Transparent, // Kendi indicator'ımızı kullanıyoruz
+                                    indicatorColor = Color.Transparent,
                                     unselectedIconColor = Slate400,
                                     unselectedTextColor = Slate400
                                 )
@@ -190,6 +223,7 @@ fun AppNavigation(
             composable(Screen.Home.route) {
                 HomeScreen(
                     viewModel = homeViewModel,
+                    listState = homeListState,
                     onJobClick = { jobId ->
                         navController.navigate(Screen.Detail.createRoute(jobId))
                     }
@@ -212,7 +246,6 @@ fun AppNavigation(
                 CategoriesScreen(
                     homeViewModel = homeViewModel,
                     onCategoryClick = { categorySlug ->
-                        // Web sitesiyle aynı kategori mantığı: matchesCategory() kullanır
                         homeViewModel.onCategorySelected(categorySlug)
                         navController.navigate(Screen.Home.route) {
                             popUpTo(navController.graph.findStartDestination().id) {

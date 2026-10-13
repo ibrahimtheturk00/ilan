@@ -12,11 +12,17 @@ val BrandSubtle       = Color(0xFFEFF6FF)
 val BrandGradientStart = Color(0xFF1D4ED8)
 val BrandGradientEnd   = Color(0xFF7C3AED)
 val SurfaceGlass       = Color(0xFFFFFFFE)
-val GlowBlue           = Color(0x332563EB)   // ~20% alpha blue glow
-val GlowPurple         = Color(0x337C3AED)   // ~20% alpha purple glow
-val CardShadow         = Color(0x14000000)   // ~8% alpha black shadow
+val GlowBlue           = Color(0x332563EB)
+val GlowPurple         = Color(0x337C3AED)
+val CardShadow         = Color(0x14000000)
 val SuccessGreen       = Color(0xFF10B981)
 val WarningAmber       = Color(0xFFF59E0B)
+
+// ─── OLED & Dark Mode Renk Paleti ─────────────────────────────────────────────
+val DarkOledBackground = Color(0xFF090D16) // Derin gece laciverti / OLED siyah
+val DarkSurfaceCard    = Color(0xFF111827) // Gece kart zemini
+val DarkSurfaceElevated= Color(0xFF1E293B) // Yükseltilmiş kart
+val DarkBorderSlate    = Color(0xFF1F2937) // Gece kenarlık
 
 // ─── Category Gradient Pairs ──────────────────────────────────────────────────
 val BilisimGradStart   = Color(0xFFEFF6FF)

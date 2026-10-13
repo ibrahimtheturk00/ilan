@@ -1,4 +1,4 @@
-package com.kamuilan.app.ui.screens.home
+﻿package com.kamuilan.app.ui.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -24,18 +24,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -45,7 +47,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -54,8 +58,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kamuilan.app.data.model.YokDepartments
+import com.kamuilan.app.ui.components.CategoryGridDialog
 import com.kamuilan.app.ui.components.JobCard
+import com.kamuilan.app.ui.components.JobCardSkeleton
 import com.kamuilan.app.ui.theme.AkademikPurple
+import com.kamuilan.app.ui.theme.AmbientGlassBackground
 import com.kamuilan.app.ui.theme.BrandDark
 import com.kamuilan.app.ui.theme.BrandLight
 import com.kamuilan.app.ui.theme.BrandPrimary
@@ -69,16 +76,23 @@ import com.kamuilan.app.ui.theme.Slate500
 import com.kamuilan.app.ui.theme.Slate700
 import com.kamuilan.app.ui.theme.Slate900
 import com.kamuilan.app.ui.theme.SozlesmeliTeal
-import com.kamuilan.app.ui.theme.AmbientGlassBackground
 
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
     onJobClick: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    listState: LazyListState = rememberLazyListState()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
+
+    var showCategoryGridDialog by remember { mutableStateOf(false) }
+
+    // Canlı kategori ilan sayıları
+    val categoryCounts = remember(uiState.allJobs) {
+        YokDepartments.calculateCounts(uiState.allJobs)
+    }
 
     // Seçili kategori başlığını bul
     val activeCategoryTitle = remember(uiState.selectedCategory) {
@@ -86,6 +100,16 @@ fun HomeScreen(
         else YokDepartments.getById(uiState.selectedCategory)?.name
             ?: uiState.selectedCategory
     }
+
+    // 4x4 Kategori Izgara Dialogu
+    CategoryGridDialog(
+        isOpen = showCategoryGridDialog,
+        onDismiss = { showCategoryGridDialog = false },
+        categoryCounts = categoryCounts,
+        onSelectCategory = { deptId ->
+            viewModel.onCategorySelected(deptId)
+        }
+    )
 
     AmbientGlassBackground(modifier = modifier) {
         Column(
@@ -114,9 +138,9 @@ fun HomeScreen(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Business,
-                            contentDescription = null,
+                            contentDescription = "Logo",
                             tint = Color.White,
-                            modifier = Modifier.size(22.dp)
+                            modifier = Modifier.size(24.dp)
                         )
                     }
 
@@ -138,18 +162,38 @@ fun HomeScreen(
                     }
                 }
 
-                IconButton(
-                    onClick = { viewModel.loadJobs() },
-                    modifier = Modifier
-                        .size(38.dp)
-                        .background(Slate100, RoundedCornerShape(11.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Refresh,
-                        contentDescription = "Yenile",
-                        tint = Slate700,
-                        modifier = Modifier.size(18.dp)
-                    )
+                    // 4x4 Kategori Izgarasını Açan Buton
+                    IconButton(
+                        onClick = { showCategoryGridDialog = true },
+                        modifier = Modifier
+                            .size(38.dp)
+                            .background(BrandPrimary.copy(alpha = 0.1f), RoundedCornerShape(11.dp))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.GridView,
+                            contentDescription = "Kategoriler Izgara",
+                            tint = BrandPrimary,
+                            modifier = Modifier.size(19.dp)
+                        )
+                    }
+
+                    IconButton(
+                        onClick = { viewModel.loadJobs() },
+                        modifier = Modifier
+                            .size(38.dp)
+                            .background(Slate100, RoundedCornerShape(11.dp))
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Yenile",
+                            tint = Slate700,
+                            modifier = Modifier.size(18.dp)
+                        )
+                    }
                 }
             }
 
@@ -217,7 +261,10 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.weight(1f, fill = false)
+                        ) {
                             Icon(
                                 imageVector = Icons.Default.FilterList,
                                 contentDescription = null,
@@ -234,7 +281,8 @@ fun HomeScreen(
                                 text = activeCategoryTitle,
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = BrandPrimary
+                                color = BrandPrimary,
+                                maxLines = 1
                             )
                         }
                         Box(
@@ -327,7 +375,7 @@ fun HomeScreen(
                         color = Slate500
                     )
                     Text(
-                        text = "${uiState.filteredJobs.size}",
+                        text = "",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = BrandPrimary
@@ -342,18 +390,16 @@ fun HomeScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // ── İçerik Durumları ─────────────────────────────────────────────
+            // ── İçerik Durumları (Skeleton Loading) ───────────────────────────
             when {
                 uiState.isLoading -> {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            CircularProgressIndicator(
-                                color = BrandPrimary,
-                                modifier = Modifier.size(36.dp),
-                                strokeWidth = 3.dp
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Text("İlanlar taranıyor...", color = Slate500, fontSize = 13.sp)
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        contentPadding = PaddingValues(bottom = 90.dp)
+                    ) {
+                        items(5) {
+                            JobCardSkeleton()
                         }
                     }
                 }
@@ -418,6 +464,7 @@ fun HomeScreen(
 
                 else -> {
                     LazyColumn(
+                        state = listState,
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                         contentPadding = PaddingValues(bottom = 90.dp)

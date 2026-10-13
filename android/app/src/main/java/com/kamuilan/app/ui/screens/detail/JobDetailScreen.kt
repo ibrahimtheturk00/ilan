@@ -453,13 +453,5 @@ private fun StatCard(
 }
 
 private fun shareJobDetails(context: Context, job: JobPost) {
-    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-        type = "text/plain"
-        putExtra(Intent.EXTRA_SUBJECT, job.title)
-        putExtra(
-            Intent.EXTRA_TEXT,
-            "${job.title}\nKurum: ${job.institution ?: "Kamu Kurumu"}\nDetay: ${job.originalUrl ?: "https://kamuilanmerkezi.com"}"
-        )
-    }
-    context.startActivity(Intent.createChooser(shareIntent, "İlanı Paylaş"))
+    com.kamuilan.app.util.ShareUtils.shareJob(context, job)
 }

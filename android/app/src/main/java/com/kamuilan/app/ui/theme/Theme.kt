@@ -1,4 +1,4 @@
-package com.kamuilan.app.ui.theme
+﻿package com.kamuilan.app.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -14,11 +14,13 @@ import androidx.compose.ui.platform.LocalContext
 private val DarkColorScheme = darkColorScheme(
     primary = BrandLight,
     secondary = BrandSubtle,
-    background = Slate900,
-    surface = Slate800,
+    background = DarkOledBackground,
+    surface = DarkSurfaceCard,
+    surfaceVariant = DarkSurfaceElevated,
     onPrimary = Color.White,
-    onBackground = Color.White,
-    onSurface = Color.White
+    onBackground = Color(0xFFF1F5F9),
+    onSurface = Color(0xFFF1F5F9),
+    outline = DarkBorderSlate
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -26,9 +28,11 @@ private val LightColorScheme = lightColorScheme(
     secondary = BrandDark,
     background = BackgroundLight,
     surface = SurfaceLight,
+    surfaceVariant = Color(0xFFF1F5F9),
     onPrimary = Color.White,
     onBackground = Slate900,
-    onSurface = Slate900
+    onSurface = Slate900,
+    outline = Slate200
 )
 
 @Composable
