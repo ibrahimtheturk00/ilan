@@ -283,26 +283,31 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
   return originalUrl;
 }
 
-export const POST_TYPE_LABELS: Record<string, { label: string; color: string }> = {
+export const POST_TYPE_LABELS: Record<string, { label: string; color: string; dot: string }> = {
   memur: {
     label: "Memur",
-    color: "bg-sky-50 text-sky-700 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60 font-semibold",
+    color: "bg-sky-500/10 text-sky-600 dark:bg-sky-500/20 dark:text-sky-300 border-sky-300 dark:border-sky-800 font-semibold",
+    dot: "bg-sky-500",
   },
   isci: {
     label: "İşçi",
-    color: "bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60 font-semibold",
+    color: "bg-amber-500/10 text-amber-700 dark:bg-amber-500/20 dark:text-amber-300 border-amber-300 dark:border-amber-800 font-semibold",
+    dot: "bg-amber-500",
   },
   akademik: {
     label: "Akademik",
-    color: "bg-purple-50 text-purple-700 border-purple-200/80 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/60 font-semibold",
+    color: "bg-purple-500/10 text-purple-700 dark:bg-purple-500/20 dark:text-purple-300 border-purple-300 dark:border-purple-800 font-semibold",
+    dot: "bg-purple-500",
   },
   sozlesmeli: {
     label: "Sözleşmeli",
-    color: "bg-teal-50 text-teal-700 border-teal-200/80 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800/60 font-semibold",
+    color: "bg-teal-500/10 text-teal-700 dark:bg-teal-500/20 dark:text-teal-300 border-teal-300 dark:border-teal-800 font-semibold",
+    dot: "bg-teal-500",
   },
   diger: {
     label: "Genel",
-    color: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 font-medium",
+    color: "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700 font-medium",
+    dot: "bg-slate-400",
   },
 };
 

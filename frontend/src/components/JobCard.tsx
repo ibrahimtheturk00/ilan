@@ -34,13 +34,14 @@ export function JobCard({ job, onSelect }: JobCardProps) {
         <div className="flex flex-wrap items-center gap-1.5 mb-3">
           {/* İptal Rozeti veya Kadro Türü */}
           {statusInfo.isCancelled ? (
-            <span className="text-[11px] px-2 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase">
+            <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase shadow-sm">
               {statusInfo.statusTitle}
             </span>
           ) : (
             typeInfo && (
-              <span className={`text-[11px] px-2.5 py-0.5 rounded font-medium border ${typeInfo.color}`}>
-                {typeInfo.label}
+              <span className={`inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-md border ${typeInfo.color}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${typeInfo.dot}`} />
+                <span>{typeInfo.label}</span>
               </span>
             )
           )}
