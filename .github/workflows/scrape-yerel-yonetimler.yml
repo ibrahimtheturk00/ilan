@@ -1,0 +1,30 @@
+name: Scrape — Yerel Yönetimler
+on:
+  schedule:
+    - cron: '0 */3 * * *' # 3 saatte bir
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r scraper/requirements.txt
+
+      - name: Install Playwright Browsers
+        run: playwright install chromium --with-deps
+
+      - name: Run Scraper
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/yerel_yonetimler.py
