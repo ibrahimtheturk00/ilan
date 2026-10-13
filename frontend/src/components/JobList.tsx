@@ -1,13 +1,17 @@
 "use client";
 
+import { useState } from "react";
 import { useJobs } from "@/hooks/useJobs";
 import { useFilters } from "@/hooks/useFilters";
 import { JobCard } from "./JobCard";
+import { JobModal } from "./JobModal";
 import { AlertCircle, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
+import { JobPost } from "@/types";
 
 export function JobList() {
   const filters = useFilters();
   const { data, isLoading, isError, error } = useJobs(filters);
+  const [selectedJob, setSelectedJob] = useState<JobPost | null>(null);
 
   if (isLoading) {
     return (
@@ -74,7 +78,7 @@ export function JobList() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {jobs.map((job) => (
-          <JobCard key={job.id} job={job} />
+          <JobCard key={job.id} job={job} onSelect={(j) => setSelectedJob(j)} />
         ))}
       </div>
 
@@ -100,6 +104,9 @@ export function JobList() {
           </button>
         </div>
       )}
+
+      {/* Detay Modalı */}
+      <JobModal job={selectedJob} onClose={() => setSelectedJob(null)} />
     </div>
   );
 }

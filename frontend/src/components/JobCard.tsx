@@ -5,15 +5,26 @@ import { formatDate, getDaysRemaining, POST_TYPE_LABELS, CATEGORY_LABELS } from 
 
 interface JobCardProps {
   job: JobPost;
+  onSelect?: (job: JobPost) => void;
 }
 
-export function JobCard({ job }: JobCardProps) {
+export function JobCard({ job, onSelect }: JobCardProps) {
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
   const daysInfo = getDaysRemaining(job.deadline_at);
 
+  const handleClick = (e: React.MouseEvent) => {
+    if (onSelect) {
+      e.preventDefault();
+      onSelect(job);
+    }
+  };
+
   return (
-    <div className="group bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-brand-300 dark:hover:border-brand-500 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+    <div
+      onClick={handleClick}
+      className="group bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-brand-300 dark:hover:border-brand-500 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
+    >
       <div>
         {/* Üst Rozetler */}
         <div className="flex flex-wrap items-center gap-2 mb-3">
@@ -48,11 +59,9 @@ export function JobCard({ job }: JobCardProps) {
         </div>
 
         {/* İlan Başlığı */}
-        <Link href={`/jobs/${job.id}/`} className="block">
-          <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2 leading-snug">
-            {job.title}
-          </h3>
-        </Link>
+        <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2 leading-snug">
+          {job.title}
+        </h3>
 
         {/* Kurum Adı */}
         <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 mt-2">
@@ -89,13 +98,14 @@ export function JobCard({ job }: JobCardProps) {
           </span>
         </div>
 
-        <Link
-          href={`/jobs/${job.id}/`}
+        <button
+          type="button"
+          onClick={handleClick}
           className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 transition-colors group-hover:translate-x-0.5 duration-150"
         >
-          İncele
+          <span>İncele</span>
           <ArrowRight className="w-3.5 h-3.5" />
-        </Link>
+        </button>
       </div>
     </div>
   );

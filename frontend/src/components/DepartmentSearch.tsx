@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Search, GraduationCap, Sparkles, BookOpen, X, ArrowRight } from "lucide-react";
 import { useJobs } from "@/hooks/useJobs";
 import { JobCard } from "./JobCard";
+import { JobModal } from "./JobModal";
 import { JobPost } from "@/types";
 
 const POPULAR_DEPARTMENTS = [
@@ -21,6 +22,7 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
   const [departmentInput, setDepartmentInput] = useState("");
   const [activeQuery, setActiveQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("");
+  const [selectedJob, setSelectedJob] = useState<JobPost | null>(null);
 
   // Arama filtresi oluştur
   const { data, isLoading } = useJobs({
@@ -166,7 +168,7 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
           ) : results.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {results.map((job) => (
-                <JobCard key={job.id} job={job} />
+                <JobCard key={job.id} job={job} onSelect={(j) => setSelectedJob(j)} />
               ))}
             </div>
           ) : (
@@ -188,6 +190,9 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
           )}
         </div>
       )}
+
+      {/* Detay Modalı */}
+      <JobModal job={selectedJob} onClose={() => setSelectedJob(null)} />
     </div>
   );
 }
