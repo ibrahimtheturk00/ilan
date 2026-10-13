@@ -10,13 +10,13 @@ import { FavoritesView } from "@/components/FavoritesView";
 import { EmploymentReport } from "@/components/EmploymentReport";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useFilters } from "@/hooks/useFilters";
-import { LayoutList, GraduationCap, Heart, BarChart3 } from "lucide-react";
+import { LayoutList, GraduationCap, Heart, BarChart3, Sparkles } from "lucide-react";
 
 export default function HomePage() {
-  // Görünüm Sekmeleri: 'all' | 'department' | 'favorites' | 'report'
-  const [activeTab, setActiveTab] = useState<"all" | "department" | "favorites" | "report">("all");
+  // Görünüm Sekmeleri: 'all' | 'today' | 'department' | 'favorites' | 'report'
+  const [activeTab, setActiveTab] = useState<"all" | "today" | "department" | "favorites" | "report">("all");
   const { count: favoriteCount } = useFavorites();
-  const { setCategory, setCity, setOnlyUrgent, resetFilters } = useFilters();
+  const { setCategory, setCity, setOnlyUrgent, setOnlyToday, resetFilters } = useFilters();
 
   const handleReportFilterCategory = (cat: string) => {
     setCategory(cat);
@@ -53,11 +53,14 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* 4 Ana Menü Butonu: Düzenli ve Kullanıcı Dostu */}
+      {/* 5 Ana Menü Butonu: Düzenli ve Kullanıcı Dostu */}
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-8">
         {/* 1. Tüm İlanlar */}
         <button
-          onClick={() => setActiveTab("all")}
+          onClick={() => {
+            resetFilters();
+            setActiveTab("all");
+          }}
           type="button"
           className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
             activeTab === "all"
@@ -69,7 +72,25 @@ export default function HomePage() {
           <span>Tüm İlanlar</span>
         </button>
 
-        {/* 2. Bölümüne Göre Ara */}
+        {/* 2. Bugün Eklenenler */}
+        <button
+          onClick={() => {
+            resetFilters();
+            setOnlyToday(true);
+            setActiveTab("today");
+          }}
+          type="button"
+          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+            activeTab === "today"
+              ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
+              : "bg-white dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+          }`}
+        >
+          <Sparkles className={`w-4 h-4 ${activeTab === "today" ? "text-white" : "text-emerald-500"}`} />
+          <span>Bugün Eklenenler</span>
+        </button>
+
+        {/* 3. Bölümüne Göre Ara */}
         <button
           onClick={() => setActiveTab("department")}
           type="button"
@@ -83,7 +104,7 @@ export default function HomePage() {
           <span>Bölümüne Göre Ara</span>
         </button>
 
-        {/* 3. Favorilerim */}
+        {/* 4. Favorilerim */}
         <button
           onClick={() => setActiveTab("favorites")}
           type="button"
@@ -108,7 +129,7 @@ export default function HomePage() {
           )}
         </button>
 
-        {/* 4. İstihdam Raporu */}
+        {/* 5. İstihdam Raporu */}
         <button
           onClick={() => setActiveTab("report")}
           type="button"
@@ -143,8 +164,8 @@ export default function HomePage() {
         />
       )}
 
-      {/* 4. SEÇENEK: Tüm İlanlar Ekranı (Filtreli Feed) */}
-      {activeTab === "all" && (
+      {/* 4. SEÇENEK: Tüm İlanlar veya Bugün Eklenenler Ekranı (Filtreli Feed) */}
+      {(activeTab === "all" || activeTab === "today") && (
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Sol: Filtreleme Yan Paneli (En Üstten Başlar) */}
           <div className="w-full lg:w-64 shrink-0">

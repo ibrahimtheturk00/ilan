@@ -24,6 +24,7 @@ data class HomeUiState(
     val searchQuery: String = "",
     val selectedPostType: String = "all", // "all", "memur", "sozlesmeli", "isci", "akademik"
     val selectedCategory: String = "",    // Kategori slug'ı, ör. "bilisim", "saglik" — boşsa filtre yok
+    val onlyToday: Boolean = false,       // Yalnızca bugün eklenen ilanlar
     val errorMessage: String? = null
 )
 
@@ -128,13 +129,44 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun toggleOnlyToday() {
+        val newOnlyToday = !_uiState.value.onlyToday
+        _uiState.value = _uiState.value.copy(
+            onlyToday = newOnlyToday,
+            filteredJobs = applyFilters(
+                _uiState.value.allJobs,
+                _uiState.value.searchQuery,
+                _uiState.value.selectedPostType,
+                _uiState.value.selectedCategory,
+                newOnlyToday
+            )
+        )
+    }
+
+    fun setOnlyToday(value: Boolean) {
+        _uiState.value = _uiState.value.copy(
+            onlyToday = value,
+            filteredJobs = applyFilters(
+                _uiState.value.allJobs,
+                _uiState.value.searchQuery,
+                _uiState.value.selectedPostType,
+                _uiState.value.selectedCategory,
+                value
+            )
+        )
+    }
+
     private fun applyFilters(
         jobs: List<JobPost>,
         query: String,
         postType: String,
-        categorySlug: String
+        categorySlug: String,
+        onlyToday: Boolean = _uiState.value.onlyToday
     ): List<JobPost> {
         return jobs.filter { job ->
+            // 0. Bugün eklenenler filtresi
+            val matchesToday = if (!onlyToday) true else JobParser.isToday(job.publishedAt)
+
             // 1. Kadro türü filtresi
             val matchesType = if (postType == "all") true
             else job.postType.equals(postType, ignoreCase = true)
@@ -147,7 +179,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val matchesQuery = if (query.isBlank()) true
             else TurkishMatcher.matchesQuery(job, query)
 
-            matchesType && matchesCategory && matchesQuery
+            matchesToday && matchesType && matchesCategory && matchesQuery
         }
     }
 

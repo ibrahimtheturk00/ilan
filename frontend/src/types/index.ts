@@ -70,6 +70,7 @@ export interface FilterState {
   kpssType?: string;
   educationLevel?: string;
   onlyUrgent?: boolean;
+  onlyToday?: boolean;
 }
 
 export type JobFilters = FilterState;

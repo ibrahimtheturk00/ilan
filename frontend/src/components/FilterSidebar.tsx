@@ -14,6 +14,7 @@ import {
   Navigation,
   Loader2,
   Check,
+  Sparkles,
 } from "lucide-react";
 
 const CITIES = [
@@ -53,6 +54,7 @@ export function FilterSidebar() {
     kpssType,
     educationLevel,
     onlyUrgent,
+    onlyToday,
     setCity,
     setPostType,
     setCategory,
@@ -60,6 +62,7 @@ export function FilterSidebar() {
     setKpssType,
     setEducationLevel,
     setOnlyUrgent,
+    setOnlyToday,
     resetFilters,
   } = useFilters();
 
@@ -74,7 +77,7 @@ export function FilterSidebar() {
   }, []);
 
   const hasActiveFilters = Boolean(
-    city || postType || category || !onlyActive || kpssType || educationLevel || onlyUrgent
+    city || postType || category || !onlyActive || kpssType || educationLevel || onlyUrgent || onlyToday
   );
 
   // GPS ile Konum & Şehir Tespiti
@@ -152,8 +155,26 @@ export function FilterSidebar() {
         )}
       </div>
 
-      {/* Son 3 Gün Acil Başvuru Alarmı / Hızlı Filtresi */}
-      <div>
+      {/* Hızlı Filtre Butonları (Bugün Eklenenler & Son 3 Gün Acil) */}
+      <div className="space-y-2">
+        {/* Bugün Eklenenler */}
+        <button
+          type="button"
+          onClick={() => setOnlyToday(!onlyToday)}
+          className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all ${
+            onlyToday
+              ? "bg-emerald-600 text-white border-emerald-700 shadow-md shadow-emerald-600/20"
+              : "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50 hover:bg-emerald-100/80"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <Sparkles className={`w-4 h-4 ${onlyToday ? "text-white" : "text-emerald-600 dark:text-emerald-400"}`} />
+            <span>Bugün Eklenen İlanlar</span>
+          </div>
+          {onlyToday && <Check className="w-4 h-4 text-white" />}
+        </button>
+
+        {/* Son 3 Gün Acil Başvuru Alarmı */}
         <button
           type="button"
           onClick={() => setOnlyUrgent(!onlyUrgent)}

@@ -13,6 +13,7 @@ interface FilterStore extends FilterState {
   setKpssType: (kpssType: string) => void;
   setEducationLevel: (level: string) => void;
   setOnlyUrgent: (onlyUrgent: boolean) => void;
+  setOnlyToday: (onlyToday: boolean) => void;
   resetFilters: () => void;
 }
 
@@ -28,6 +29,7 @@ const initialState: FilterState = {
   kpssType: "",
   educationLevel: "",
   onlyUrgent: false,
+  onlyToday: false,
 };
 
 export const useFilters = create<FilterStore>((set) => ({
@@ -43,5 +45,6 @@ export const useFilters = create<FilterStore>((set) => ({
   setKpssType: (kpssType) => set({ kpssType, page: 1 }),
   setEducationLevel: (educationLevel) => set({ educationLevel, page: 1 }),
   setOnlyUrgent: (onlyUrgent) => set({ onlyUrgent, page: 1 }),
+  setOnlyToday: (onlyToday) => set({ onlyToday, page: 1 }),
   resetFilters: () => set(initialState),
 }));

@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { JobPost, Source, ScrapeLog, FilterState } from "@/types";
-import { detectKpssType, detectEducationLevel, fuzzyTurkishMatch } from "@/lib/jobParser";
+import { detectKpssType, detectEducationLevel, fuzzyTurkishMatch, isJobPublishedToday } from "@/lib/jobParser";
 import { getJobApplicationStatus } from "@/lib/utils";
 export { trackUniqueVisitor, getCachedVisitorCount as fetchUniqueVisitorCount } from "@/lib/visitor";
 
@@ -280,6 +280,10 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
           });
         }
 
+        if (filters.onlyToday) {
+          filtered = filtered.filter((j) => isJobPublishedToday(j));
+        }
+
         const count = filtered.length;
         const from = (filters.page - 1) * pageSize;
         const pageData = filtered.slice(from, from + pageSize);
@@ -328,6 +332,10 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
       const status = getJobApplicationStatus(j.published_at, j.deadline_at, j.title);
       return status.type === "urgent";
     });
+  }
+
+  if (filters.onlyToday) {
+    filtered = filtered.filter((j) => isJobPublishedToday(j));
   }
 
   if (filters.sortBy === "position_desc") {

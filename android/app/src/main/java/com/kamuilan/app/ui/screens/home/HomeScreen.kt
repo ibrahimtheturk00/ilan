@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Business
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.FilterList
@@ -61,6 +62,9 @@ import com.kamuilan.app.data.model.YokDepartments
 import com.kamuilan.app.ui.components.CategoryGridDialog
 import com.kamuilan.app.ui.components.JobCard
 import com.kamuilan.app.ui.components.JobCardSkeleton
+import com.kamuilan.app.ui.theme.ActiveEmerald
+import com.kamuilan.app.ui.theme.ActiveEmeraldBg
+import com.kamuilan.app.ui.theme.ActiveEmeraldBorder
 import com.kamuilan.app.ui.theme.AkademikPurple
 import com.kamuilan.app.ui.theme.AmbientGlassBackground
 import com.kamuilan.app.ui.theme.BrandDark
@@ -303,7 +307,7 @@ fun HomeScreen(
                 }
             }
 
-            // ── Kadro Türü Filter Pill'leri ───────────────────────────────────
+            // ── Hızlı Filtre Pill'leri: Bugün Eklenenler & Kadro Türleri ────────
             val postTypePills = listOf(
                 Triple("all", "Tümü", Slate900),
                 Triple("memur", "Memur", MemurSky),
@@ -318,6 +322,50 @@ fun HomeScreen(
                     .horizontalScroll(rememberScrollState()),
                 horizontalArrangement = Arrangement.spacedBy(7.dp)
             ) {
+                // 1. Özel "Bugün Eklenenler" Pill
+                val isTodaySelected = uiState.onlyToday
+                val todayShape = RoundedCornerShape(20.dp)
+                Box(
+                    modifier = Modifier
+                        .clickable { viewModel.toggleOnlyToday() }
+                        .then(
+                            if (isTodaySelected) {
+                                Modifier.background(
+                                    brush = Brush.horizontalGradient(
+                                        listOf(ActiveEmerald, Color(0xFF047857))
+                                    ),
+                                    shape = todayShape
+                                )
+                            } else {
+                                Modifier
+                                    .background(
+                                        color = ActiveEmeraldBg,
+                                        shape = todayShape
+                                    )
+                                    .border(width = 1.dp, color = ActiveEmeraldBorder, shape = todayShape)
+                            }
+                        )
+                        .padding(horizontal = 13.dp, vertical = 8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.AutoAwesome,
+                            contentDescription = null,
+                            tint = if (isTodaySelected) Color.White else ActiveEmerald,
+                            modifier = Modifier.size(13.dp)
+                        )
+                        Text(
+                            text = "Bugün Eklenenler",
+                            fontSize = 12.sp,
+                            fontWeight = if (isTodaySelected) FontWeight.Bold else FontWeight.SemiBold,
+                            color = if (isTodaySelected) Color.White else ActiveEmerald
+                        )
+                    }
+                }
                 postTypePills.forEach { (typeKey, typeLabel, brandColor) ->
                     val isSelected = uiState.selectedPostType == typeKey
                     val interSource = remember { MutableInteractionSource() }
