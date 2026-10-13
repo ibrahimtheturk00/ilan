@@ -196,7 +196,7 @@ class BaseScraper(ABC):
         for p in unique_posts:
             ch = p.get("content_hash")
             uh = p.get("url_hash")
-            existing_id = existing_by_content.get(ch) or existing_by_url.get(uh)
+            existing_id = existing_by_url.get(uh) or existing_by_content.get(ch)
 
             try:
                 if existing_id:
@@ -208,8 +208,8 @@ class BaseScraper(ABC):
                     res = self.client.table("job_posts").insert(p).execute()
                     if res.data:
                         new_id = res.data[0]["id"]
-                        existing_by_content[ch] = new_id
-                        existing_by_url[uh] = new_id
+                        if ch: existing_by_content[ch] = new_id
+                        if uh: existing_by_url[uh] = new_id
                         posts_new += 1
             except Exception as e:
                 self.logger.error(f"İlan kaydetme hatası ('{p.get('title')}'): {e}")

@@ -1,0 +1,70 @@
+name: Scrape Tum Kaynaklar
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  scrape-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          pip install -r scraper/requirements.txt
+          playwright install chromium --with-deps
+
+      - name: Run Kamu Ilan SBB
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/kamu_ilan_sbb.py
+
+      - name: Run Kariyer Kapisi
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/kariyer_kapisi.py
+
+      - name: Run ISKUR
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/iskur.py
+
+      - name: Run Resmi Gazete
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/resmi_gazete.py
+
+      - name: Run Yerel Yonetimler
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/yerel_yonetimler.py
+
+      - name: Run Ilan Gov
+        continue-on-error: true
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/ilan_gov.py
