@@ -60,17 +60,17 @@ export default function HomePage() {
 
       {/* 2. SEÇENEK: Tüm İlanlar Ekranı (Filtreli Feed) */}
       {activeTab === "all" && (
-        <div className="space-y-6">
-          {/* Canlı Arama Çubuğu & Hızlı Kadro Filtreleri + Sıralama */}
-          <div className="max-w-3xl mx-auto space-y-3.5">
-            <SearchBar />
-            <PostTypeQuickFilter />
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          {/* Sol: Filtreleme Yan Paneli (En Üstten Başlar) */}
+          <div className="w-full lg:w-64 shrink-0">
+            <FilterSidebar />
           </div>
 
-          {/* Ana İçerik Grid */}
-          <div className="flex flex-col lg:flex-row gap-6 items-start mt-6">
-            <FilterSidebar />
-            <div className="flex-1 w-full">
+          {/* Sağ: Arama Çubuğu, Kadro Filtreleri + Sıralama ve İlan Listesi */}
+          <div className="flex-1 w-full space-y-5">
+            <SearchBar />
+            <PostTypeQuickFilter />
+            <div className="pt-1">
               <JobList />
             </div>
           </div>

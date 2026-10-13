@@ -72,9 +72,9 @@ export function PostTypeQuickFilter() {
   const currentSort = SORT_OPTIONS.find((s) => s.key === sortBy) || SORT_OPTIONS[0];
 
   return (
-    <div className="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2.5 pt-1">
-      {/* Sol / Orta: Kadro Türü Butonları */}
-      <div className="flex items-center gap-1.5 overflow-x-auto py-1 px-0.5 no-scrollbar flex-1">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+      {/* Sol / Orta: Kadro Türü Butonları (Geniş aralıklarla) */}
+      <div className="flex items-center gap-2 overflow-x-auto py-1 px-0.5 no-scrollbar flex-1">
         {POST_TYPES.map((item) => {
           const isSelected = postType === item.key;
           return (
@@ -82,7 +82,7 @@ export function PostTypeQuickFilter() {
               key={item.key || "all"}
               type="button"
               onClick={() => setPostType(item.key)}
-              className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all border shrink-0 ${
+              className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all border shrink-0 ${
                 isSelected
                   ? item.activeColor
                   : "bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/60"
@@ -100,7 +100,7 @@ export function PostTypeQuickFilter() {
       </div>
 
       {/* Sağ: Sıralama Butonu & Açılır Menü */}
-      <div className="relative shrink-0" ref={sortRef}>
+      <div className="relative shrink-0 self-end sm:self-auto" ref={sortRef}>
         <button
           type="button"
           onClick={() => setIsSortOpen(!isSortOpen)}
