@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kamuilan.app.data.local.PreferencesManager
@@ -130,11 +131,11 @@ fun PersonalizedScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
                             text = "Bana Özel İlanlar",
-                            fontSize = 22.sp,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Slate900
                         )
@@ -143,24 +144,39 @@ fun PersonalizedScreen(
                             imageVector = Icons.Default.AutoAwesome,
                             contentDescription = null,
                             tint = BrandPrimary,
-                            modifier = Modifier.size(20.dp)
+                            modifier = Modifier.size(18.dp)
                         )
                     }
                     Text(
                         text = "Mezuniyetinize ve KPSS puanınıza en uygun alımlar",
-                        fontSize = 12.sp,
-                        color = Slate500
+                        fontSize = 11.sp,
+                        color = Slate500,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
+
+                Spacer(modifier = Modifier.width(8.dp))
 
                 OutlinedButton(
                     onClick = onEditPreferences,
                     shape = RoundedCornerShape(10.dp),
+                    contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Slate700)
                 ) {
-                    Icon(imageVector = Icons.Default.Tune, contentDescription = null, modifier = Modifier.size(15.dp))
+                    Icon(
+                        imageVector = Icons.Default.Tune,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp)
+                    )
                     Spacer(modifier = Modifier.width(4.dp))
-                    Text("Kriterler", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    Text(
+                        text = "Kriterler",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        softWrap = false
+                    )
                 }
             }
 

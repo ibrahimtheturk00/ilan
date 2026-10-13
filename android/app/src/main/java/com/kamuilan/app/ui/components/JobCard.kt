@@ -46,6 +46,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -114,227 +117,220 @@ fun JobCard(
                 width = 1.dp,
                 color = cardBorderColor,
                 shape = cardShape
-            ),
+            )
+            .drawBehind {
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(accentColor, accentColor.copy(alpha = 0.4f))
+                    ),
+                    topLeft = Offset.Zero,
+                    size = Size(4.dp.toPx(), size.height)
+                )
+            },
         shape = cardShape,
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 0.dp,
         shadowElevation = 1.dp
     ) {
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Min)
+                .padding(start = 14.dp, end = 16.dp, top = 16.dp, bottom = 16.dp)
         ) {
-            // ── Sol Kenar Renkli Vurgu Şeriti ──────────────────────────────────────
-            Box(
-                modifier = Modifier
-                    .width(4.dp)
-                    .fillMaxHeight()
-                    .background(
-                        brush = Brush.verticalGradient(
-                            colors = listOf(accentColor, accentColor.copy(alpha = 0.4f))
-                        )
-                    )
-            )
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+            // ── Üst Rozetler ve Aksiyon Butonları (Paylaş & Favori) ────────────────
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Top
             ) {
-                // ── Üst Rozetler ve Aksiyon Butonları (Paylaş & Favori) ────────────────
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Top
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.weight(1f)
                 ) {
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        if (isToday) TodayAddedBadge()
+                    if (isToday) TodayAddedBadge()
 
-                        // Kadro Türü Rozeti
-                        if (isCancelled) {
-                            CancelledBadge()
-                        } else {
-                            PostTypeSolidBadge(postType = job.postType)
-                        }
-
-                        // Kategori Rozeti
-                        val catLabel = getWebCategoryLabel(job.category)
-                        WebCategoryBadge(text = catLabel)
-
-                        // Kaynak Rozeti
-                        if (job.source != null && !job.source.name.isNullOrBlank()) {
-                            WebSourceBadge(text = job.source.name)
-                        }
+                    // Kadro Türü Rozeti
+                    if (isCancelled) {
+                        CancelledBadge()
+                    } else {
+                        PostTypeSolidBadge(postType = job.postType)
                     }
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(0.dp)
-                    ) {
-                        IconButton(
-                            onClick = { ShareUtils.shareJob(context, job) },
-                            modifier = Modifier.size(32.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = "Paylaş",
-                                tint = Slate400,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                        IconButton(
-                            onClick = onFavoriteClick,
-                            modifier = Modifier.size(32.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                contentDescription = "Favoriye Ekle",
-                                tint = if (isFavorite) Color(0xFFF43F5E) else Slate400,
-                                modifier = Modifier.size(18.dp)
-                            )
-                        }
+                    // Kategori Rozeti
+                    val catLabel = getWebCategoryLabel(job.category)
+                    WebCategoryBadge(text = catLabel)
+
+                    // Kaynak Rozeti
+                    if (job.source != null && !job.source.name.isNullOrBlank()) {
+                        WebSourceBadge(text = job.source.name)
                     }
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                // ── Kurum Logo/İkonu + Başlık Alanı ────────────────────────────────────
-                Row(verticalAlignment = Alignment.Top) {
-                    Box(
-                        modifier = Modifier
-                            .size(38.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(instInfo.bgColor)
-                            .border(1.dp, instInfo.iconColor.copy(alpha = 0.25f), RoundedCornerShape(10.dp)),
-                        contentAlignment = Alignment.Center
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(0.dp)
+                ) {
+                    IconButton(
+                        onClick = { ShareUtils.shareJob(context, job) },
+                        modifier = Modifier.size(32.dp)
                     ) {
                         Icon(
-                            imageVector = instInfo.icon,
-                            contentDescription = instInfo.categoryName,
-                            tint = instInfo.iconColor,
-                            modifier = Modifier.size(20.dp)
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Paylaş",
+                            tint = Slate400,
+                            modifier = Modifier.size(16.dp)
                         )
                     }
-
-                    Spacer(modifier = Modifier.width(10.dp))
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            text = job.title,
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Slate900,
-                            lineHeight = 21.sp,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
+                    IconButton(
+                        onClick = onFavoriteClick,
+                        modifier = Modifier.size(32.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                            contentDescription = "Favoriye Ekle",
+                            tint = if (isFavorite) Color(0xFFF43F5E) else Slate400,
+                            modifier = Modifier.size(18.dp)
                         )
-                        Spacer(modifier = Modifier.height(3.dp))
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // ── Kurum Logo/İkonu + Başlık Alanı ────────────────────────────────────
+            Row(verticalAlignment = Alignment.Top) {
+                Box(
+                    modifier = Modifier
+                        .size(38.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(instInfo.bgColor)
+                        .border(1.dp, instInfo.iconColor.copy(alpha = 0.25f), RoundedCornerShape(10.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = instInfo.icon,
+                        contentDescription = instInfo.categoryName,
+                        tint = instInfo.iconColor,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = job.title,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Slate900,
+                        lineHeight = 21.sp,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Text(
+                        text = job.institution ?: "Resmi Kamu Kurumu",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = Slate500,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
+            }
+
+            // ── Meta Rozetleri: KPSS, Eğitim, Yaş Sınırı ───────────────────────────
+            val hasKpss = kpssType != "Belirtilmemiş"
+            val hasEdu = education != "Belirtilmemiş"
+            val hasAge = maxAge != null
+
+            if (hasKpss || hasEdu || hasAge) {
+                Spacer(modifier = Modifier.height(10.dp))
+                FlowRow(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    if (hasKpss) {
+                        WebMetaBadge(
+                            text = kpssType,
+                            icon = Icons.Default.MilitaryTech,
+                            bg = Color(0xFFEFF6FF),
+                            textColor = Color(0xFF1D4ED8),
+                            borderColor = Color(0xFFBFDBFE)
+                        )
+                    }
+                    if (hasEdu) {
+                        WebMetaBadge(
+                            text = education,
+                            icon = Icons.Default.School,
+                            bg = Color(0xFFFAF5FF),
+                            textColor = Color(0xFF7E22CE),
+                            borderColor = Color(0xFFE9D5FF)
+                        )
+                    }
+                    if (hasAge) {
+                        WebMetaBadge(
+                            text = "Maks. $maxAge Yaş",
+                            icon = Icons.Default.AccessTime,
+                            bg = Color(0xFFFFFBEB),
+                            textColor = Color(0xFF92400E),
+                            borderColor = Color(0xFFFDE68A)
+                        )
+                    }
+                }
+            }
+
+            // ── Açıklama Özeti ─────────────────────────────────────────────────────
+            if (!job.description.isNullOrBlank()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = job.description,
+                    fontSize = 12.sp,
+                    color = Slate500,
+                    lineHeight = 18.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+            HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // ── Alt Bilgi Çubuğu (Şehir, Başvuru Durumu, İncele ->) ────────────────
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Sol Bölüm: Şehir (veya Türkiye Geneli) & Kontenjan
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.weight(1f, fill = false)
+                ) {
+                    val displayCity = if (!job.city.isNullOrBlank()) job.city else "Türkiye Geneli"
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(3.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.LocationOn,
+                            contentDescription = null,
+                            tint = Slate400,
+                            modifier = Modifier.size(13.dp)
+                        )
                         Text(
-                            text = job.institution ?: "Resmi Kamu Kurumu",
+                            text = displayCity,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Medium,
-                            color = Slate500,
+                            color = Slate700,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                     }
-                }
-
-                // ── Meta Rozetleri: KPSS, Eğitim, Yaş Sınırı ───────────────────────────
-                val hasKpss = kpssType != "Belirtilmemiş"
-                val hasEdu = education != "Belirtilmemiş"
-                val hasAge = maxAge != null
-
-                if (hasKpss || hasEdu || hasAge) {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    FlowRow(
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalArrangement = Arrangement.spacedBy(6.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        if (hasKpss) {
-                            WebMetaBadge(
-                                text = kpssType,
-                                icon = Icons.Default.MilitaryTech,
-                                bg = Color(0xFFEFF6FF),
-                                textColor = Color(0xFF1D4ED8),
-                                borderColor = Color(0xFFBFDBFE)
-                            )
-                        }
-                        if (hasEdu) {
-                            WebMetaBadge(
-                                text = education,
-                                icon = Icons.Default.School,
-                                bg = Color(0xFFFAF5FF),
-                                textColor = Color(0xFF7E22CE),
-                                borderColor = Color(0xFFE9D5FF)
-                            )
-                        }
-                        if (hasAge) {
-                            WebMetaBadge(
-                                text = "Maks.  Yaş",
-                                icon = Icons.Default.AccessTime,
-                                bg = Color(0xFFFFFBEB),
-                                textColor = Color(0xFF92400E),
-                                borderColor = Color(0xFFFDE68A)
-                            )
-                        }
-                    }
-                }
-
-                // ── Açıklama Özeti ─────────────────────────────────────────────────────
-                if (!job.description.isNullOrBlank()) {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = job.description,
-                        fontSize = 12.sp,
-                        color = Slate500,
-                        lineHeight = 18.sp,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(12.dp))
-                HorizontalDivider(color = Color(0xFFF1F5F9), thickness = 1.dp)
-                Spacer(modifier = Modifier.height(10.dp))
-
-                // ── Alt Bilgi Çubuğu (Şehir, Başvuru Durumu, İncele ->) ────────────────
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Sol Bölüm: Şehir & Kontenjan
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
-                        modifier = Modifier.weight(1f, fill = false)
-                    ) {
-                        if (!job.city.isNullOrBlank()) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(3.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.LocationOn,
-                                    contentDescription = null,
-                                    tint = Slate400,
-                                    modifier = Modifier.size(13.dp)
-                                )
-                                Text(
-                                    text = job.city,
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = Slate700
-                                )
-                            }
-                        }
 
                     if (job.positionCount != null && job.positionCount > 0) {
                         Row(
@@ -358,11 +354,12 @@ fun JobCard(
                     }
                 }
 
-                // Sağ Bölüm: Durum Rozeti (Pulse Efektli) + İncele Butonu (Asla taşmaz)
+                Spacer(modifier = Modifier.width(6.dp))
+
+                // Sağ Bölüm: Durum Rozeti (Pulse Efektli) + İncele Butonu
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.weight(1f, fill = false)
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
                     when {
                         isCancelled -> {
@@ -489,7 +486,6 @@ fun JobCard(
             }
         }
     }
-}
 }
 
 // ── Web Tarzı Rozetler ──────────────────────────────────────────────────────────
