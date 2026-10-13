@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kamuilan.app.data.local.PreferencesManager
 import com.kamuilan.app.data.model.JobPost
+import com.kamuilan.app.data.model.TurkishMatcher
 import com.kamuilan.app.data.repository.JobRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -82,10 +83,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             val matchesQuery = if (query.isBlank()) {
                 true
             } else {
-                val q = query.lowercase().trim()
-                job.title.lowercase().contains(q) ||
-                        (job.institution?.lowercase()?.contains(q) == true) ||
-                        (job.city?.lowercase()?.contains(q) == true)
+                TurkishMatcher.matchesQuery(job, query)
             }
             matchesType && matchesQuery
         }

@@ -54,6 +54,7 @@ import com.kamuilan.app.ui.theme.Slate200
 import com.kamuilan.app.ui.theme.Slate400
 import com.kamuilan.app.ui.theme.Slate500
 import com.kamuilan.app.ui.theme.Slate900
+import com.kamuilan.app.ui.theme.AmbientGlassBackground
 
 data class DepartmentCategory(
     val title: String,
@@ -64,7 +65,7 @@ data class DepartmentCategory(
 )
 
 val POPULAR_CATEGORIES = listOf(
-    DepartmentCategory("Bilişim & Yazılım", Icons.Default.Computer, Color(0xFF2563EB), Color(0xFFEFF6FF), "yazılım"),
+    DepartmentCategory("Bilişim & Yazılım", Icons.Default.Computer, Color(0xFF2563EB), Color(0xFFEFF6FF), "bilisim"),
     DepartmentCategory("Sağlık & Tıp", Icons.Default.MedicalServices, Color(0xFFE11D48), Color(0xFFFFF1F2), "tabip"),
     DepartmentCategory("Hemşirelik & Ebelik", Icons.Default.LocalHospital, Color(0xFF0D9488), Color(0xFFF0FDFA), "hemşire"),
     DepartmentCategory("Eğitim & Öğretmenlik", Icons.Default.School, Color(0xFFD97706), Color(0xFFFFFBEB), "öğretim"),
@@ -87,39 +88,41 @@ fun CategoriesScreen(
     onCategoryClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        // Başlık Alanı (Hero)
-        Text(
-            text = "Bölümünüze Göre İlanlar",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold,
-            color = Slate900
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = "Mezuniyet alanınızı seçerek ilgili kamu kadrolarına anında ulaşın",
-            fontSize = 13.sp,
-            color = Slate500
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
-            contentPadding = PaddingValues(bottom = 80.dp),
-            modifier = Modifier.fillMaxSize()
+    AmbientGlassBackground(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
-            items(POPULAR_CATEGORIES) { category ->
-                CategoryCard(
-                    category = category,
-                    onClick = { onCategoryClick(category.queryKeyword) }
-                )
+            // Başlık Alanı (Hero)
+            Text(
+                text = "Bölümünüze Göre İlanlar",
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                color = Slate900
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Text(
+                text = "Mezuniyet alanınızı seçerek ilgili kamu kadrolarına anında ulaşın",
+                fontSize = 13.sp,
+                color = Slate500
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+                contentPadding = PaddingValues(bottom = 80.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(POPULAR_CATEGORIES) { category ->
+                    CategoryCard(
+                        category = category,
+                        onClick = { onCategoryClick(category.queryKeyword) }
+                    )
+                }
             }
         }
     }

@@ -59,6 +59,8 @@ import com.kamuilan.app.ui.theme.Slate700
 import com.kamuilan.app.ui.theme.Slate900
 import com.kamuilan.app.ui.theme.SozlesmeliTeal
 
+import com.kamuilan.app.ui.theme.AmbientGlassBackground
+
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
@@ -68,11 +70,12 @@ fun HomeScreen(
     val uiState by viewModel.uiState.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp)
-    ) {
+    AmbientGlassBackground(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+        ) {
         Spacer(modifier = Modifier.height(10.dp))
 
         // Üst Marka Başlığı (Web Header ile Birebir)
@@ -309,3 +312,5 @@ fun HomeScreen(
         }
     }
 }
+}
+
