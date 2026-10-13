@@ -21,6 +21,9 @@ export const MOCK_SOURCES: Source[] = [
   { id: 4, name: "İŞKUR Kamu İlanları", slug: "iskur", base_url: "https://www.iskur.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
   { id: 5, name: "T.C. Resmî Gazete", slug: "resmi-gazete", base_url: "https://www.resmigazete.gov.tr", scraper_type: "pdf", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
   { id: 6, name: "Yerel Yönetimler Portalı", slug: "yerel-yonetimler", base_url: "https://yerelyonetimler.csb.gov.tr", scraper_type: "playwright", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 7, name: "Millî Savunma Bakanlığı (MSB PERTEM)", slug: "msb-pertem", base_url: "https://personeltemin.msb.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 9, name: "Adalet Bakanlığı (PGM)", slug: "adalet-bakanligi", base_url: "https://pgm.adalet.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 10, name: "T.C. İçişleri Bakanlığı", slug: "icisleri-bakanligi", base_url: "https://www.icisleri.gov.tr/personel", scraper_type: "http", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
 ];
 
 export const MOCK_JOBS: JobPost[] = [
