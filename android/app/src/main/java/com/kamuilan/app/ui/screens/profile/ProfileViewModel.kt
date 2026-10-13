@@ -1,6 +1,7 @@
 package com.kamuilan.app.ui.screens.profile
 
 import android.app.Application
+import android.util.Patterns
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kamuilan.app.data.local.PreferencesManager
@@ -62,26 +63,49 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             return
         }
 
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            _uiState.value = _uiState.value.copy(errorMessage = "Lütfen geçerli bir e-posta adresi giriniz.")
+            return
+        }
+
+        if (password.length < 6) {
+            _uiState.value = _uiState.value.copy(errorMessage = "Şifreniz en az 6 karakterden oluşmalıdır.")
+            return
+        }
+
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true, errorMessage = null, successMessage = null)
-            val result = if (_uiState.value.isSignUpMode) {
-                authRepository.signUp(email, password)
+            if (_uiState.value.isSignUpMode) {
+                val result = authRepository.signUp(email, password)
+                result.onSuccess { msg ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        emailInput = email,
+                        passwordInput = "",
+                        isSignUpMode = false,
+                        successMessage = "$msg Şimdi şifrenizle giriş yapabilirsiniz."
+                    )
+                }.onFailure { error ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = error.localizedMessage ?: "Kayıt işlemi başarısız oldu."
+                    )
+                }
             } else {
-                authRepository.signIn(email, password)
-            }
-
-            result.onSuccess {
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    emailInput = "",
-                    passwordInput = "",
-                    successMessage = if (_uiState.value.isSignUpMode) "Kayıt başarılı! Giriş yapıldı." else "Giriş başarılı!"
-                )
-            }.onFailure { error ->
-                _uiState.value = _uiState.value.copy(
-                    isLoading = false,
-                    errorMessage = error.localizedMessage ?: "İşlem sırasında bir hata oluştu"
-                )
+                val result = authRepository.signIn(email, password)
+                result.onSuccess {
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        emailInput = "",
+                        passwordInput = "",
+                        successMessage = "Giriş başarılı!"
+                    )
+                }.onFailure { error ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        errorMessage = error.localizedMessage ?: "Giriş yapılamadı."
+                    )
+                }
             }
         }
     }

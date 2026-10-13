@@ -29,11 +29,9 @@ import com.kamuilan.app.ui.screens.home.HomeScreen
 import com.kamuilan.app.ui.screens.home.HomeViewModel
 import com.kamuilan.app.ui.screens.profile.ProfileScreen
 import com.kamuilan.app.ui.screens.profile.ProfileViewModel
-import com.kamuilan.app.ui.theme.BlueLight
-import com.kamuilan.app.ui.theme.BluePrimary
-import com.kamuilan.app.ui.theme.SlateBorder
-import com.kamuilan.app.ui.theme.SlateDark
-import com.kamuilan.app.ui.theme.SlateMuted
+import com.kamuilan.app.ui.theme.BrandPrimary
+import com.kamuilan.app.ui.theme.BrandSubtle
+import com.kamuilan.app.ui.theme.Slate500
 
 @Composable
 fun AppNavigation(
@@ -83,11 +81,11 @@ fun AppNavigation(
                                 }
                             },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = BluePrimary,
-                                selectedTextColor = BluePrimary,
-                                indicatorColor = BlueLight,
-                                unselectedIconColor = SlateMuted,
-                                unselectedTextColor = SlateMuted
+                                selectedIconColor = BrandPrimary,
+                                selectedTextColor = BrandPrimary,
+                                indicatorColor = BrandSubtle,
+                                unselectedIconColor = Slate500,
+                                unselectedTextColor = Slate500
                             )
                         )
                     }

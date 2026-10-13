@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,8 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kamuilan.app.ui.components.JobCard
 import com.kamuilan.app.ui.screens.home.HomeViewModel
-import com.kamuilan.app.ui.theme.SlateDark
-import com.kamuilan.app.ui.theme.SlateMuted
+import com.kamuilan.app.ui.theme.BrandPrimary
+import com.kamuilan.app.ui.theme.Slate400
+import com.kamuilan.app.ui.theme.Slate500
+import com.kamuilan.app.ui.theme.Slate900
 
 @Composable
 fun FavoritesScreen(
@@ -43,21 +48,22 @@ fun FavoritesScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(horizontal = 16.dp, vertical = 10.dp)
     ) {
         Text(
             text = "Favorilerim (${favoriteJobs.size})",
-            fontSize = 20.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = SlateDark
+            color = Slate900
         )
+        Spacer(modifier = Modifier.height(2.dp))
         Text(
-            text = "Başvurmayı planladığınız veya takip ettiğiniz ilanlar",
+            text = "Başvurmayı planladığınız veya takip ettiğiniz kayıtlı kamu ilanları",
             fontSize = 13.sp,
-            color = SlateMuted
+            color = Slate500
         )
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         if (favoriteJobs.isEmpty()) {
             Box(
@@ -71,24 +77,28 @@ fun FavoritesScreen(
                     Icon(
                         imageVector = Icons.Outlined.FavoriteBorder,
                         contentDescription = null,
-                        tint = SlateMuted,
-                        modifier = Modifier.height(56.dp)
+                        tint = Slate400,
+                        modifier = Modifier.size(56.dp)
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
                     Text(
                         text = "Henüz favori ilan eklemediniz",
                         fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = SlateDark
+                        fontWeight = FontWeight.Bold,
+                        color = Slate900
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
-                        text = "İlan kartlarındaki kalp simgesine dokunarak kaydedebilirsiniz.",
+                        text = "İlan kartlarındaki kalp simgesine dokunarak ilanları listenize ekleyebilirsiniz.",
                         fontSize = 13.sp,
-                        color = SlateMuted
+                        color = Slate500
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = onExploreClick) {
+                    Spacer(modifier = Modifier.height(18.dp))
+                    Button(
+                        onClick = onExploreClick,
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
+                    ) {
                         Text("İlanları Keşfet")
                     }
                 }
@@ -96,8 +106,8 @@ fun FavoritesScreen(
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(bottom = 80.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                contentPadding = PaddingValues(bottom = 90.dp)
             ) {
                 items(favoriteJobs, key = { it.id }) { job ->
                     JobCard(

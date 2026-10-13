@@ -2,21 +2,72 @@ package com.kamuilan.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val NavyPrimary = Color(0xFF1E3A8A)
-val BluePrimary = Color(0xFF2563EB)
-val BlueSecondary = Color(0xFF3B82F6)
-val BlueLight = Color(0xFFEFF6FF)
+// Brand Gradients & Primaries
+val BrandPrimary = Color(0xFF2563EB)
+val BrandDark = Color(0xFF1D4ED8)
+val BrandLight = Color(0xFF3B82F6)
+val BrandSubtle = Color(0xFFEFF6FF)
 
-val UrgentRed = Color(0xFFDC2626)
-val UrgentRedBg = Color(0xFFFEF2F2)
-val WarningAmber = Color(0xFFD97706)
-val WarningAmberBg = Color(0xFFFFFBEB)
-val SuccessGreen = Color(0xFF059669)
-val SuccessGreenBg = Color(0xFFECFDF5)
+// Kadro Türü Rozet Renkleri (Web ile Birebir)
+val MemurSky = Color(0xFF0284C7)
+val MemurSkyBg = Color(0xFFF0F9FF)
+val MemurSkyBorder = Color(0xFFBAE6FD)
 
-val SlateDark = Color(0xFF0F172A)
-val SlateCard = Color(0xFF1E293B)
-val SlateMuted = Color(0xFF64748B)
-val SlateBorder = Color(0xFFE2E8F0)
+val SozlesmeliTeal = Color(0xFF0D9488)
+val SozlesmeliTealBg = Color(0xFFF0FDFA)
+val SozlesmeliTealBorder = Color(0xFF99F6E4)
+
+val IsciAmber = Color(0xFFD97706)
+val IsciAmberBg = Color(0xFFFFFBEB)
+val IsciAmberBorder = Color(0xFFFDE68A)
+
+val AkademikPurple = Color(0xFF9333EA)
+val AkademikPurpleBg = Color(0xFFFAF5FF)
+val AkademikPurpleBorder = Color(0xFFE9D5FF)
+
+val GenelSlate = Color(0xFF475569)
+val GenelSlateBg = Color(0xFFF8FAFC)
+val GenelSlateBorder = Color(0xFFE2E8F0)
+
+// Durum Rozetleri
+val UrgentRose = Color(0xFFE11D48)
+val UrgentRoseBg = Color(0xFFFFF1F2)
+val UrgentRoseBorder = Color(0xFFFECDD3)
+
+val ActiveEmerald = Color(0xFF059669)
+val ActiveEmeraldBg = Color(0xFFECFDF5)
+val ActiveEmeraldBorder = Color(0xFFA7F3D0)
+
+val CancelledRed = Color(0xFFDC2626)
+
+// Meta Rozetleri (KPSS, Eğitim, Kaynak, Yaş)
+val KpssBlue = Color(0xFF1D4ED8)
+val KpssBlueBg = Color(0xFFEFF6FF)
+val KpssBlueBorder = Color(0xFFBFDBFE)
+
+val EducationPurple = Color(0xFF7E22CE)
+val EducationPurpleBg = Color(0xFFF3E8FF)
+val EducationPurpleBorder = Color(0xFFE9D5FF)
+
+val AgeAmber = Color(0xFFB45309)
+val AgeAmberBg = Color(0xFFFFFBEB)
+val AgeAmberBorder = Color(0xFFFEF3C7)
+
+val SourceIndigo = Color(0xFF4338CA)
+val SourceIndigoBg = Color(0xFFEEF2FF)
+val SourceIndigoBorder = Color(0xFFC7D2FE)
+
+// Nötr Renkler (Slate)
+val Slate900 = Color(0xFF0F172A)
+val Slate800 = Color(0xFF1E293B)
+val Slate700 = Color(0xFF334155)
+val Slate600 = Color(0xFF475569)
+val Slate500 = Color(0xFF64748B)
+val Slate400 = Color(0xFF94A3B8)
+val Slate300 = Color(0xFFCBD5E1)
+val Slate200 = Color(0xFFE2E8F0)
+val Slate100 = Color(0xFFF1F5F9)
+val Slate50 = Color(0xFFF8FAFC)
+
 val BackgroundLight = Color(0xFFF8FAFC)
 val SurfaceLight = Color(0xFFFFFFFF)

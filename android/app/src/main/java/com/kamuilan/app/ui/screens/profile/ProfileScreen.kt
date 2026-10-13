@@ -1,6 +1,8 @@
 package com.kamuilan.app.ui.screens.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -18,6 +21,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.CloudDone
+import androidx.compose.material.icons.filled.ErrorOutline
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,10 +35,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -43,14 +50,19 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kamuilan.app.ui.theme.BlueLight
-import com.kamuilan.app.ui.theme.BluePrimary
-import com.kamuilan.app.ui.theme.SlateBorder
-import com.kamuilan.app.ui.theme.SlateDark
-import com.kamuilan.app.ui.theme.SlateMuted
-import com.kamuilan.app.ui.theme.SuccessGreen
-import com.kamuilan.app.ui.theme.SuccessGreenBg
-import com.kamuilan.app.ui.theme.UrgentRed
+import com.kamuilan.app.ui.theme.ActiveEmerald
+import com.kamuilan.app.ui.theme.ActiveEmeraldBg
+import com.kamuilan.app.ui.theme.ActiveEmeraldBorder
+import com.kamuilan.app.ui.theme.BrandPrimary
+import com.kamuilan.app.ui.theme.Slate100
+import com.kamuilan.app.ui.theme.Slate200
+import com.kamuilan.app.ui.theme.Slate400
+import com.kamuilan.app.ui.theme.Slate500
+import com.kamuilan.app.ui.theme.Slate700
+import com.kamuilan.app.ui.theme.Slate900
+import com.kamuilan.app.ui.theme.UrgentRose
+import com.kamuilan.app.ui.theme.UrgentRoseBg
+import com.kamuilan.app.ui.theme.UrgentRoseBorder
 
 @Composable
 fun ProfileScreen(
@@ -68,72 +80,100 @@ fun ProfileScreen(
     ) {
         Text(
             text = "Kullanıcı Profili",
-            fontSize = 20.sp,
+            fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = SlateDark
+            color = Slate900
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            text = "Hesap ve bildirim tercihlerinizi yönetin",
+            fontSize = 13.sp,
+            color = Slate500
         )
 
-        Spacer(modifier = Modifier.height(14.dp))
+        Spacer(modifier = Modifier.height(18.dp))
 
         if (userEmail != null) {
-            // Giriş Yapmış Kullanıcı Görünümü
+            // Giriş Yapmış Kullanıcı Kartı
+            val cardShape = RoundedCornerShape(16.dp)
             Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(width = 1.dp, color = Slate200, shape = cardShape),
+                shape = cardShape,
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = CardDefaults.outlinedCardBorder().copy(width = 1.dp, brush = androidx.compose.ui.graphics.SolidColor(SlateBorder))
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(18.dp)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = Icons.Default.AccountCircle,
-                            contentDescription = null,
-                            tint = BluePrimary,
-                            modifier = Modifier.size(44.dp)
-                        )
-                        Spacer(modifier = Modifier.padding(start = 12.dp))
+                        Box(
+                            modifier = Modifier
+                                .size(48.dp)
+                                .background(Slate100, RoundedCornerShape(14.dp)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = null,
+                                tint = BrandPrimary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(14.dp))
+
                         Column {
                             Text(
-                                text = "Hoş Geldiniz",
-                                fontSize = 13.sp,
-                                color = SlateMuted
+                                text = "Aktif Oturum",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Slate500
                             )
                             Text(
                                 text = userEmail!!,
-                                fontSize = 16.sp,
+                                fontSize = 15.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = SlateDark
+                                color = Slate900
                             )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(14.dp))
 
+                    // Bulut Senkronizasyon Rozeti
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(SuccessGreenBg, RoundedCornerShape(8.dp))
-                            .padding(10.dp),
+                            .background(ActiveEmeraldBg, RoundedCornerShape(10.dp))
+                            .border(width = 1.dp, color = ActiveEmeraldBorder, shape = RoundedCornerShape(10.dp))
+                            .padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            imageVector = Icons.Default.CheckCircle,
+                            imageVector = Icons.Default.CloudDone,
                             contentDescription = null,
-                            tint = SuccessGreen,
-                            modifier = Modifier.size(18.dp)
+                            tint = ActiveEmerald,
+                            modifier = Modifier.size(20.dp)
                         )
-                        Spacer(modifier = Modifier.padding(start = 6.dp))
-                        Text(
-                            text = "Bulut Senkronizasyonu Aktif",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = SuccessGreen
-                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Column {
+                            Text(
+                                text = "Bulut Senkronizasyonu Aktif",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = ActiveEmerald
+                            )
+                            Text(
+                                text = "Favori ilanlarınız hesabınıza bağlı olarak güvenle saklanıyor.",
+                                fontSize = 11.sp,
+                                color = ActiveEmerald
+                            )
+                        }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
 
-                    // Bildirim Ayarları
+                    // Bildirim Ayarı
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
@@ -143,21 +183,21 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Default.Notifications,
                                 contentDescription = null,
-                                tint = SlateDark,
-                                modifier = Modifier.size(20.dp)
+                                tint = Slate700,
+                                modifier = Modifier.size(22.dp)
                             )
-                            Spacer(modifier = Modifier.padding(start = 8.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
                             Column {
                                 Text(
                                     text = "Yeni İlan Bildirimleri",
                                     fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium,
-                                    color = SlateDark
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Slate900
                                 )
                                 Text(
-                                    text = "Yeni alım duyuruları düştüğünde uyar",
+                                    text = "Yeni ilanlar yayınlandığında anlık bildirim al",
                                     fontSize = 12.sp,
-                                    color = SlateMuted
+                                    color = Slate500
                                 )
                             }
                         }
@@ -167,116 +207,214 @@ fun ProfileScreen(
                             onCheckedChange = { viewModel.toggleNotifications(it) },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
-                                checkedTrackColor = BluePrimary
+                                checkedTrackColor = BrandPrimary
                             )
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
                     OutlinedButton(
                         onClick = { viewModel.signOut() },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonDefaults.outlinedButtonColors(contentColor = UrgentRed),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = UrgentRose)
                     ) {
-                        Text("Çıkış Yap")
+                        Text("Oturumu Kapat", fontWeight = FontWeight.SemiBold)
                     }
                 }
             }
         } else {
-            // Misafir Kullanıcı / Giriş & Kayıt Kartı
+            // Misafir / Giriş & Kayıt Ol Kartı
+            val cardShape = RoundedCornerShape(16.dp)
             Card(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(width = 1.dp, color = Slate200, shape = cardShape),
+                shape = cardShape,
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                border = CardDefaults.outlinedCardBorder().copy(width = 1.dp, brush = androidx.compose.ui.graphics.SolidColor(SlateBorder))
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Text(
-                        text = if (uiState.isSignUpMode) "Yeni Hesap Oluştur" else "Giriş Yap",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = SlateDark
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = "Üye olmak isteğe bağlıdır. Giriş yaparak favorilerinizi farklı cihazlarda senkronize edebilir ve bildirim alabilirsiniz.",
-                        fontSize = 12.sp,
-                        color = SlateMuted,
-                        lineHeight = 16.sp
-                    )
+                Column(modifier = Modifier.padding(18.dp)) {
+                    // Sekme Seçimi: Giriş Yap / Kayıt Ol
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(Slate100, RoundedCornerShape(12.dp))
+                            .padding(4.dp)
+                    ) {
+                        val isSignUp = uiState.isSignUpMode
+
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { if (isSignUp) viewModel.toggleMode() }
+                                .background(
+                                    color = if (!isSignUp) MaterialTheme.colorScheme.surface else Color.Transparent,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                                .padding(vertical = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Giriş Yap",
+                                fontSize = 13.sp,
+                                fontWeight = if (!isSignUp) FontWeight.Bold else FontWeight.Medium,
+                                color = if (!isSignUp) Slate900 else Slate500
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .weight(1f)
+                                .clickable { if (!isSignUp) viewModel.toggleMode() }
+                                .background(
+                                    color = if (isSignUp) MaterialTheme.colorScheme.surface else Color.Transparent,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                                .padding(vertical = 8.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = "Kayıt Ol",
+                                fontSize = 13.sp,
+                                fontWeight = if (isSignUp) FontWeight.Bold else FontWeight.Medium,
+                                color = if (isSignUp) Slate900 else Slate500
+                            )
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(14.dp))
 
+                    Text(
+                        text = if (uiState.isSignUpMode) "Yeni Hesap Açın" else "Hesabınıza Giriş Yapın",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Slate900
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = "Üyelik tamamen isteğe bağlıdır. Giriş yapmadan tüm kamu ilanlarını inceleyebilirsiniz.",
+                        fontSize = 12.sp,
+                        color = Slate500,
+                        lineHeight = 17.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // E-posta Girişi
                     OutlinedTextField(
                         value = uiState.emailInput,
                         onValueChange = { viewModel.onEmailChange(it) },
-                        label = { Text("E-posta Adresi") },
+                        label = { Text("E-posta Adresi", fontSize = 13.sp) },
+                        leadingIcon = {
+                            Icon(Icons.Default.Mail, contentDescription = null, tint = Slate400, modifier = Modifier.size(18.dp))
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = BrandPrimary,
+                            unfocusedBorderColor = Slate200
+                        )
                     )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
+                    // Şifre Girişi
                     OutlinedTextField(
                         value = uiState.passwordInput,
                         onValueChange = { viewModel.onPasswordChange(it) },
-                        label = { Text("Şifre") },
+                        label = { Text("Şifre (En az 6 karakter)", fontSize = 13.sp) },
+                        leadingIcon = {
+                            Icon(Icons.Default.Lock, contentDescription = null, tint = Slate400, modifier = Modifier.size(18.dp))
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = BrandPrimary,
+                            unfocusedBorderColor = Slate200
+                        )
                     )
 
+                    // Hata Mesajı Kutusu
                     if (uiState.errorMessage != null) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = uiState.errorMessage!!,
-                            color = UrgentRed,
-                            fontSize = 12.sp
-                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(UrgentRoseBg, RoundedCornerShape(8.dp))
+                                .border(width = 1.dp, color = UrgentRoseBorder, shape = RoundedCornerShape(8.dp))
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.ErrorOutline,
+                                contentDescription = null,
+                                tint = UrgentRose,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = uiState.errorMessage!!,
+                                color = UrgentRose,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
 
+                    // Başarı Mesajı Kutusu
                     if (uiState.successMessage != null) {
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = uiState.successMessage!!,
-                            color = SuccessGreen,
-                            fontSize = 12.sp
-                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(ActiveEmeraldBg, RoundedCornerShape(8.dp))
+                                .border(width = 1.dp, color = ActiveEmeraldBorder, shape = RoundedCornerShape(8.dp))
+                                .padding(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = ActiveEmerald,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = uiState.successMessage!!,
+                                color = ActiveEmerald,
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(18.dp))
 
                     Button(
                         onClick = { viewModel.submit() },
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
                         enabled = !uiState.isLoading,
-                        shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = BluePrimary)
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
                     ) {
                         if (uiState.isLoading) {
                             CircularProgressIndicator(color = Color.White, modifier = Modifier.size(20.dp))
                         } else {
-                            Text(if (uiState.isSignUpMode) "Hesap Oluştur" else "Giriş Yap")
+                            Text(
+                                text = if (uiState.isSignUpMode) "Kayıt Ol" else "Giriş Yap",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    TextButton(
-                        onClick = { viewModel.toggleMode() },
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = if (uiState.isSignUpMode) "Zaten hesabınız var mı? Giriş Yapın" else "Hesabınız yok mu? Kayıt Olun",
-                            fontSize = 13.sp,
-                            color = BluePrimary
-                        )
                     }
                 }
             }

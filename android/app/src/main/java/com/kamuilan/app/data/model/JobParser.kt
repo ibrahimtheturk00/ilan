@@ -1,7 +1,6 @@
 package com.kamuilan.app.data.model
 
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 object JobParser {
@@ -33,6 +32,29 @@ object JobParser {
             text.contains("ilköğretim") || text.contains("ilkokul") -> "İlköğretim"
             else -> "Belirtilmemiş"
         }
+    }
+
+    fun detectMaxAge(job: JobPost): Int? {
+        val text = "${job.title} ${job.description ?: ""}".lowercase()
+        val regex = Regex("""(\d{2})\s*(?:yaş|yaşını|yaşından)""")
+        val match = regex.find(text)
+        return match?.groupValues?.get(1)?.toIntOrNull()?.takeIf { it in 18..65 }
+    }
+
+    fun isToday(publishedStr: String?): Boolean {
+        if (publishedStr.isNullOrBlank()) return false
+        return try {
+            val date = LocalDate.parse(publishedStr.substring(0, 10))
+            date == LocalDate.now()
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    fun isCancelled(title: String?): Boolean {
+        if (title.isNullOrBlank()) return false
+        val lower = title.lowercase()
+        return lower.contains("iptal") || lower.contains("düzeltme")
     }
 
     fun calculateDaysRemaining(deadlineStr: String?): Long? {
