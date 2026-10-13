@@ -22,7 +22,7 @@ TURKISH_MONTHS = {
 }
 
 def clean_text(text: Optional[str]) -> str:
-    """Metin içindeki fazla boşlukları, özel karakter bozulmalarını temizler."""
+    """Metin içindeki fazla boşlukları ve karakter bozulmalarını temizler."""
     if not text:
         return ""
     text = re.sub(r'\s+', ' ', text)
@@ -37,50 +37,69 @@ def normalize_city(text: str) -> Optional[str]:
         pattern = r'\b' + re.escape(city.lower()) + r'\b'
         if re.search(pattern, lower_text):
             return city
+    # Bakanlıklar veya Genel Müdürlükler genellikle Ankara merkezlidir
+    if any(k in lower_text for k in ["bakanlığı", "başkanlığı", "müsteşarlığı", "genel müdürlüğü", "yargıtay", "danıştay"]):
+        return "Ankara"
     return None
 
 def parse_turkish_date(date_str: Optional[str]) -> Optional[str]:
     """
     Farklı formatlardaki tarih stringlerini YYYY-MM-DD ISO formatına dönüştürür.
-    Örnekler:
-    - '15.10.2024' -> '2024-10-15'
-    - '15 Ekim 2024' -> '2024-10-15'
-    - '2024-10-15T09:00:00' -> '2024-10-15'
+    Yıl belirtilmemişse geçerli yılı otomatik olarak atar.
     """
     if not date_str:
         return None
     
     date_str = date_str.strip().lower()
+    curr_year = datetime.now().year
     
     # ISO format kontrolü
     iso_match = re.search(r'(\d{4})-(\d{2})-(\d{2})', date_str)
     if iso_match:
         return f"{iso_match.group(1)}-{iso_match.group(2)}-{iso_match.group(3)}"
         
-    # Gün.Ay.Yıl formatı (15.10.2024 veya 15/10/2024)
-    dot_match = re.search(r'(\d{1,2})[\.\/](\d{1,2})[\.\/](\d{4})', date_str)
+    # Gün.Ay.Yıl formatı (15.10.2026 veya 15/10/2026)
+    dot_match = re.search(r'(\d{1,2})[\.\/](\d{1,2})[\.\/](\d{2,4})', date_str)
     if dot_match:
         day = dot_match.group(1).zfill(2)
         month = dot_match.group(2).zfill(2)
-        year = dot_match.group(3)
+        raw_year = dot_match.group(3)
+        year = raw_year if len(raw_year) == 4 else f"20{raw_year}"
         return f"{year}-{month}-{day}"
 
-    # Türkçe Ay adı formatı (15 Ekim 2024)
+    # Türkçe Ay adı formatı (15 Ekim veya 15 Ekim 2026)
     for m_name, m_num in TURKISH_MONTHS.items():
         if m_name in date_str:
-            name_match = re.search(rf'(\d{{1,2}})\s+{m_name}\s+(\d{{4}})', date_str)
+            name_match = re.search(rf'(\d{{1,2}})\s+{m_name}(?:\s+(\d{{4}}))?', date_str)
             if name_match:
                 day = name_match.group(1).zfill(2)
-                year = name_match.group(2)
+                year = name_match.group(2) or str(curr_year)
                 return f"{year}-{m_num}-{day}"
 
     return None
+
+def parse_turkish_date_range(range_str: Optional[str]) -> Tuple[Optional[str], Optional[str]]:
+    """
+    '12 Ekim - 26 Ekim' veya '02.10.2026 - 15.10.2026' gibi tarih aralıklarını ayrıştırır.
+    Döndürür: (published_at, deadline_at)
+    """
+    if not range_str:
+        return None, None
+        
+    parts = range_str.split('-')
+    if len(parts) >= 2:
+        start = parse_turkish_date(parts[0].strip())
+        end = parse_turkish_date(parts[1].strip())
+        return start, end
+    else:
+        single = parse_turkish_date(range_str)
+        return single, single
 
 def extract_position_count(text: str) -> Optional[int]:
     """Metin içinden 'X adet', 'X kişi', 'X personel' gibi kadro sayılarını bulur."""
     if not text:
         return None
-    match = re.search(r'(\d+)\s*(adet|kişi|personel|memur|işçi|öğretim\s+üyesi)', text, re.IGNORECASE)
+    match = re.search(r'(\d+)\s*(adet|kişi|personel|memur|işçi|öğretim\s+üyesi|uzman|subay|mühendis|avukat|müdür)', text, re.IGNORECASE)
     if match:
         try:
             return int(match.group(1))

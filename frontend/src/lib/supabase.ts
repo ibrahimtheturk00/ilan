@@ -31,8 +31,8 @@ export const MOCK_JOBS: JobPost[] = [
     post_type: "sozlesmeli",
     category: "bilisim",
     position_count: 25,
-    published_at: "2024-10-10",
-    deadline_at: "2024-11-15",
+    published_at: "2026-10-10",
+    deadline_at: "2026-11-15",
     original_url: "https://kariyerkapisi.cbiko.gov.tr/announcement/1",
     url_hash: "mock1",
     content_hash: "mockcontent1",
@@ -53,8 +53,8 @@ export const MOCK_JOBS: JobPost[] = [
     post_type: "sozlesmeli",
     category: "saglik",
     position_count: 15000,
-    published_at: "2024-10-12",
-    deadline_at: "2024-10-28",
+    published_at: "2026-10-12",
+    deadline_at: "2026-11-28",
     original_url: "https://www.ilan.gov.tr/ilan/kategori/8/saglik-personeli",
     url_hash: "mock2",
     content_hash: "mockcontent2",
@@ -75,8 +75,8 @@ export const MOCK_JOBS: JobPost[] = [
     post_type: "akademik",
     category: "egitim",
     position_count: 18,
-    published_at: "2024-10-11",
-    deadline_at: "2024-10-26",
+    published_at: "2026-10-11",
+    deadline_at: "2026-11-26",
     original_url: "https://www.resmigazete.gov.tr/ilanlar/itu-akademik.pdf",
     url_hash: "mock3",
     content_hash: "mockcontent3",
@@ -97,8 +97,8 @@ export const MOCK_JOBS: JobPost[] = [
     post_type: "isci",
     category: "diger",
     position_count: 50,
-    published_at: "2024-10-09",
-    deadline_at: "2024-10-20",
+    published_at: "2026-10-09",
+    deadline_at: "2026-11-20",
     original_url: "https://www.iskur.gov.tr/baglantilar/kurum-disi-kamu-isci-alimi/abb-sofor.pdf",
     url_hash: "mock4",
     content_hash: "mockcontent4",
@@ -119,8 +119,8 @@ export const MOCK_JOBS: JobPost[] = [
     post_type: "memur",
     category: "maliye",
     position_count: 100,
-    published_at: "2024-10-08",
-    deadline_at: "2024-11-05",
+    published_at: "2026-10-08",
+    deadline_at: "2026-11-15",
     original_url: "https://kamuilan.sbb.gov.tr/ilan-105",
     url_hash: "mock5",
     content_hash: "mockcontent5",
@@ -141,8 +141,8 @@ export const MOCK_JOBS: JobPost[] = [
     post_type: "memur",
     category: "hukuk",
     position_count: 12,
-    published_at: "2024-10-05",
-    deadline_at: "2024-10-25",
+    published_at: "2026-10-05",
+    deadline_at: "2026-11-25",
     original_url: "https://yerelyonetimler.csb.gov.tr/duyurular/izmir-avukat",
     url_hash: "mock6",
     content_hash: "mockcontent6",
@@ -179,7 +179,6 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
       }
 
       if (filters.searchQuery) {
-        // İki yönlü basit anahtar kelime araması (ilike)
         const term = `%${filters.searchQuery.trim()}%`;
         query = query.or(`title.ilike.${term},institution.ilike.${term},description.ilike.${term}`);
       }
@@ -189,7 +188,8 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
       const to = from + pageSize - 1;
 
       const { data, count, error } = await query
-        .order("published_at", { ascending: false, nullsFirst: false })
+        .order("deadline_at", { ascending: false, nullsFirst: false })
+        .order("id", { ascending: false })
         .range(from, to);
 
       if (!error && data) {

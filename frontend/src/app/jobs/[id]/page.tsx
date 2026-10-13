@@ -1,14 +1,10 @@
 import { JobDetailClient } from "@/components/JobDetailClient";
 
 export async function generateStaticParams() {
-  return [
-    { id: "1" },
-    { id: "2" },
-    { id: "3" },
-    { id: "4" },
-    { id: "5" },
-    { id: "6" },
-  ];
+  // İlk 200 ID için statik yol oluştur
+  return Array.from({ length: 200 }, (_, i) => ({
+    id: String(i + 1),
+  }));
 }
 
 export default function JobDetailPage({ params }: { params: { id: string } }) {

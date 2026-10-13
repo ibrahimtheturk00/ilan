@@ -8,15 +8,17 @@ POST_TYPE_PATTERNS = {
         r'araştırma\s+görevlisi', r'öğretim\s+görevlisi', r'akademik', r'rektörlük'
     ],
     'sozlesmeli': [
-        r'sözleşmeli', r'4/b', r'4-b', r'proje\s+personeli', r'geçici\s+personel'
+        r'sözleşmeli', r'4/b', r'4-b', r'proje\s+personeli', r'geçici\s+personel',
+        r'sözleşmeli\s+bilişim'
     ],
     'isci': [
         r'sürekli\s+işçi', r'geçici\s+işçi', r'işçi', r'temizlik\s+görevlisi',
         r'güvenlik\s+görevlisi', r'şoför', r'aşçı', r'teknisyen', r'operatör'
     ],
     'memur': [
-        r'memur', r'uzman\s+yardımcısı', r'müfettiş\s+yardımcısı', r'denetçi',
-        r'zabıta', r'itfaiye', r'v.h.k.i', r'veri\s+hazırlama', r'kaymakam', r'idari\s+personel'
+        r'memur', r'uzman', r'denetçi', r'müfettiş', r'subay', r'astsubay', r'avukat',
+        r'zabıta', r'itfaiye', r'v\.h\.k\.i', r'veri\s+hazırlama', r'kaymakam',
+        r'idari\s+personel', r'icra\s+müdür'
     ]
 }
 
@@ -24,11 +26,11 @@ POST_TYPE_PATTERNS = {
 CATEGORY_PATTERNS = {
     'bilisim': [
         r'yazılım', r'bilişim', r'programcı', r'sistem\s+yöneticisi', r'veritabanı',
-        r'ağ\s+uzmanı', r'cyber', r'siber', r'bilgisayar', r'çözümleyici'
+        r'ağ\s+uzmanı', r'cyber', r'siber', r'bilgisayar', r'çözümleyici', r'veri'
     ],
     'saglik': [
         r'doktor', r'tabip', r'hemşire', r'ebe', r'sağlık\s+teknikeri', r'eczacı',
-        r'biyolog', r'psikolog', r'fizyoterapist', r'hastane', r'sağlık'
+        r'biyolog', r'psikolog', r'fizyoterapist', r'hastane', r'sağlık', r'veteriner'
     ],
     'egitim': [
         r'öğretmen', r'eğitmen', r'öğretim', r'akademisyen', r'anaokulu', r'pedagog'
@@ -37,11 +39,11 @@ CATEGORY_PATTERNS = {
         r'mühendis', r'mimar', r'şehir\s+plancısı', r'tekniker', r'harita'
     ],
     'hukuk': [
-        r'avukat', r'hukuk', r'hakim', r'savcı', r'icra\s+müdürü', r'adli'
+        r'avukat', r'hukuk', r'hakim', r'savcı', r'icra\s+müdürü', r'icra', r'adli'
     ],
     'maliye': [
         r'muhasebe', r'maliye', r'gelir\s+uzmanı', r'vergi', r'denetmen', r'sayman',
-        r'iktisat', r'ekonomist'
+        r'iktisat', r'ekonomist', r'fon', r'bankacılık', r'finans'
     ]
 }
 
@@ -52,7 +54,7 @@ def detect_post_type(title: str, text: str = "") -> str:
         for pat in patterns:
             if re.search(r'\b' + pat, combined):
                 return post_type
-    return 'diger'
+    return 'memur' if 'personel' in combined else 'diger'
 
 def detect_category(title: str, text: str = "") -> str:
     """İlan başlığı ve içeriğinden meslek kategorisini tespit eder."""
