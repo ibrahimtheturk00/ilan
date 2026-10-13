@@ -19,57 +19,58 @@ class IskurScraper(BaseScraper):
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
         }
 
-        # İŞKUR Kurum Dışı Kamu İşçi Alımı sayfası
-        url = "https://www.iskur.gov.tr/baglantilar/kurum-disi-kamu-isci-alimi/"
+        # İŞKUR hem Kamu Memur Alımı hem de Kurumdışı Kamu İşçi Alımı sayfalarını tarar
+        pages = [
+            ("https://www.iskur.gov.tr/ilanlar/kamu-memur-alim-ilanlari/", "memur"),
+            ("https://www.iskur.gov.tr/ilanlar/kurumdisi-kamu-isci-alim-ilanlari/", "isci")
+        ]
 
         try:
-            with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True) as client:
-                resp = client.get(url)
-                if resp.status_code == 200:
+            with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True, verify=False) as client:
+                for base_page, default_type in pages:
+                    resp = client.get(base_page)
+                    if resp.status_code != 200:
+                        continue
+
                     soup = BeautifulSoup(resp.text, "html.parser")
-                    # İlan tablosu satırları
-                    rows = soup.select("table tbody tr, .content-list tr, .accordion-item")
-                    
-                    for row in rows[:30]:
-                        links = row.select("a[href]")
-                        if not links:
-                            continue
-                            
-                        main_link = links[0]
-                        href = main_link.get("href", "")
-                        if not href.startswith("http"):
-                            href = f"https://www.iskur.gov.tr{href}"
+                    # data-count olan şehirleri tespit et
+                    active_cities = []
+                    for opt in soup.select("#city-dropdown option"):
+                        val = opt.get("value")
+                        data_id = opt.get("data-id")
+                        text = opt.get_text(strip=True)
+                        if "(" in text and val and data_id:
+                            active_cities.append((val, data_id))
 
-                        title = main_link.get_text(strip=True) or "İŞKUR Kamu İlanı"
-                        
-                        # Kurum veya il bilgisi genellikle satır içi sütunlardadır
-                        cols = row.select("td")
-                        institution = cols[0].get_text(strip=True) if len(cols) > 0 else "İŞKUR Kamu Kurumu"
-                        deadline = cols[-1].get_text(strip=True) if len(cols) > 1 else None
+                    # İlk 15 şehri tara (kota aşımını önlemek için)
+                    for city_val, city_id in active_cities[:15]:
+                        city_url = f"{base_page}?idId={city_id}&il={city_val}"
+                        try:
+                            c_resp = client.get(city_url, timeout=15.0)
+                            if c_resp.status_code == 200:
+                                c_soup = BeautifulSoup(c_resp.text, "html.parser")
+                                for row in c_soup.select(".clickable-row"):
+                                    file_url = row.get("data-file-url") or ""
+                                    if file_url and not file_url.startswith("http"):
+                                        file_url = f"https://www.iskur.gov.tr{file_url}"
 
-                        # PDF eki varsa metin çıkarımı yap
-                        pdf_desc = ""
-                        pos_count = None
-                        if href.endswith(".pdf"):
-                            try:
-                                pdf_resp = client.get(href, timeout=15.0)
-                                if pdf_resp.status_code == 200:
-                                    pdf_data = extract_pdf_content(pdf_resp.content)
-                                    pdf_desc = pdf_data.get("text", "")[:1000]
-                                    deadline = deadline or pdf_data.get("deadline")
-                                    pos_count = pdf_data.get("position_count")
-                            except Exception as pdf_err:
-                                self.logger.warning(f"PDF okunamadı ({href}): {pdf_err}")
+                                    row_text = row.get_text(separator=" | ", strip=True)
+                                    parts = [p.strip() for p in row_text.split("|") if p.strip()]
+                                    
+                                    deadline = parts[0] if len(parts) > 1 else None
+                                    title = parts[1] if len(parts) > 1 else (parts[0] if parts else "İŞKUR Kamu İlanı")
 
-                        posts.append({
-                            "title": title,
-                            "institution": institution,
-                            "post_type": "isci",
-                            "deadline_at": deadline,
-                            "position_count": pos_count,
-                            "original_url": href,
-                            "description": pdf_desc or row.get_text(separator=" ", strip=True)
-                        })
+                                    posts.append({
+                                        "title": title,
+                                        "institution": title.split("Alım")[0].split("Sınav")[0].strip() or "İŞKUR Kamu Kurumu",
+                                        "city": city_val.capitalize() if city_val else None,
+                                        "post_type": default_type,
+                                        "deadline_at": deadline,
+                                        "original_url": file_url or city_url,
+                                        "description": f"İŞKUR {default_type} Alım İlanı: {title}"
+                                    })
+                        except Exception as city_err:
+                            self.logger.warning(f"İŞKUR {city_val} sayfası hatası: {city_err}")
         except Exception as e:
             self.logger.error(f"İŞKUR scraping hatası: {e}")
 

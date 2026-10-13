@@ -1,7 +1,7 @@
 name: Scrape — Yerel Yönetimler
 on:
   schedule:
-    - cron: '0 */3 * * *' # 3 saatte bir
+    - cron: '*/5 * * * *' # Deneme amaçlı 5 dakikada bir
   workflow_dispatch:
 
 jobs:

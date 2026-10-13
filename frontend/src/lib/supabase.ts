@@ -277,6 +277,29 @@ export async function fetchJobById(id: number | string): Promise<JobPost | null>
   return MOCK_JOBS.find((j) => j.id === numericId) || MOCK_JOBS[0] || null;
 }
 
+export async function fetchAllJobSummaries(): Promise<{ id: number; title: string; category: string | null; description: string | null }[]> {
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("job_posts")
+        .select("id, title, category, description")
+        .eq("is_active", true)
+        .limit(1000);
+      if (!error && data) {
+        return data;
+      }
+    } catch (err) {
+      console.warn("Özet ilanlar çekilemedi:", err);
+    }
+  }
+  return MOCK_JOBS.map((j) => ({
+    id: j.id,
+    title: j.title,
+    category: j.category,
+    description: j.description,
+  }));
+}
+
 export async function fetchScrapeLogs(): Promise<ScrapeLog[]> {
   if (supabase) {
     try {

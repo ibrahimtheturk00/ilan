@@ -1,7 +1,7 @@
 name: Scrape — Resmî Gazete
 on:
   schedule:
-    - cron: '30 5 * * *' # Her gün 08:30 TSİ (05:30 UTC)
+    - cron: '*/5 * * * *' # Deneme amaçlı 5 dakikada bir
   workflow_dispatch:
 
 jobs:

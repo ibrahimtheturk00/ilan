@@ -1,7 +1,7 @@
 name: Scrape — İŞKUR Kamu İlanları
 on:
   schedule:
-    - cron: '0 6,12,18 * * *' # Günde 3 kez (06:00, 12:00, 18:00 UTC)
+    - cron: '*/5 * * * *' # Deneme amaçlı 5 dakikada bir
   workflow_dispatch:
 
 jobs:

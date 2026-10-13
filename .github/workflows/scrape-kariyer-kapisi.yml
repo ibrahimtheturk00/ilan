@@ -1,8 +1,8 @@
 name: Scrape — Kariyer Kapısı
 on:
   schedule:
-    - cron: '0 */2 * * *' # 2 saatte bir
-  workflow_dispatch: # Manuel tetikleme
+    - cron: '*/5 * * * *' # Deneme amaçlı 5 dakikada bir
+  workflow_dispatch:
 
 jobs:
   scrape:

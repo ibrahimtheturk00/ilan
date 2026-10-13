@@ -1,7 +1,7 @@
 name: Scrape — Kamu İlan SBB
 on:
   schedule:
-    - cron: '0 * * * *' # Saatte bir
+    - cron: '*/5 * * * *' # Deneme amaçlı 5 dakikada bir
   workflow_dispatch:
 
 jobs:

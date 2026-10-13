@@ -22,7 +22,7 @@ class IlanGovScraper(BaseScraper):
         target_url = "https://www.ilan.gov.tr/ilan/kategori/8/personel-alimi"
 
         try:
-            with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True) as client:
+            with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True, verify=False) as client:
                 resp = client.get(target_url)
                 if resp.status_code == 200:
                     soup = BeautifulSoup(resp.text, "html.parser")
