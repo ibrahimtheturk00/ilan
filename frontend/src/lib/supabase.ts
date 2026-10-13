@@ -277,6 +277,25 @@ export async function fetchJobById(id: number | string): Promise<JobPost | null>
   return MOCK_JOBS.find((j) => j.id === numericId) || MOCK_JOBS[0] || null;
 }
 
+export async function fetchJobsByIds(ids: number[]): Promise<JobPost[]> {
+  if (ids.length === 0) return [];
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("job_posts")
+        .select("*, sources(name, slug)")
+        .in("id", ids)
+        .order("deadline_at", { ascending: true, nullsFirst: false });
+      if (!error && data) {
+        return data as JobPost[];
+      }
+    } catch (err) {
+      console.warn("ID listesi ile ilan çekme hatası:", err);
+    }
+  }
+  return MOCK_JOBS.filter((j) => ids.includes(j.id));
+}
+
 export async function fetchAllJobSummaries(): Promise<{ id: number; title: string; category: string | null; description: string | null }[]> {
   if (supabase) {
     try {
@@ -299,6 +318,8 @@ export async function fetchAllJobSummaries(): Promise<{ id: number; title: strin
     description: j.description,
   }));
 }
+
+
 
 export async function fetchScrapeLogs(): Promise<ScrapeLog[]> {
   if (supabase) {

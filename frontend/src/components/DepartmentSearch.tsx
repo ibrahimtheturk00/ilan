@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { GraduationCap, ArrowRight, BookOpen, Layers, CheckCircle2 } from "lucide-react";
 import { useJobs } from "@/hooks/useJobs";
 import { useQuery } from "@tanstack/react-query";
-import { fetchAllJobSummaries } from "@/lib/supabase";
+import { fetchAllJobSummaries, fetchJobsByIds } from "@/lib/supabase";
 import { JobCard } from "./JobCard";
 import { JobModal } from "./JobModal";
 import { JobPost } from "@/types";
@@ -118,38 +118,38 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
     staleTime: 1000 * 60 * 5,
   });
 
-  // Her kategori için ilan sayısını hesapla
-  const departmentCounts = useMemo(() => {
-    const counts: Record<string, number> = {};
+  // Her kategori için eşleşen ilan ID'lerini hesapla
+  const departmentMatches = useMemo(() => {
+    const matches: Record<string, number[]> = {};
 
     YOK_ATLAS_DEPARTMENTS.forEach((dept) => {
-      let count = 0;
+      const ids: number[] = [];
       jobSummaries.forEach((job) => {
         const fullContent = normalizeText(`${job.title} ${job.description || ""}`);
         const matchesCategory = dept.dbCategory && job.category === dept.dbCategory;
         const matchesKeyword = dept.keywords.some((kw) => fullContent.includes(kw));
         if (matchesCategory || matchesKeyword) {
-          count++;
+          ids.push(job.id);
         }
       });
-      counts[dept.id] = count;
+      matches[dept.id] = ids;
     });
 
-    return counts;
+    return matches;
   }, [jobSummaries]);
 
-  // Seçili kategoriye göre ilanları çek
-  const { data: jobResults, isLoading } = useJobs({
-    searchQuery: selectedDept ? selectedDept.keywords[0] : "",
-    category: selectedDept?.dbCategory || "",
-    city: "",
-    postType: "",
-    sourceSlug: "",
-    onlyActive: true,
-    page: 1,
-  });
+  const selectedDeptIds = useMemo(() => {
+    if (!selectedDept) return [];
+    return departmentMatches[selectedDept.id] || [];
+  }, [selectedDept, departmentMatches]);
 
-  const results: JobPost[] = jobResults?.data || [];
+  // Seçili kategoriye ait tam ilan kartı verilerini çek
+  const { data: results = [], isLoading } = useQuery({
+    queryKey: ["department-jobs", selectedDept?.id, selectedDeptIds],
+    queryFn: () => fetchJobsByIds(selectedDeptIds),
+    enabled: selectedDeptIds.length > 0,
+    staleTime: 1000 * 60 * 5,
+  });
 
   return (
     <div className="space-y-8 animate-fadeIn">
@@ -173,7 +173,7 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
           {YOK_ATLAS_DEPARTMENTS.map((dept) => {
             const isSelected = selectedDept?.id === dept.id;
-            const count = departmentCounts[dept.id] || 0;
+            const count = departmentMatches[dept.id]?.length || 0;
 
             return (
               <button
