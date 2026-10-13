@@ -162,8 +162,8 @@ class BaseScraper(ABC):
 
     def save_posts(self, posts: List[Dict[str, Any]]) -> Tuple[int, int]:
         """
-        Normalize edilmiş ilanları Supabase'e batch upsert eder.
-        Döndürür: (yeni_ilan_sayisi, guncellenen_ilan_sayisi)
+        Normalize edilmiş ilanları mükerrerlikten arındırarak Supabase'e kaydeder.
+        Aynı kurum, başlık ve son başvuru tarihine sahip ilanların mükerrer kayıt oluşturmasını engeller.
         """
         if not posts:
             return 0, 0
@@ -172,24 +172,47 @@ class BaseScraper(ABC):
             self.logger.info(f"[DRY-RUN] {len(posts)} ilan hazırlandı ancak Supabase bağlantısı yok.")
             return len(posts), 0
 
+        # 1. Kendi içindeki mükerrerleri temizle (aynı scrape partisindeki yinelenenler)
+        unique_posts_dict = {}
+        for p in posts:
+            ch = p.get("content_hash") or p.get("url_hash")
+            unique_posts_dict[ch] = p
+        unique_posts = list(unique_posts_dict.values())
+
+        # 2. Veritabanındaki mevcut ilanların content_hash ve url_hash haritasını çek
+        try:
+            existing_res = self.client.table("job_posts").select("id, url_hash, content_hash").execute()
+            existing_data = existing_res.data or []
+            existing_by_content = {r["content_hash"]: r["id"] for r in existing_data if r.get("content_hash")}
+            existing_by_url = {r["url_hash"]: r["id"] for r in existing_data if r.get("url_hash")}
+        except Exception as e:
+            self.logger.warning(f"Mevcut ilanlar çekilemedi, standart upsert kullanılacak: {e}")
+            existing_by_content = {}
+            existing_by_url = {}
+
         posts_new = 0
         posts_updated = 0
 
-        # Batch upsert (url_hash çakışmasında güncelle)
-        chunk_size = 50
-        for i in range(0, len(posts), chunk_size):
-            chunk = posts[i:i + chunk_size]
+        for p in unique_posts:
+            ch = p.get("content_hash")
+            uh = p.get("url_hash")
+            existing_id = existing_by_content.get(ch) or existing_by_url.get(uh)
+
             try:
-                res = self.client.table("job_posts").upsert(
-                    chunk,
-                    on_conflict="url_hash"
-                ).execute()
-                
-                # Basit bir tahmin veya kontrol
-                if res.data:
-                    posts_new += len(res.data)
+                if existing_id:
+                    # Mevcut ilanı güncelle
+                    self.client.table("job_posts").update(p).eq("id", existing_id).execute()
+                    posts_updated += 1
+                else:
+                    # Yeni ilan ekle
+                    res = self.client.table("job_posts").insert(p).execute()
+                    if res.data:
+                        new_id = res.data[0]["id"]
+                        existing_by_content[ch] = new_id
+                        existing_by_url[uh] = new_id
+                        posts_new += 1
             except Exception as e:
-                self.logger.error(f"Batch upsert hatası: {e}")
+                self.logger.error(f"İlan kaydetme hatası ('{p.get('title')}'): {e}")
 
         return posts_new, posts_updated
 

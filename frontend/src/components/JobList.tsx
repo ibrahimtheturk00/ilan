@@ -49,6 +49,8 @@ export function JobList() {
 
   const jobs = data?.data || [];
   const totalCount = data?.count || 0;
+  const pageSize = 12;
+  const totalPages = Math.ceil(totalCount / pageSize);
 
   if (jobs.length === 0) {
     return (
@@ -82,26 +84,64 @@ export function JobList() {
         ))}
       </div>
 
-      {/* Sayfalama Kontrolleri */}
-      {totalCount > 12 && (
-        <div className="flex items-center justify-center gap-2 pt-6">
-          <button
-            onClick={() => filters.setPage(Math.max(1, filters.page - 1))}
-            disabled={filters.page === 1}
-            className="p-2 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:pointer-events-none"
-          >
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 px-3">
-            Sayfa {filters.page}
-          </span>
-          <button
-            onClick={() => filters.setPage(filters.page + 1)}
-            disabled={filters.page * 12 >= totalCount}
-            className="p-2 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-40 disabled:pointer-events-none"
-          >
-            <ChevronRight className="w-4 h-4" />
-          </button>
+      {/* Sayfalama Kontrolleri (Fotoğraftaki gibi: 1 2 3 ... sonraki) */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-1.5 pt-8">
+          {filters.page > 1 && (
+            <button
+              onClick={() => {
+                filters.setPage(filters.page - 1);
+                window.scrollTo({ top: 300, behavior: "smooth" });
+              }}
+              className="text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-2 transition-colors mr-1"
+            >
+              önceki
+            </button>
+          )}
+
+          {/* Sayfa Numaraları */}
+          {Array.from({ length: totalPages }, (_, i) => i + 1)
+            .filter((p) => {
+              // 1, son sayfa ve aktif sayfanın etrafındaki 2 sayfayı göster
+              return p === 1 || p === totalPages || Math.abs(p - filters.page) <= 2;
+            })
+            .map((p, index, arr) => {
+              const prev = arr[index - 1];
+              const showEllipsis = prev && p - prev > 1;
+
+              return (
+                <div key={p} className="flex items-center gap-1.5">
+                  {showEllipsis && (
+                    <span className="text-xs text-slate-400 px-1 select-none">...</span>
+                  )}
+                  <button
+                    onClick={() => {
+                      filters.setPage(p);
+                      window.scrollTo({ top: 300, behavior: "smooth" });
+                    }}
+                    className={`w-9 h-9 rounded-full text-xs font-semibold flex items-center justify-center transition-all ${
+                      filters.page === p
+                        ? "bg-slate-100 dark:bg-slate-700 text-brand-600 dark:text-brand-400 font-bold shadow-sm ring-1 ring-slate-200 dark:ring-slate-600"
+                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    }`}
+                  >
+                    {p}
+                  </button>
+                </div>
+              );
+            })}
+
+          {filters.page < totalPages && (
+            <button
+              onClick={() => {
+                filters.setPage(filters.page + 1);
+                window.scrollTo({ top: 300, behavior: "smooth" });
+              }}
+              className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 px-3 py-2 transition-colors ml-1"
+            >
+              sonraki
+            </button>
+          )}
         </div>
       )}
 

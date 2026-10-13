@@ -123,7 +123,7 @@ export function getDaysRemaining(deadlineStr: string | null | undefined) {
 }
 
 export function resolveApplicationUrl(institution: string | null | undefined, originalUrl: string): string {
-  if (!originalUrl) return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+  if (!originalUrl) return "https://kariyerkapisi.gov.tr/isealim";
   const inst = (institution || "").toLowerCase();
 
   // Eğer SBB'nin linki ise (ilanDetay.aspx?kod=...)
@@ -144,7 +144,7 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
 
     // 2. Bakanlıklar ve Bağlı Kuruluşlar
     if (inst.includes("tapu ve kadastro") || inst.includes("tkgm")) {
-      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+      return "https://kariyerkapisi.gov.tr/isealim";
     }
     if (inst.includes("adalet bakanlığı") || inst.includes("icra")) {
       return "https://pgm.adalet.gov.tr/";
@@ -174,10 +174,10 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
       return "https://www.gib.gov.tr/";
     }
     if (inst.includes("özeleştirme") || inst.includes("özelleştirme")) {
-      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+      return "https://kariyerkapisi.gov.tr/isealim";
     }
     if (inst.includes("iletişim başkanlığı")) {
-      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+      return "https://kariyerkapisi.gov.tr/isealim";
     }
     if (inst.includes("savunma sanayii") || inst.includes("ssb")) {
       return "https://www.ssb.gov.tr/";
@@ -212,10 +212,13 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
       return "https://www.itu.edu.tr/";
     }
     if (inst.includes("üniversite") || inst.includes("universite")) {
-      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+      return "https://kariyerkapisi.gov.tr/isealim";
     }
 
     // 4. Belediyeler
+    if (inst.includes("eleşkirt") || inst.includes("eleskirt")) {
+      return "http://www.eleskirt.bel.tr/";
+    }
     if (inst.includes("keşan") || inst.includes("kesan")) {
       return "https://www.kesan.bel.tr/";
     }
@@ -230,7 +233,7 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     }
 
     // 5. Resmi Kamu Kariyer Kapısı (Cumhurbaşkanlığı İşe Alım Portalı - Tüm bakanlık ve kamu kurumlarının tek adresi)
-    return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+    return "https://kariyerkapisi.gov.tr/isealim";
   }
 
   return originalUrl;
