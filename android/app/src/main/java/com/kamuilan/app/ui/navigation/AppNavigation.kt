@@ -61,6 +61,7 @@ import com.kamuilan.app.ui.theme.Slate50
 
 @Composable
 fun AppNavigation(
+    initialJobId: Long? = null,
     homeViewModel: HomeViewModel = viewModel(),
     profileViewModel: ProfileViewModel = viewModel()
 ) {
@@ -71,6 +72,13 @@ fun AppNavigation(
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+
+    // Bildirime tıklanıp açıldıysa doğrudan ilanın detayına git
+    androidx.compose.runtime.LaunchedEffect(initialJobId) {
+        if (initialJobId != null && initialJobId > 0) {
+            navController.navigate(Screen.Detail.createRoute(initialJobId))
+        }
+    }
 
     val bottomNavItems = listOf(
         Screen.Home,

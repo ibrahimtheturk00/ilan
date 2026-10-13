@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <!-- Hükümet / Kamu Binası ve Bildirim İkonu -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M12,2L2,7v2h20V7L12,2z M4,11v7h2v-7H4z M9,11v7h2v-7H9z M13,11v7h2v-7H13z M18,11v7h2v-7H18z M2,20v2h20v-2H2z" />
+</vector>

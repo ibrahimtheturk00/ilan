@@ -31,10 +31,18 @@ class PreferencesManager(private val context: Context) {
         private val KEY_PREF_EDUCATION = stringPreferencesKey("pref_education")
         private val KEY_PREF_KPSS = stringPreferencesKey("pref_kpss")
         private val KEY_PREF_CITY = stringPreferencesKey("pref_city")
+
+        // Bildirim Ayarları ve Görülen İlanlar
+        private val KEY_NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        private val KEY_SEEN_JOB_IDS = stringSetPreferencesKey("seen_job_ids")
     }
 
     val favoriteJobIdsFlow: Flow<Set<String>> = context.dataStore.data.map { preferences ->
         preferences[KEY_FAVORITES] ?: emptySet()
+    }
+
+    val notificationsEnabledFlow: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[KEY_NOTIFICATIONS_ENABLED] ?: true
     }
 
     val userProfileFlow: Flow<UserPreferencesProfile> = context.dataStore.data.map { prefs ->
@@ -93,6 +101,31 @@ class PreferencesManager(private val context: Context) {
     suspend fun clearFavorites() {
         context.dataStore.edit { preferences ->
             preferences.remove(KEY_FAVORITES)
+        }
+    }
+
+    suspend fun setNotificationsEnabled(enabled: Boolean) {
+        context.dataStore.edit { prefs ->
+            prefs[KEY_NOTIFICATIONS_ENABLED] = enabled
+        }
+    }
+
+    suspend fun getSeenJobIds(): Set<String> {
+        val prefs = context.dataStore.data.first()
+        return prefs[KEY_SEEN_JOB_IDS] ?: emptySet()
+    }
+
+    suspend fun markJobsAsSeen(jobIds: Collection<Long>) {
+        context.dataStore.edit { prefs ->
+            val current = (prefs[KEY_SEEN_JOB_IDS] ?: emptySet()).toMutableSet()
+            current.addAll(jobIds.map { it.toString() })
+            // Son 1000 ilanı sakla
+            if (current.size > 1000) {
+                val trimmed = current.toList().takeLast(1000).toSet()
+                prefs[KEY_SEEN_JOB_IDS] = trimmed
+            } else {
+                prefs[KEY_SEEN_JOB_IDS] = current
+            }
         }
     }
 }

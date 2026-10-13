@@ -90,17 +90,23 @@ fun PersonalizedScreen(
                 val educationMatches = profile.educationLevel.isBlank() || profile.educationLevel == "Tümü" ||
                         JobParser.detectEducationLevel(job).equals(profile.educationLevel, ignoreCase = true)
 
+                // KPSS eşleşmesi: Kullanıcı puan türü seçse bile "KPSS Şartsız" ilanlar DAİMA gösterilir
+                val detectedKpss = JobParser.detectKpssType(job)
+                val isKpssFree = JobParser.isKpssFree(job)
                 val kpssMatches = profile.kpssType.isBlank() || profile.kpssType == "Tümü" ||
-                        JobParser.detectKpssType(job).equals(profile.kpssType, ignoreCase = true)
+                        detectedKpss.equals(profile.kpssType, ignoreCase = true) ||
+                        isKpssFree
 
                 val cityMatches = profile.preferredCity.isBlank() || profile.preferredCity == "Tüm Türkiye" ||
                         (job.city != null && TurkishMatcher.normalize(job.city).contains(TurkishMatcher.normalize(profile.preferredCity)))
 
-                // Puanlama: En çok eşleşen en üstte
+                // Puanlama: Doğrudan KPSS puanı eşleşmesi +3, KPSS Şartsız +2
                 var matchScore = 0
                 if (departmentMatches) matchScore += 4
                 if (educationMatches) matchScore += 3
-                if (kpssMatches) matchScore += 2
+                if (kpssMatches) {
+                    matchScore += if (detectedKpss.equals(profile.kpssType, ignoreCase = true)) 3 else 2
+                }
                 if (cityMatches) matchScore += 1
 
                 if (departmentMatches || (educationMatches && kpssMatches)) {
@@ -183,8 +189,11 @@ fun PersonalizedScreen(
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
+                            val deptDisplay = com.kamuilan.app.data.model.YokDepartments.getDisplayName(userProfile!!.department)
+                            val eduDisplay = userProfile!!.educationLevel.ifBlank { "Tüm Eğitimler" }
+                            val kpssDisplay = userProfile!!.kpssType.ifBlank { "Tüm KPSS" }
                             Text(
-                                text = "Kriter: ${userProfile!!.department.ifBlank { "Tüm Alanlar" }} • ${userProfile!!.educationLevel} • ${userProfile!!.kpssType}",
+                                text = "$deptDisplay • $eduDisplay • $kpssDisplay (+KPSS Şartsız)",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = Slate700,

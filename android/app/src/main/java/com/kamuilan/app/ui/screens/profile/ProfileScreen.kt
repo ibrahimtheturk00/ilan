@@ -68,6 +68,7 @@ fun ProfileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val userProfile by viewModel.userProfile.collectAsState()
+    val notificationsEnabled by viewModel.notificationsEnabled.collectAsState()
 
     AmbientGlassBackground(modifier = modifier) {
         Column(
@@ -132,7 +133,7 @@ fun ProfileScreen(
                 Column(modifier = Modifier.fillMaxWidth()) {
                     PreferenceItemRow(
                         label = "Mezuniyet / Bölüm",
-                        value = if (userProfile.department.isNotBlank()) userProfile.department else "Belirtilmedi",
+                        value = if (userProfile.department.isNotBlank()) com.kamuilan.app.data.model.YokDepartments.getDisplayName(userProfile.department) else "Tüm Alanlar",
                         icon = Icons.Default.School
                     )
                     HorizontalDivider(color = Slate100, modifier = Modifier.padding(vertical = 10.dp))
@@ -223,7 +224,7 @@ fun ProfileScreen(
                             )
                         }
                         Switch(
-                            checked = uiState.notificationsEnabled,
+                            checked = notificationsEnabled,
                             onCheckedChange = { viewModel.toggleNotifications(it) },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,

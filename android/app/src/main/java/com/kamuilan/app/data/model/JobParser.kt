@@ -20,6 +20,18 @@ object JobParser {
         }
     }
 
+    fun isKpssFree(job: JobPost): Boolean {
+        val detected = detectKpssType(job)
+        if (detected == "KPSS Şartsız") return true
+        val text = "${job.title} ${job.description ?: ""}".lowercase()
+        return text.contains("kpss şartı aranmaz") ||
+                text.contains("kpss şartsız") ||
+                text.contains("kpss puanı aranmaz") ||
+                text.contains("kpss şartı yoktur") ||
+                text.contains("kpss şartı aranmamaktadır") ||
+                job.postType == "isci"
+    }
+
     fun detectEducationLevel(job: JobPost): String {
         val text = "${job.title} ${job.description ?: ""}".lowercase()
 

@@ -211,4 +211,36 @@ object YokDepartments {
             dept.id to jobs.count { job -> matches(job, dept) }
         }
     }
+
+    /**
+     * Kullanıcı arayüzünde raw slug (örn: 'bilisim', 'muhendislik') yerine
+     * daima Türkçe şık kategori adı gösterilmesini garanti eder.
+     */
+    fun getDisplayName(idOrKeyword: String?): String {
+        if (idOrKeyword.isNullOrBlank() || idOrKeyword.equals("all", ignoreCase = true)) {
+            return "Tüm Alanlar"
+        }
+        val dept = getById(idOrKeyword)
+        if (dept != null) return dept.name
+
+        return when (idOrKeyword.lowercase().trim()) {
+            "bilisim", "yazilim" -> "Bilgisayar & Bilişim & Yazılım"
+            "egitim" -> "Eğitim Fakültesi & Öğretmenlik"
+            "hukuk" -> "Hukuk & Adalet"
+            "saglik" -> "Sağlık & Tıp & Diş Hekimliği"
+            "hemsirelik" -> "Hemşirelik & Ebelik & Sağlık Teknikerliği"
+            "iibf", "iktisat", "maliye" -> "İktisat, İşletme, Maliye & Denetim"
+            "muhendislik" -> "Mühendislik & Mimarlık (Tüm Branşlar)"
+            "buro" -> "Büro Yönetimi & İdari Personel"
+            "zabita", "guvenlik" -> "Zabıta, İtfaiye & Özel Güvenlik"
+            "sosyal" -> "Sosyal Hizmetler & Psikoloji & PDR"
+            "fen_edebiyat" -> "Fen - Edebiyat & Temel Bilimler"
+            "ziraat_veteriner", "ziraat" -> "Ziraat, Orman, Hayvancılık & Gıda"
+            "teknik_usta", "teknik" -> "Tekniker, Teknisyen, Usta & Mekanik"
+            "savunma_askeri", "askeri" -> "Milli Savunma & Askeri Kadrolar"
+            "kultur_sanat" -> "Kültür, Sanat, Arkeoloji & Müze"
+            "destek_hizmet" -> "Temizlik, Aşçılık & Destek Hizmetleri"
+            else -> idOrKeyword.replaceFirstChar { it.uppercase() }
+        }
+    }
 }

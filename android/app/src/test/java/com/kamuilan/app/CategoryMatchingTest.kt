@@ -150,5 +150,46 @@ class CategoryMatchingTest {
         assertEquals("Lise / Ortaöğretim", JobParser.detectEducationLevel(highSchoolJob))
 
         assertEquals("KPSS Şartsız", JobParser.detectKpssType(noKpssJob))
+        assertTrue(JobParser.isKpssFree(noKpssJob))
+        assertFalse(JobParser.isKpssFree(bachelorsJob))
+    }
+
+    @Test
+    fun testDisplayNameConversion() {
+        assertEquals("Bilgisayar & Bilişim & Yazılım", YokDepartments.getDisplayName("bilisim"))
+        assertEquals("Mühendislik & Mimarlık (Tüm Branşlar)", YokDepartments.getDisplayName("muhendislik"))
+        assertEquals("Eğitim Fakültesi & Öğretmenlik", YokDepartments.getDisplayName("egitim"))
+        assertEquals("Hukuk & Adalet", YokDepartments.getDisplayName("hukuk"))
+        assertEquals("Tüm Alanlar", YokDepartments.getDisplayName("all"))
+        assertEquals("Tüm Alanlar", YokDepartments.getDisplayName(""))
+        assertEquals("Tüm Alanlar", YokDepartments.getDisplayName(null))
+    }
+
+    @Test
+    fun testKpssFreeMatchesEvenIfKpssTypeSelected() {
+        val userKpssPref = "KPSS P3 (Lisans)"
+
+        val regularP3Job = JobPost(id = 301, title = "KPSS P3 Mühendis Alımı")
+        val noKpssJob = JobPost(id = 302, title = "KPSS Şartsız İşçi Alımı", postType = "isci")
+        val p93Job = JobPost(id = 303, title = "KPSS P93 Tekniker Alımı")
+
+        // Kullanıcı P3 seçmiş olsa bile:
+        // 1. P3 ilanı eşleşmeli
+        assertTrue(
+            JobParser.detectKpssType(regularP3Job) == userKpssPref ||
+                    JobParser.isKpssFree(regularP3Job)
+        )
+
+        // 2. KPSS Şartsız ilan DAİMA eşleşmeli
+        assertTrue(
+            JobParser.detectKpssType(noKpssJob) == userKpssPref ||
+                    JobParser.isKpssFree(noKpssJob)
+        )
+
+        // 3. Başka bir KPSS türü (P93) eşleşmemeli
+        assertFalse(
+            JobParser.detectKpssType(p93Job) == userKpssPref ||
+                    JobParser.isKpssFree(p93Job)
+        )
     }
 }

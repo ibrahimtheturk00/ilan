@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kamuilan.app.data.local.PreferencesManager
 import com.kamuilan.app.data.local.UserPreferencesProfile
+import com.kamuilan.app.notification.NotificationScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,6 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 data class ProfileUiState(
-    val notificationsEnabled: Boolean = true,
     val urgentJobAlertsEnabled: Boolean = true,
     val infoMessage: String? = null
 )
@@ -29,11 +29,28 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             initialValue = UserPreferencesProfile()
         )
 
+    val notificationsEnabled: StateFlow<Boolean> = preferencesManager.notificationsEnabledFlow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = true
+        )
+
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     fun toggleNotifications(enabled: Boolean) {
-        _uiState.value = _uiState.value.copy(notificationsEnabled = enabled)
+        viewModelScope.launch {
+            preferencesManager.setNotificationsEnabled(enabled)
+            val context = getApplication<Application>().applicationContext
+            if (enabled) {
+                NotificationScheduler.schedulePeriodicSync(context)
+                _uiState.value = _uiState.value.copy(infoMessage = "Yeni ilan bildirimleri aktifleştirildi.")
+            } else {
+                NotificationScheduler.cancelPeriodicSync(context)
+                _uiState.value = _uiState.value.copy(infoMessage = "İlan bildirimleri kapatıldı.")
+            }
+        }
     }
 
     fun toggleUrgentJobAlerts(enabled: Boolean) {

@@ -4,13 +4,16 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.kamuilan.app.data.local.PreferencesManager
+import com.kamuilan.app.data.model.JobParser
 import com.kamuilan.app.data.model.JobPost
 import com.kamuilan.app.data.model.TurkishMatcher
 import com.kamuilan.app.data.repository.JobRepository
+import com.kamuilan.app.notification.JobNotificationHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -54,6 +57,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         _uiState.value.selectedCategory
                     )
                 )
+                checkNewJobNotifications(jobs)
             }.onFailure { error ->
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -144,6 +148,48 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             else TurkishMatcher.matchesQuery(job, query)
 
             matchesType && matchesCategory && matchesQuery
+        }
+    }
+
+    private fun checkNewJobNotifications(jobs: List<JobPost>) {
+        viewModelScope.launch {
+            try {
+                val notificationsEnabled = preferencesManager.notificationsEnabledFlow.first()
+                if (!notificationsEnabled) return@launch
+
+                val profile = preferencesManager.userProfileFlow.first()
+                if (!profile.isOnboardingCompleted) return@launch
+
+                val seenIds = preferencesManager.getSeenJobIds()
+                if (seenIds.isNotEmpty()) {
+                    val newJobs = jobs.filter { !seenIds.contains(it.id.toString()) }
+                    val matchedJobs = newJobs.filter { job ->
+                        val departmentMatches = profile.department.isBlank() || profile.department == "all" ||
+                                TurkishMatcher.matchesCategory(job, profile.department)
+                        val educationMatches = profile.educationLevel.isBlank() || profile.educationLevel == "Tümü" ||
+                                JobParser.detectEducationLevel(job).equals(profile.educationLevel, ignoreCase = true)
+                        val detectedKpss = JobParser.detectKpssType(job)
+                        val isKpssFree = JobParser.isKpssFree(job)
+                        val kpssMatches = profile.kpssType.isBlank() || profile.kpssType == "Tümü" ||
+                                detectedKpss.equals(profile.kpssType, ignoreCase = true) ||
+                                isKpssFree
+                        val cityMatches = profile.preferredCity.isBlank() || profile.preferredCity == "Tüm Türkiye" ||
+                                (job.city != null && TurkishMatcher.normalize(job.city).contains(TurkishMatcher.normalize(profile.preferredCity)))
+
+                        departmentMatches && educationMatches && kpssMatches && cityMatches
+                    }
+
+                    matchedJobs.take(2).forEach { job ->
+                        JobNotificationHelper.showJobMatchNotification(
+                            getApplication<Application>().applicationContext,
+                            job
+                        )
+                    }
+                }
+                preferencesManager.markJobsAsSeen(jobs.map { it.id })
+            } catch (e: Exception) {
+                // Sessizce devam et
+            }
         }
     }
 }
