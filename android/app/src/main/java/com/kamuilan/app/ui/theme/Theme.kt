@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.ui.theme
+package com.kamuilan.app.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -37,18 +37,12 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun KamuIlanMerkeziTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = false, // Şimdilik varsayılan tamamen aydınlık mod
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
+    // Kullanıcı talebi: Şimdilik sadece aydınlık (Light) tema aktif
+    val colorScheme = LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
