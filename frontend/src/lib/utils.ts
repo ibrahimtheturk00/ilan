@@ -259,7 +259,15 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
       return `https://www.${bsehirMatch[1]}.bel.tr/`;
     }
 
-    // B) İlçe / Belde Belediyeleri: "<İsim> Belediye..." -> "https://www.<isim>.bel.tr/"
+    // B) Özel / Doğrulanmış Belde ve İlçe Belediyeleri
+    if (norm.includes("sariidris")) return "https://sariidris.bel.tr/";
+    if (norm.includes("eleskirt")) return "http://www.eleskirt.bel.tr/";
+    if (norm.includes("sile")) return "https://www.sile.bel.tr/";
+    if (norm.includes("celtik")) return "https://www.celtik.bel.tr/";
+    if (norm.includes("kesan")) return "https://www.kesan.bel.tr/";
+    if (norm.includes("ortahisar")) return "https://www.ortahisar.bel.tr/";
+
+    // C) İlçe / Belde Belediyeleri Dinamik: "<İsim> Belediye..." -> "https://www.<isim>.bel.tr/"
     const belMatch = norm.match(/([a-z]+)\s+belediye/);
     if (belMatch && belMatch[1]) {
       const slug = belMatch[1];
