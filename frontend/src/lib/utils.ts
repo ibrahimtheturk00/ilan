@@ -156,135 +156,127 @@ export function getDaysRemaining(deadlineStr: string | null | undefined) {
 
 export function resolveApplicationUrl(institution: string | null | undefined, originalUrl: string): string {
   if (!originalUrl) return "https://kariyerkapisi.gov.tr/isealim";
-  const inst = (institution || "").toLowerCase();
 
   // Eğer SBB'nin linki ise (ilanDetay.aspx?kod=...)
   if (originalUrl.includes("kamuilan.sbb.gov.tr/ilanDetay.aspx")) {
+    const rawInst = institution || "";
+    // Türkçe karakterleri ve aksanları temiz normalize et
+    const norm = rawInst
+      .toLocaleLowerCase("tr-TR")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/ç/g, "c")
+      .replace(/ğ/g, "g")
+      .replace(/ı/g, "i")
+      .replace(/ö/g, "o")
+      .replace(/ş/g, "s")
+      .replace(/ü/g, "u");
+
     // 1. Askeri / Güvenlik Kurumları
-    if (inst.includes("milli savunma") || inst.includes("millî savunma") || inst.includes("msb")) {
+    if (norm.includes("milli savunma") || norm.includes("msb")) {
       return "https://personeltemin.msb.gov.tr/";
     }
-    if (inst.includes("jandarma")) {
+    if (norm.includes("jandarma")) {
       return "https://vatandas.jandarma.gov.tr/ptm/giris";
     }
-    if (inst.includes("sahil güvenlik")) {
+    if (norm.includes("sahil guvenlik")) {
       return "https://www.sg.gov.tr/";
     }
-    if (inst.includes("emniyet") || inst.includes("polis")) {
+    if (norm.includes("emniyet") || norm.includes("polis")) {
       return "https://www.pa.edu.tr/";
     }
 
     // 2. Bakanlıklar ve Bağlı Kuruluşlar
-    if (inst.includes("tapu ve kadastro") || inst.includes("tkgm")) {
+    if (norm.includes("tapu ve kadastro") || norm.includes("tkgm")) {
       return "https://kariyerkapisi.gov.tr/isealim";
     }
-    if (inst.includes("adalet bakanlığı") || inst.includes("icra")) {
+    if (norm.includes("adalet bakanligi") || norm.includes("icra")) {
       return "https://pgm.adalet.gov.tr/";
     }
-    if (inst.includes("kalkınma ajansı") || inst.includes("ajansı")) {
+    if (norm.includes("kalkinma ajansi") || norm.includes("ajansi")) {
       return "https://sinavbasvuru.sanayi.gov.tr/";
     }
-    if (inst.includes("tübitak")) {
+    if (norm.includes("tubitak")) {
       return "https://kariyer.tubitak.gov.tr/";
     }
-    if (inst.includes("tmsf") || inst.includes("tasarruf mevduatı")) {
+    if (norm.includes("tmsf") || norm.includes("tasarruf mevduati")) {
       return "https://www.tmsf.org.tr/";
     }
-    if (inst.includes("bddk") || inst.includes("bankacılık düzenleme")) {
+    if (norm.includes("bddk") || norm.includes("bankacilik duzenleme")) {
       return "https://www.bddk.org.tr/";
     }
-    if (inst.includes("vakıflar")) {
+    if (norm.includes("vakiflar")) {
       return "https://vgm.gov.tr/";
     }
-    if (inst.includes("yargıtay")) {
+    if (norm.includes("yargitay")) {
       return "https://www.yargitay.gov.tr/";
     }
-    if (inst.includes("danıştay")) {
+    if (norm.includes("danistay")) {
       return "https://www.danistay.gov.tr/";
     }
-    if (inst.includes("gelir idaresi") || inst.includes("gib")) {
+    if (norm.includes("gelir idaresi") || norm.includes("gib")) {
       return "https://www.gib.gov.tr/";
     }
-    if (inst.includes("özeleştirme") || inst.includes("özelleştirme")) {
+    if (norm.includes("ozellestirme")) {
       return "https://kariyerkapisi.gov.tr/isealim";
     }
-    if (inst.includes("iletişim başkanlığı")) {
+    if (norm.includes("iletisim baskanligi")) {
       return "https://kariyerkapisi.gov.tr/isealim";
     }
-    if (inst.includes("savunma sanayii") || inst.includes("ssb")) {
+    if (norm.includes("savunma sanayii") || norm.includes("ssb")) {
       return "https://www.ssb.gov.tr/";
     }
-    if (inst.includes("türk patent")) {
+    if (norm.includes("turk patent")) {
       return "https://www.turkpatent.gov.tr/";
     }
-    if (inst.includes("spk") || inst.includes("sermaye piyasası")) {
+    if (norm.includes("spk") || norm.includes("sermaye piyasasi")) {
       return "https://spk.gov.tr/";
     }
 
-    // 3. Üniversiteler (Akademik Personel / İdari Başvuru)
-    if (inst.includes("eskişehir teknik") || inst.includes("eskisehir teknik")) {
-      return "https://www.eskisehir.edu.tr/";
-    }
-    if (inst.includes("şırnak") || inst.includes("sirnak")) {
-      return "https://www.sirnak.edu.tr/";
-    }
-    if (inst.includes("ondokuz mayıs")) {
-      return "https://www.omu.edu.tr/";
-    }
-    if (inst.includes("necmettin erbakan")) {
-      return "https://www.erbakan.edu.tr/";
-    }
-    if (inst.includes("ankara üniversitesi")) {
-      return "https://www.ankara.edu.tr/";
-    }
-    if (inst.includes("atatürk üniversitesi")) {
-      return "https://atauni.edu.tr/";
-    }
-    if (inst.includes("batman üniversitesi")) {
-      return "https://batman.edu.tr/";
-    }
-    if (inst.includes("istanbul teknik") || inst.includes("itü")) {
-      return "https://www.itu.edu.tr/";
-    }
-    if (inst.includes("üniversite") || inst.includes("universite")) {
-      return "https://kariyerkapisi.gov.tr/isealim";
-    }
+    // 3. Üniversiteler (Özel Domainler)
+    if (norm.includes("eskisehir teknik")) return "https://www.eskisehir.edu.tr/";
+    if (norm.includes("sirnak")) return "https://www.sirnak.edu.tr/";
+    if (norm.includes("ondokuz mayis")) return "https://www.omu.edu.tr/";
+    if (norm.includes("necmettin erbakan")) return "https://www.erbakan.edu.tr/";
+    if (norm.includes("ankara universitesi")) return "https://www.ankara.edu.tr/";
+    if (norm.includes("ataturk universitesi")) return "https://atauni.edu.tr/";
+    if (norm.includes("batman universitesi")) return "https://batman.edu.tr/";
+    if (norm.includes("istanbul teknik") || norm.includes("itu")) return "https://www.itu.edu.tr/";
 
-    // 4. Belediyeler (Dinamik ilçe/belde/şehir tespiti)
-    if (inst.includes("şile") || inst.includes("sile")) return "https://www.sile.bel.tr/";
-    if (inst.includes("çeltik") || inst.includes("celtik")) return "https://www.celtik.bel.tr/";
-    if (inst.includes("sarıidris") || inst.includes("sariidris")) return "https://www.sariidris.bel.tr/";
-    if (inst.includes("eleşkirt") || inst.includes("eleskirt")) return "http://www.eleskirt.bel.tr/";
-    if (inst.includes("keşan") || inst.includes("kesan")) return "https://www.kesan.bel.tr/";
-    if (inst.includes("ortahisar")) return "https://www.ortahisar.bel.tr/";
-
-    // Genel Otomatik Belediye Domain Çıkarımı: "<İsim> Belediye..." -> "https://www.<isim>.bel.tr/"
-    const belMatch = inst.match(/([a-zçğıöşü]+)\s+belediye/i);
-    if (belMatch && belMatch[1]) {
-      const rawName = belMatch[1].toLowerCase();
-      const trMap: Record<string, string> = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", i: "i" };
-      const slug = rawName.split("").map((c) => trMap[c] || c).join("");
-      if (slug.length >= 3 && !["buyuksehir", "büyükşehir", "merkez"].includes(slug)) {
-        return `https://www.${slug}.bel.tr/`;
-      }
-    }
-
-    if (inst.includes("belediye") || inst.includes("belediyesi")) {
-      return "https://yerelyonetimler.csb.gov.tr/";
-    }
-
-    // Genel Otomatik Üniversite Domain Çıkarımı: "<İsim> Üniversite..." -> "https://www.<isim>.edu.tr/"
-    const uniMatch = inst.match(/([a-zçğıöşü]+)\s+üniversite/i);
+    // Otomatik Üniversite Tespiti: "<İsim> Üniversite..." -> "https://www.<isim>.edu.tr/"
+    const uniMatch = norm.match(/([a-z]+)\s+universite/);
     if (uniMatch && uniMatch[1]) {
-      const rawName = uniMatch[1].toLowerCase();
-      const trMap: Record<string, string> = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", i: "i" };
-      const slug = rawName.split("").map((c) => trMap[c] || c).join("");
+      const slug = uniMatch[1];
       if (slug.length >= 3 && slug !== "teknik") {
         return `https://www.${slug}.edu.tr/`;
       }
     }
 
-    // 5. Resmi Kamu Kariyer Kapısı (Cumhurbaşkanlığı İşe Alım Portalı - Tüm bakanlık ve kamu kurumlarının tek adresi)
+    // 4. BELEDİYELER (Tüm Büyükşehir, İlçe ve Belde Belediyelerini Otomatik Bağlama)
+    // A) Büyükşehir Belediyeleri: "<İsim> Büyükşehir Belediye..." -> "https://www.<isim>.bel.tr/"
+    const bsehirMatch = norm.match(/([a-z]+)\s+buyuksehir\s+belediye/);
+    if (bsehirMatch && bsehirMatch[1]) {
+      return `https://www.${bsehirMatch[1]}.bel.tr/`;
+    }
+
+    // B) İlçe / Belde Belediyeleri: "<İsim> Belediye..." -> "https://www.<isim>.bel.tr/"
+    const belMatch = norm.match(/([a-z]+)\s+belediye/);
+    if (belMatch && belMatch[1]) {
+      const slug = belMatch[1];
+      if (slug.length >= 3 && !["merkez", "ilce"].includes(slug)) {
+        return `https://www.${slug}.bel.tr/`;
+      }
+    }
+
+    if (norm.includes("belediye") || norm.includes("belediyesi")) {
+      return "https://yerelyonetimler.csb.gov.tr/";
+    }
+
+    if (norm.includes("universite") || norm.includes("universitesi")) {
+      return "https://kariyerkapisi.gov.tr/isealim";
+    }
+
+    // 5. Resmi Kamu Kariyer Kapısı (Cumhurbaşkanlığı İşe Alım Portalı)
     return "https://kariyerkapisi.gov.tr/isealim";
   }
 

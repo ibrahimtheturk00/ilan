@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useJobDetail } from "@/hooks/useJobs";
-import { formatDate, getJobApplicationStatus, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
+import { formatDate, getJobApplicationStatus, resolveApplicationUrl, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
 import {
   ArrowLeft,
   Building,
@@ -55,6 +55,7 @@ export function JobDetailClient({ id }: { id: string }) {
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
   const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at, job.title);
+  const applicationUrl = resolveApplicationUrl(job.institution, job.original_url);
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors">
@@ -136,7 +137,7 @@ export function JobDetailClient({ id }: { id: string }) {
                 Resmi başvuru işlemi ilgili kurum portalı üzerinden gerçekleştirilir.
               </div>
               <a
-                href={job.original_url}
+                href={applicationUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-md shadow-brand-500/20 transition-all hover:scale-[1.02]"
