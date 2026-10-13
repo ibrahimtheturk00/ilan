@@ -352,6 +352,7 @@ export async function fetchSources(): Promise<Source[]> {
       const { data, error } = await supabase
         .from("sources")
         .select("*")
+        .neq("slug", "visitor-counter")
         .order("id", { ascending: true });
       if (!error && data && data.length > 0) {
         return data as Source[];
@@ -362,4 +363,61 @@ export async function fetchSources(): Promise<Source[]> {
   }
   return MOCK_SOURCES;
 }
+
+/**
+ * Benzersiz ziyaretçi sayacı motoru.
+ * Tarayıcı parmak izi (fingerprint) oluşturur, localStorage'da tutar.
+ * Sayfa yenilemelerinde (refresh) tekrar saymaz; sadece ilk ziyarette Supabase'e 1 kez yazar.
+ */
+export async function trackUniqueVisitor(): Promise<number> {
+  const VISITOR_KEY = "kpi_unique_visitor_id";
+  let visitorId = "";
+
+  if (typeof window !== "undefined") {
+    visitorId = localStorage.getItem(VISITOR_KEY) || "";
+    if (!visitorId) {
+      visitorId = `v_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+      localStorage.setItem(VISITOR_KEY, visitorId);
+
+      // Yeni tekil ziyaretçi ise Supabase'e 1 kez kaydet
+      if (supabase) {
+        try {
+          await supabase.from("scrape_logs").insert({
+            source_id: 8, // Ziyaretçi Sayacı
+            status: "success",
+            error_message: `visitor:${visitorId}`,
+            posts_found: 0,
+            posts_new: 0,
+            posts_updated: 0,
+          });
+        } catch (e) {
+          console.warn("Ziyaretçi kaydı eklenemedi:", e);
+        }
+      }
+    }
+  }
+
+  // Toplam tekil ziyaretçi sayısını getir
+  return fetchUniqueVisitorCount();
+}
+
+export async function fetchUniqueVisitorCount(): Promise<number> {
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("scrape_logs")
+        .select("error_message")
+        .eq("source_id", 8)
+        .like("error_message", "visitor:%");
+      if (!error && data) {
+        const uniqueSet = new Set(data.map((d) => d.error_message));
+        return Math.max(1, uniqueSet.size);
+      }
+    } catch (e) {
+      console.warn("Ziyaretçi sayısı çekilemedi:", e);
+    }
+  }
+  return 1;
+}
+
 
