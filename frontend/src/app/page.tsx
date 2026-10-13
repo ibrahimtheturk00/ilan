@@ -16,7 +16,7 @@ export default function HomePage() {
   // Görünüm Sekmeleri: 'all' | 'department' | 'favorites' | 'report'
   const [activeTab, setActiveTab] = useState<"all" | "department" | "favorites" | "report">("all");
   const { count: favoriteCount } = useFavorites();
-  const { setCategory, setCity } = useFilters();
+  const { setCategory, setCity, setOnlyUrgent, resetFilters } = useFilters();
 
   const handleReportFilterCategory = (cat: string) => {
     setCategory(cat);
@@ -26,6 +26,19 @@ export default function HomePage() {
   const handleReportFilterCity = (selectedCity: string) => {
     setCity(selectedCity);
     setActiveTab("all");
+  };
+
+  const handleGoToAllJobs = () => {
+    resetFilters();
+    setActiveTab("all");
+    window.scrollTo({ top: 300, behavior: "smooth" });
+  };
+
+  const handleGoToUrgentJobs = () => {
+    resetFilters();
+    setOnlyUrgent(true);
+    setActiveTab("all");
+    window.scrollTo({ top: 300, behavior: "smooth" });
   };
 
   return (
@@ -125,6 +138,8 @@ export default function HomePage() {
         <EmploymentReport
           onFilterCategory={handleReportFilterCategory}
           onFilterCity={handleReportFilterCity}
+          onGoToAllJobs={handleGoToAllJobs}
+          onGoToUrgentJobs={handleGoToUrgentJobs}
         />
       )}
 

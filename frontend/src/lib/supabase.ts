@@ -404,10 +404,12 @@ export interface EmploymentReportData {
   totalActiveJobs: number;
   totalPositions: number;
   urgentJobsCount: number;
+  totalInstitutions: number;
   topInstitutions: { name: string; count: number; positions: number }[];
   categoryDistribution: { key: string; label: string; count: number; percentage: number }[];
   postTypeDistribution: { key: string; label: string; count: number; percentage: number }[];
   topCities: { city: string; count: number }[];
+  allJobs: JobPost[];
 }
 
 export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
@@ -515,10 +517,12 @@ export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
     totalActiveJobs,
     totalPositions,
     urgentJobsCount,
+    totalInstitutions: Object.keys(instMap).length,
     topInstitutions,
     categoryDistribution,
     postTypeDistribution,
     topCities,
+    allJobs: jobs,
   };
 }
 
