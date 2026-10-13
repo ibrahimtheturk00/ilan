@@ -20,11 +20,12 @@ export function formatDate(dateStr: string | null | undefined): string {
 }
 
 export interface ApplicationStatusInfo {
-  type: "upcoming" | "active" | "urgent" | "expired" | "unknown";
+  type: "cancelled" | "upcoming" | "active" | "urgent" | "expired" | "unknown";
   statusTitle: string;
   daysText: string;
   fullBadgeText: string;
   badgeClass: string;
+  isCancelled: boolean;
   isUpcoming: boolean;
   isActive: boolean;
   isExpired: boolean;
@@ -32,8 +33,26 @@ export interface ApplicationStatusInfo {
 
 export function getJobApplicationStatus(
   publishedStr: string | null | undefined,
-  deadlineStr: string | null | undefined
+  deadlineStr: string | null | undefined,
+  title?: string
 ): ApplicationStatusInfo {
+  // 0. İptal / Düzeltme İlanı Kontrolü
+  const titleLower = (title || "").toLowerCase();
+  if (titleLower.includes("iptal") || titleLower.includes("düzeltme") || titleLower.includes("duzeltme")) {
+    const isIptal = titleLower.includes("iptal");
+    return {
+      type: "cancelled",
+      statusTitle: isIptal ? "İptal İlanı" : "Düzeltme İlanı",
+      daysText: isIptal ? "Başvuru İptal Edildi" : "Şartlar Güncellendi",
+      fullBadgeText: isIptal ? "İptal Edildi" : "Düzeltme İlanı",
+      badgeClass: "bg-red-600 text-white font-bold shadow-sm ring-1 ring-red-700",
+      isCancelled: true,
+      isUpcoming: false,
+      isActive: false,
+      isExpired: true,
+    };
+  }
+
   const now = new Date();
   now.setHours(0, 0, 0, 0);
 
@@ -49,7 +68,8 @@ export function getJobApplicationStatus(
         statusTitle: "Gelecek Başvuru",
         daysText: `${diffToStart} gün sonra başlıyor`,
         fullBadgeText: `Gelecek Başvuru • ${diffToStart} gün sonra`,
-        badgeClass: "bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/70 dark:text-emerald-300 font-semibold",
+        badgeClass: "bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/50 font-medium",
+        isCancelled: false,
         isUpcoming: true,
         isActive: false,
         isExpired: false,
@@ -64,7 +84,8 @@ export function getJobApplicationStatus(
       statusTitle: "Başvuru Aktif",
       daysText: "Süresiz / Belirtilmemiş",
       fullBadgeText: "Başvuru Aktif",
-      badgeClass: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300",
+      badgeClass: "bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
+      isCancelled: false,
       isUpcoming: false,
       isActive: true,
       isExpired: false,
@@ -81,7 +102,8 @@ export function getJobApplicationStatus(
       statusTitle: "Süresi Doldu",
       daysText: "Başvuru Kapandı",
       fullBadgeText: "Süresi Doldu",
-      badgeClass: "bg-slate-100 text-slate-500 border-slate-200 dark:bg-slate-800 dark:text-slate-400",
+      badgeClass: "bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-800/60 dark:text-slate-400 dark:border-slate-700",
+      isCancelled: false,
       isUpcoming: false,
       isActive: false,
       isExpired: true,
@@ -91,8 +113,9 @@ export function getJobApplicationStatus(
       type: "urgent",
       statusTitle: "Başvuru Aktif (Acil)",
       daysText: diffDays === 0 ? "Bugün Son Gün!" : `Son ${diffDays} gün kaldı!`,
-      fullBadgeText: diffDays === 0 ? "Bugün Son Gün!" : `Aktif • Son ${diffDays} gün!`,
-      badgeClass: "bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-950/70 dark:text-rose-300 font-bold animate-pulse",
+      fullBadgeText: diffDays === 0 ? "Bugün Son Gün!" : `Son ${diffDays} gün!`,
+      badgeClass: "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800 font-semibold",
+      isCancelled: false,
       isUpcoming: false,
       isActive: true,
       isExpired: false,
@@ -103,7 +126,8 @@ export function getJobApplicationStatus(
       statusTitle: "Başvuru Aktif",
       daysText: `${diffDays} gün kaldı`,
       fullBadgeText: `Başvuru Aktif • ${diffDays} gün kaldı`,
-      badgeClass: "bg-rose-100 text-rose-800 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 font-semibold",
+      badgeClass: "bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-800/50 font-medium",
+      isCancelled: false,
       isUpcoming: false,
       isActive: true,
       isExpired: false,
@@ -260,11 +284,26 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
 }
 
 export const POST_TYPE_LABELS: Record<string, { label: string; color: string }> = {
-  memur: { label: "Memur", color: "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300" },
-  isci: { label: "İşçi", color: "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300" },
-  akademik: { label: "Akademik", color: "bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300" },
-  sozlesmeli: { label: "Sözleşmeli", color: "bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-950/60 dark:text-teal-300" },
-  diger: { label: "Diğer", color: "bg-slate-100 text-slate-800 border-slate-200 dark:bg-slate-800 dark:text-slate-300" },
+  memur: {
+    label: "Memur",
+    color: "bg-sky-50 text-sky-700 border-sky-200/80 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800/60 font-semibold",
+  },
+  isci: {
+    label: "İşçi",
+    color: "bg-amber-50 text-amber-700 border-amber-200/80 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60 font-semibold",
+  },
+  akademik: {
+    label: "Akademik",
+    color: "bg-purple-50 text-purple-700 border-purple-200/80 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800/60 font-semibold",
+  },
+  sozlesmeli: {
+    label: "Sözleşmeli",
+    color: "bg-teal-50 text-teal-700 border-teal-200/80 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800/60 font-semibold",
+  },
+  diger: {
+    label: "Genel",
+    color: "bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 font-medium",
+  },
 };
 
 export const CATEGORY_LABELS: Record<string, { label: string; icon: string }> = {

@@ -102,8 +102,8 @@ export function JobList() {
           {/* Sayfa Numaraları */}
           {Array.from({ length: totalPages }, (_, i) => i + 1)
             .filter((p) => {
-              // 1, son sayfa ve aktif sayfanın etrafındaki 2 sayfayı göster
-              return p === 1 || p === totalPages || Math.abs(p - filters.page) <= 2;
+              // 1, son sayfa ve aktif sayfanın etrafındaki 5 sayfayı göster
+              return p === 1 || p === totalPages || Math.abs(p - filters.page) <= 5;
             })
             .map((p, index, arr) => {
               const prev = arr[index - 1];

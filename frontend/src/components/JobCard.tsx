@@ -11,7 +11,7 @@ interface JobCardProps {
 export function JobCard({ job, onSelect }: JobCardProps) {
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
-  const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at);
+  const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at, job.title);
 
   const handleClick = (e: React.MouseEvent) => {
     if (onSelect) {
@@ -23,56 +23,72 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   return (
     <div
       onClick={handleClick}
-      className="group bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-brand-300 dark:hover:border-brand-500 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between cursor-pointer"
+      className={`group bg-white dark:bg-slate-900 border ${
+        statusInfo.isCancelled
+          ? "border-red-200 dark:border-red-900/50 hover:border-red-400"
+          : "border-slate-200/80 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
+      } rounded-xl p-5 transition-all duration-150 hover:shadow-md flex flex-col justify-between cursor-pointer`}
     >
       <div>
         {/* Üst Rozetler */}
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          {typeInfo && (
-            <span className={`text-xs px-2.5 py-0.5 rounded-md font-semibold border ${typeInfo.color}`}>
-              {typeInfo.label}
+        <div className="flex flex-wrap items-center gap-1.5 mb-3">
+          {/* İptal Rozeti veya Kadro Türü */}
+          {statusInfo.isCancelled ? (
+            <span className="text-[11px] px-2 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase">
+              {statusInfo.statusTitle}
             </span>
+          ) : (
+            typeInfo && (
+              <span className={`text-[11px] px-2.5 py-0.5 rounded font-medium border ${typeInfo.color}`}>
+                {typeInfo.label}
+              </span>
+            )
           )}
+
           {categoryInfo && (
-            <span className="text-xs px-2.5 py-0.5 rounded-md font-medium bg-slate-100 dark:bg-slate-700/60 text-slate-700 dark:text-slate-300">
+            <span className="text-[11px] px-2 py-0.5 rounded font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
               {categoryInfo.label}
             </span>
           )}
+
+          {/* Kaynak Rozeti (Örn: CBİKO, SBB, vb. - Şık İndigo/Slate Tonu) */}
           {job.sources?.name && (
-            <span className="text-xs px-2 py-0.5 rounded font-normal text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-700/60">
+            <span className="text-[11px] px-2 py-0.5 rounded font-medium bg-indigo-50/80 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/40">
               {job.sources.name}
             </span>
           )}
 
-          {/* Başvuru Durum Rozeti (Yeşil: Gelecek, Kırmızı/Turuncu: Aktif/Acil) */}
-          <span
-            className={`ml-auto text-xs font-semibold px-2.5 py-0.5 rounded-full border ${statusInfo.badgeClass}`}
-          >
-            {statusInfo.fullBadgeText}
-          </span>
+          {/* Başvuru Durum Rozeti (İptal değilse göster) */}
+          {!statusInfo.isCancelled && (
+            <span
+              className={`ml-auto text-[11px] px-2 py-0.5 rounded font-medium ${statusInfo.badgeClass}`}
+            >
+              {statusInfo.fullBadgeText}
+            </span>
+          )}
         </div>
 
         {/* İlan Başlığı */}
-        <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2 leading-snug">
+        <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2 leading-snug tracking-tight">
           {job.title}
         </h3>
 
         {/* Kurum Adı */}
-        <div className="flex items-center gap-1.5 text-xs font-medium text-slate-600 dark:text-slate-300 mt-2">
+        <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-2">
           <Building className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-          <span className="truncate">{job.institution || "Resmi Kamu Kurumu"}</span>
+          <span className="truncate font-medium">{job.institution || "Resmi Kamu Kurumu"}</span>
         </div>
 
         {/* Açıklama Özeti */}
         {job.description && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2.5 line-clamp-2 leading-relaxed">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-2 leading-relaxed">
             {job.description}
           </p>
         )}
       </div>
 
       {/* Alt Bilgi Çubuğu */}
-      <div className="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-700/50 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-3">
           {job.city && (
             <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300">
@@ -86,16 +102,18 @@ export function JobCard({ job, onSelect }: JobCardProps) {
               {job.position_count} Kişi
             </span>
           )}
-          <span className="hidden sm:flex items-center gap-1">
-            <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-            {formatDate(job.published_at)}
-          </span>
+          {!statusInfo.isCancelled && job.published_at && (
+            <span className="hidden sm:flex items-center gap-1 text-slate-500 dark:text-slate-400">
+              <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+              {formatDate(job.published_at)}
+            </span>
+          )}
         </div>
 
         <button
           type="button"
           onClick={handleClick}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 transition-colors group-hover:translate-x-0.5 duration-150"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
         >
           <span>İncele</span>
           <ArrowRight className="w-3.5 h-3.5" />
