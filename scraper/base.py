@@ -3,7 +3,7 @@ import sys
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 
 from dotenv import load_dotenv
 
