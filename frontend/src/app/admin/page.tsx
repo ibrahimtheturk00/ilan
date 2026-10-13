@@ -13,18 +13,23 @@ import {
   ArrowLeft,
   KeyRound,
 } from "lucide-react";
-import { fetchScrapeLogs, MOCK_SOURCES, isSupabaseConfigured, supabase } from "@/lib/supabase";
-import { ScrapeLog } from "@/types";
+import { fetchScrapeLogs, fetchSources, MOCK_SOURCES, isSupabaseConfigured, supabase } from "@/lib/supabase";
+import { ScrapeLog, Source } from "@/types";
 
 export default function AdminDashboardPage() {
+  const [sources, setSources] = useState<Source[]>(MOCK_SOURCES);
   const [logs, setLogs] = useState<ScrapeLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState<string | null>(null);
 
   const loadData = async () => {
     setLoading(true);
-    const logData = await fetchScrapeLogs();
+    const [logData, sourceData] = await Promise.all([
+      fetchScrapeLogs(),
+      fetchSources(),
+    ]);
     setLogs(logData);
+    setSources(sourceData);
     setLoading(false);
   };
 
@@ -139,7 +144,7 @@ export default function AdminDashboardPage() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {MOCK_SOURCES.map((s) => (
+          {sources.map((s) => (
             <div key={s.id} className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-4 shadow-sm">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{s.name}</span>

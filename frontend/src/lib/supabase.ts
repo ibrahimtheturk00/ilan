@@ -12,12 +12,12 @@ export const supabase = isSupabaseConfigured
 
 // Mock / Demo verileri (Supabase URL girilmeden önce veya çevrimdışı önizlemede kullanılır)
 export const MOCK_SOURCES: Source[] = [
-  { id: 1, name: "Kariyer Kapısı (CBİKO)", slug: "kariyer-kapisi", base_url: "https://kariyerkapisi.cbiko.gov.tr", scraper_type: "playwright", is_active: true, scrape_interval_minutes: 120, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
-  { id: 2, name: "İlan.gov.tr (BİK)", slug: "ilan-gov", base_url: "https://www.ilan.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 60, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
-  { id: 3, name: "Kamu İlan (SBB)", slug: "kamu-ilan-sbb", base_url: "https://kamuilan.sbb.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 60, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
-  { id: 4, name: "İŞKUR Kamu İlanları", slug: "iskur", base_url: "https://www.iskur.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 360, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
-  { id: 5, name: "T.C. Resmî Gazete", slug: "resmi-gazete", base_url: "https://www.resmigazete.gov.tr", scraper_type: "pdf", is_active: true, scrape_interval_minutes: 1440, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
-  { id: 6, name: "Yerel Yönetimler Portalı", slug: "yerel-yonetimler", base_url: "https://yerelyonetimler.csb.gov.tr", scraper_type: "playwright", is_active: true, scrape_interval_minutes: 180, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 1, name: "Kariyer Kapısı (CBİKO)", slug: "kariyer-kapisi", base_url: "https://kariyerkapisi.cbiko.gov.tr", scraper_type: "playwright", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 2, name: "İlan.gov.tr (BİK)", slug: "ilan-gov", base_url: "https://www.ilan.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 3, name: "Kamu İlan (SBB)", slug: "kamu-ilan-sbb", base_url: "https://kamuilan.sbb.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 4, name: "İŞKUR Kamu İlanları", slug: "iskur", base_url: "https://www.iskur.gov.tr", scraper_type: "http", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 5, name: "T.C. Resmî Gazete", slug: "resmi-gazete", base_url: "https://www.resmigazete.gov.tr", scraper_type: "pdf", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
+  { id: 6, name: "Yerel Yönetimler Portalı", slug: "yerel-yonetimler", base_url: "https://yerelyonetimler.csb.gov.tr", scraper_type: "playwright", is_active: true, scrape_interval_minutes: 5, last_scraped_at: new Date().toISOString(), created_at: new Date().toISOString() },
 ];
 
 export const MOCK_JOBS: JobPost[] = [
@@ -324,3 +324,21 @@ export async function fetchScrapeLogs(): Promise<ScrapeLog[]> {
     { id: 4, source_id: 6, started_at: new Date(Date.now() - 21600000).toISOString(), finished_at: new Date(Date.now() - 21550000).toISOString(), status: "partial", posts_found: 6, posts_new: 0, posts_updated: 6, error_message: "Bağlantı zaman aşımı (Playwright fallback kullanıldı)", github_run_id: "run-9835", sources: MOCK_SOURCES[5] },
   ];
 }
+
+export async function fetchSources(): Promise<Source[]> {
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("sources")
+        .select("*")
+        .order("id", { ascending: true });
+      if (!error && data && data.length > 0) {
+        return data as Source[];
+      }
+    } catch (err) {
+      console.warn("Kaynakları çekme hatası:", err);
+    }
+  }
+  return MOCK_SOURCES;
+}
+
