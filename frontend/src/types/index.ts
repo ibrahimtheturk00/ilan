@@ -55,7 +55,8 @@ export type SortOption =
   | "deadline_desc"  // Son gün uzak olanlar önce
   | "published_desc" // En yeni eklenenler önce
   | "title_asc"      // İlan Başlığı (A'dan Z'ye)
-  | "title_desc";    // İlan Başlığı (Z'den A'ya)
+  | "title_desc"     // İlan Başlığı (Z'den A'ya)
+  | "position_desc"; // Kontenjan Sayısı (Çoktan aza)
 
 export interface FilterState {
   searchQuery: string;
@@ -66,6 +67,9 @@ export interface FilterState {
   onlyActive: boolean;
   page: number;
   sortBy?: SortOption;
+  kpssType?: string;
+  educationLevel?: string;
+  onlyUrgent?: boolean;
 }
 
 export type JobFilters = FilterState;

@@ -10,6 +10,9 @@ interface FilterStore extends FilterState {
   setOnlyActive: (onlyActive: boolean) => void;
   setPage: (page: number) => void;
   setSortBy: (sort: FilterState["sortBy"]) => void;
+  setKpssType: (kpssType: string) => void;
+  setEducationLevel: (level: string) => void;
+  setOnlyUrgent: (onlyUrgent: boolean) => void;
   resetFilters: () => void;
 }
 
@@ -22,6 +25,9 @@ const initialState: FilterState = {
   onlyActive: true,
   page: 1,
   sortBy: "deadline_desc",
+  kpssType: "",
+  educationLevel: "",
+  onlyUrgent: false,
 };
 
 export const useFilters = create<FilterStore>((set) => ({
@@ -34,5 +40,8 @@ export const useFilters = create<FilterStore>((set) => ({
   setOnlyActive: (onlyActive) => set({ onlyActive, page: 1 }),
   setPage: (page) => set({ page }),
   setSortBy: (sort) => set({ sortBy: sort, page: 1 }),
+  setKpssType: (kpssType) => set({ kpssType, page: 1 }),
+  setEducationLevel: (educationLevel) => set({ educationLevel, page: 1 }),
+  setOnlyUrgent: (onlyUrgent) => set({ onlyUrgent, page: 1 }),
   resetFilters: () => set(initialState),
 }));

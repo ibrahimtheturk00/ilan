@@ -1,5 +1,8 @@
 import { createClient } from "@supabase/supabase-js";
 import { JobPost, Source, ScrapeLog, FilterState } from "@/types";
+import { detectKpssType, detectEducationLevel, fuzzyTurkishMatch } from "@/lib/jobParser";
+import { getJobApplicationStatus } from "@/lib/utils";
+export { trackUniqueVisitor, getCachedVisitorCount as fetchUniqueVisitorCount } from "@/lib/visitor";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
@@ -156,6 +159,9 @@ export const MOCK_JOBS: JobPost[] = [
 ];
 
 export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPost[]; count: number }> {
+  const hasDerivedFilters = Boolean(filters.kpssType || filters.educationLevel || filters.onlyUrgent);
+  const pageSize = 12;
+
   if (supabase) {
     try {
       let query = supabase
@@ -178,44 +184,73 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
         query = query.eq("category", filters.category);
       }
 
-      if (filters.searchQuery) {
+      if (filters.searchQuery && !hasDerivedFilters) {
         const term = `%${filters.searchQuery.trim()}%`;
         query = query.or(`title.ilike.${term},institution.ilike.${term},description.ilike.${term}`);
       }
 
-      const pageSize = 12;
-      const from = (filters.page - 1) * pageSize;
-      const to = from + pageSize - 1;
-
       // Dinamik Sıralama
       switch (filters.sortBy) {
         case "deadline_asc":
-          // Başvuru süresi en az kalanlar / yaklaşanlar önce
           query = query.order("deadline_at", { ascending: true, nullsFirst: false }).order("id", { ascending: true });
           break;
         case "published_desc":
-          // En yeni eklenen / yayınlanan ilanlar önce
           query = query.order("published_at", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
           break;
+        case "position_desc":
+          query = query.order("position_count", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
+          break;
         case "title_asc":
-          // A'dan Z'ye alfabetik
           query = query.order("title", { ascending: true }).order("id", { ascending: false });
           break;
         case "title_desc":
-          // Z'den A'ya alfabetik
           query = query.order("title", { ascending: false }).order("id", { ascending: false });
           break;
         case "deadline_desc":
         default:
-          // Varsayılan: Son başvuru tarihi ileri olanlar / güncel
           query = query.order("deadline_at", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
           break;
       }
 
-      const { data, count, error } = await query.range(from, to);
+      if (hasDerivedFilters || filters.searchQuery) {
+        // İstemci tarafında türetilen filtreler veya fuzzy arama için tüm adayları çekip süzüyoruz
+        const { data, error } = await query.limit(500);
+        if (!error && data) {
+          let filtered = data as JobPost[];
 
-      if (!error && data) {
-        return { data: data as JobPost[], count: count || data.length };
+          if (filters.searchQuery) {
+            filtered = filtered.filter((j) =>
+              fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""}`, filters.searchQuery)
+            );
+          }
+
+          if (filters.kpssType) {
+            filtered = filtered.filter((j) => detectKpssType(j).type === filters.kpssType);
+          }
+
+          if (filters.educationLevel) {
+            filtered = filtered.filter((j) => detectEducationLevel(j).level === filters.educationLevel);
+          }
+
+          if (filters.onlyUrgent) {
+            filtered = filtered.filter((j) => {
+              const status = getJobApplicationStatus(j.published_at, j.deadline_at, j.title);
+              return status.type === "urgent";
+            });
+          }
+
+          const count = filtered.length;
+          const from = (filters.page - 1) * pageSize;
+          const pageData = filtered.slice(from, from + pageSize);
+          return { data: pageData, count };
+        }
+      } else {
+        const from = (filters.page - 1) * pageSize;
+        const to = from + pageSize - 1;
+        const { data, count, error } = await query.range(from, to);
+        if (!error && data) {
+          return { data: data as JobPost[], count: count || data.length };
+        }
       }
     } catch (err) {
       console.warn("Supabase fetch hatası, mock veriye dönülüyor:", err);
@@ -242,18 +277,37 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
   }
 
   if (filters.searchQuery) {
-    const q = filters.searchQuery.toLowerCase();
-    filtered = filtered.filter(
-      (j) =>
-        j.title.toLowerCase().includes(q) ||
-        j.institution?.toLowerCase().includes(q) ||
-        j.description?.toLowerCase().includes(q)
+    filtered = filtered.filter((j) =>
+      fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""}`, filters.searchQuery)
     );
   }
 
+  if (filters.kpssType) {
+    filtered = filtered.filter((j) => detectKpssType(j).type === filters.kpssType);
+  }
+
+  if (filters.educationLevel) {
+    filtered = filtered.filter((j) => detectEducationLevel(j).level === filters.educationLevel);
+  }
+
+  if (filters.onlyUrgent) {
+    filtered = filtered.filter((j) => {
+      const status = getJobApplicationStatus(j.published_at, j.deadline_at, j.title);
+      return status.type === "urgent";
+    });
+  }
+
+  if (filters.sortBy === "position_desc") {
+    filtered.sort((a, b) => (b.position_count || 0) - (a.position_count || 0));
+  }
+
+  const count = filtered.length;
+  const from = (filters.page - 1) * pageSize;
+  const pageData = filtered.slice(from, from + pageSize);
+
   return {
-    data: filtered,
-    count: filtered.length,
+    data: pageData,
+    count,
   };
 }
 
@@ -319,6 +373,155 @@ export async function fetchAllJobSummaries(): Promise<{ id: number; title: strin
   }));
 }
 
+export async function fetchCityJobCounts(): Promise<Record<string, number>> {
+  const counts: Record<string, number> = {};
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("job_posts")
+        .select("city")
+        .eq("is_active", true);
+      if (!error && data) {
+        for (const row of data) {
+          const city = row.city || "Tüm Türkiye";
+          counts[city] = (counts[city] || 0) + 1;
+        }
+        return counts;
+      }
+    } catch (e) {
+      console.warn("Şehir sayaçları alınamadı:", e);
+    }
+  }
+
+  for (const job of MOCK_JOBS) {
+    const city = job.city || "Tüm Türkiye";
+    counts[city] = (counts[city] || 0) + 1;
+  }
+  return counts;
+}
+
+export interface EmploymentReportData {
+  totalActiveJobs: number;
+  totalPositions: number;
+  urgentJobsCount: number;
+  topInstitutions: { name: string; count: number; positions: number }[];
+  categoryDistribution: { key: string; label: string; count: number; percentage: number }[];
+  postTypeDistribution: { key: string; label: string; count: number; percentage: number }[];
+  topCities: { city: string; count: number }[];
+}
+
+export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
+  let jobs: JobPost[] = [];
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("job_posts")
+        .select("*")
+        .eq("is_active", true)
+        .limit(1000);
+      if (!error && data) {
+        jobs = data as JobPost[];
+      }
+    } catch (e) {
+      console.warn("İstihdam raporu verileri alınamadı:", e);
+    }
+  }
+
+  if (jobs.length === 0) {
+    jobs = MOCK_JOBS;
+  }
+
+  const totalActiveJobs = jobs.length;
+  let totalPositions = 0;
+  let urgentJobsCount = 0;
+
+  const instMap: Record<string, { count: number; positions: number }> = {};
+  const catMap: Record<string, number> = {};
+  const typeMap: Record<string, number> = {};
+  const cityMap: Record<string, number> = {};
+
+  for (const j of jobs) {
+    const pCount = j.position_count || 1;
+    totalPositions += pCount;
+
+    const st = getJobApplicationStatus(j.published_at, j.deadline_at, j.title);
+    if (st.type === "urgent") {
+      urgentJobsCount++;
+    }
+
+    const inst = (j.institution || "Diğer Kamu Kurumu").trim();
+    if (!instMap[inst]) instMap[inst] = { count: 0, positions: 0 };
+    instMap[inst].count++;
+    instMap[inst].positions += pCount;
+
+    const cat = j.category || "diger";
+    catMap[cat] = (catMap[cat] || 0) + 1;
+
+    const pType = j.post_type || "diger";
+    typeMap[pType] = (typeMap[pType] || 0) + 1;
+
+    if (j.city && j.city !== "Tüm Türkiye") {
+      cityMap[j.city] = (cityMap[j.city] || 0) + 1;
+    }
+  }
+
+  const topInstitutions = Object.entries(instMap)
+    .map(([name, val]) => ({ name, count: val.count, positions: val.positions }))
+    .sort((a, b) => b.positions - a.positions || b.count - a.count)
+    .slice(0, 5);
+
+  const CAT_NAMES: Record<string, string> = {
+    bilisim: "Bilişim & Yazılım",
+    saglik: "Sağlık & Tıp",
+    egitim: "Eğitim & Akademi",
+    muhendislik: "Mühendislik & Teknik",
+    hukuk: "Hukuk & Adalet",
+    maliye: "Maliye & Finans",
+    diger: "Genel / Diğer",
+  };
+
+  const TYPE_NAMES: Record<string, string> = {
+    memur: "Memur",
+    sozlesmeli: "Sözleşmeli Personel",
+    isci: "Sürekli / Geçici İşçi",
+    akademik: "Akademik Personel",
+    diger: "Genel Kadrolar",
+  };
+
+  const categoryDistribution = Object.entries(catMap)
+    .map(([key, count]) => ({
+      key,
+      label: CAT_NAMES[key] || key,
+      count,
+      percentage: totalActiveJobs > 0 ? Math.round((count / totalActiveJobs) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  const postTypeDistribution = Object.entries(typeMap)
+    .map(([key, count]) => ({
+      key,
+      label: TYPE_NAMES[key] || key,
+      count,
+      percentage: totalActiveJobs > 0 ? Math.round((count / totalActiveJobs) * 100) : 0,
+    }))
+    .sort((a, b) => b.count - a.count);
+
+  const topCities = Object.entries(cityMap)
+    .map(([city, count]) => ({ city, count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 6);
+
+  return {
+    totalActiveJobs,
+    totalPositions,
+    urgentJobsCount,
+    topInstitutions,
+    categoryDistribution,
+    postTypeDistribution,
+    topCities,
+  };
+}
+
 
 
 export async function fetchScrapeLogs(): Promise<ScrapeLog[]> {
@@ -362,62 +565,6 @@ export async function fetchSources(): Promise<Source[]> {
     }
   }
   return MOCK_SOURCES;
-}
-
-/**
- * Benzersiz ziyaretçi sayacı motoru.
- * Tarayıcı parmak izi (fingerprint) oluşturur, localStorage'da tutar.
- * Sayfa yenilemelerinde (refresh) tekrar saymaz; sadece ilk ziyarette Supabase'e 1 kez yazar.
- */
-export async function trackUniqueVisitor(): Promise<number> {
-  const VISITOR_KEY = "kpi_unique_visitor_id";
-  let visitorId = "";
-
-  if (typeof window !== "undefined") {
-    visitorId = localStorage.getItem(VISITOR_KEY) || "";
-    if (!visitorId) {
-      visitorId = `v_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
-      localStorage.setItem(VISITOR_KEY, visitorId);
-
-      // Yeni tekil ziyaretçi ise Supabase'e 1 kez kaydet
-      if (supabase) {
-        try {
-          await supabase.from("scrape_logs").insert({
-            source_id: 8, // Ziyaretçi Sayacı
-            status: "success",
-            error_message: `visitor:${visitorId}`,
-            posts_found: 0,
-            posts_new: 0,
-            posts_updated: 0,
-          });
-        } catch (e) {
-          console.warn("Ziyaretçi kaydı eklenemedi:", e);
-        }
-      }
-    }
-  }
-
-  // Toplam tekil ziyaretçi sayısını getir
-  return fetchUniqueVisitorCount();
-}
-
-export async function fetchUniqueVisitorCount(): Promise<number> {
-  if (supabase) {
-    try {
-      const { data, error } = await supabase
-        .from("scrape_logs")
-        .select("error_message")
-        .eq("source_id", 8)
-        .like("error_message", "visitor:%");
-      if (!error && data) {
-        const uniqueSet = new Set(data.map((d) => d.error_message));
-        return Math.max(1, uniqueSet.size);
-      }
-    } catch (e) {
-      console.warn("Ziyaretçi sayısı çekilemedi:", e);
-    }
-  }
-  return 1;
 }
 
 

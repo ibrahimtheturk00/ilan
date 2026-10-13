@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Building2, ShieldCheck, Mail, Users, Github } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
-import { trackUniqueVisitor } from "@/lib/supabase";
+import { trackUniqueVisitor } from "@/lib/visitor";
 
 export function Header() {
   const [visitorCount, setVisitorCount] = useState<number | null>(null);

@@ -48,6 +48,7 @@ const POST_TYPES: PostTypeOption[] = [
 const SORT_OPTIONS: { key: SortOption; label: string; desc: string }[] = [
   { key: "deadline_desc", label: "Son Başvuru (İleri Tarihli)", desc: "En geç bitecek ilanlar önce" },
   { key: "deadline_asc", label: "Kalan Süre (Azalan / Acil)", desc: "Son günü yaklaşan ilanlar önce" },
+  { key: "position_desc", label: "Kontenjan (Çoktan Aza)", desc: "En yüksek kadro sayısı önce" },
   { key: "published_desc", label: "En Yeni Eklenenler", desc: "En son yayınlanan ilanlar önce" },
   { key: "title_asc", label: "İlan Başlığı (A → Z)", desc: "Alfabetik artan sıralama" },
   { key: "title_desc", label: "İlan Başlığı (Z → A)", desc: "Alfabetik azalan sıralama" },
