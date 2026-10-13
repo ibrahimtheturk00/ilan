@@ -74,6 +74,11 @@ object TurkishMatcher {
     )
 
     fun matchesCategory(job: JobPost, categorySlug: String): Boolean {
+        val dept = YokDepartments.getById(categorySlug)
+        if (dept != null) {
+            return YokDepartments.matches(job, dept)
+        }
+
         val normSlug = normalize(categorySlug)
 
         // 1. Doğrudan veri tabanındaki category alanı eşleşmesi

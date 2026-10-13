@@ -13,7 +13,7 @@ sealed class Screen(val route: String, val title: String, val icon: ImageVector?
     object Personalized : Screen("personalized", "Bana Özel", Icons.Default.AutoAwesome)
     object Categories : Screen("categories", "Bölümler", Icons.Default.School)
     object Favorites : Screen("favorites", "Favorilerim", Icons.Default.Favorite)
-    object Profile : Screen("profile", "Hesabım", Icons.Default.Person)
+    object Profile : Screen("profile", "Profilim", Icons.Default.Person)
     object Onboarding : Screen("onboarding", "Kurulum")
     object Detail : Screen("detail/{jobId}", "İlan Detayı") {
         fun createRoute(jobId: Long) = "detail/$jobId"

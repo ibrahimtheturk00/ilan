@@ -1,8 +1,12 @@
 package com.kamuilan.app.ui.screens.categories
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,106 +25,115 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.AccountBalance
-import androidx.compose.material.icons.filled.Agriculture
-import androidx.compose.material.icons.filled.Build
-import androidx.compose.material.icons.filled.Campaign
-import androidx.compose.material.icons.filled.Computer
-import androidx.compose.material.icons.filled.Engineering
-import androidx.compose.material.icons.filled.Folder
-import androidx.compose.material.icons.filled.Gavel
-import androidx.compose.material.icons.filled.Hotel
-import androidx.compose.material.icons.filled.LocalHospital
-import androidx.compose.material.icons.filled.MedicalServices
-import androidx.compose.material.icons.filled.Mosque
-import androidx.compose.material.icons.filled.Psychology
 import androidx.compose.material.icons.filled.School
-import androidx.compose.material.icons.filled.Science
-import androidx.compose.material.icons.filled.Security
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.kamuilan.app.data.model.DepartmentCategory
+import com.kamuilan.app.data.model.YokDepartments
+import com.kamuilan.app.ui.screens.home.HomeViewModel
+import com.kamuilan.app.ui.theme.ActiveEmerald
+import com.kamuilan.app.ui.theme.ActiveEmeraldBg
+import com.kamuilan.app.ui.theme.ActiveEmeraldBorder
+import com.kamuilan.app.ui.theme.AmbientGlassBackground
+import com.kamuilan.app.ui.theme.BrandPrimary
 import com.kamuilan.app.ui.theme.Slate200
 import com.kamuilan.app.ui.theme.Slate400
 import com.kamuilan.app.ui.theme.Slate500
 import com.kamuilan.app.ui.theme.Slate900
-import com.kamuilan.app.ui.theme.AmbientGlassBackground
-
-data class DepartmentCategory(
-    val title: String,
-    val icon: ImageVector,
-    val color: Color,
-    val bgColor: Color,
-    val queryKeyword: String
-)
-
-val POPULAR_CATEGORIES = listOf(
-    DepartmentCategory("Bilişim & Yazılım", Icons.Default.Computer, Color(0xFF2563EB), Color(0xFFEFF6FF), "bilisim"),
-    DepartmentCategory("Sağlık & Tıp", Icons.Default.MedicalServices, Color(0xFFE11D48), Color(0xFFFFF1F2), "tabip"),
-    DepartmentCategory("Hemşirelik & Ebelik", Icons.Default.LocalHospital, Color(0xFF0D9488), Color(0xFFF0FDFA), "hemşire"),
-    DepartmentCategory("Eğitim & Öğretmenlik", Icons.Default.School, Color(0xFFD97706), Color(0xFFFFFBEB), "öğretim"),
-    DepartmentCategory("Mühendislik & Mimarlık", Icons.Default.Engineering, Color(0xFF4F46E5), Color(0xFFEEF2FF), "mühendis"),
-    DepartmentCategory("Hukuk & Adalet", Icons.Default.Gavel, Color(0xFF9333EA), Color(0xFFFAF5FF), "hukuk"),
-    DepartmentCategory("İktisat & Maliye", Icons.Default.AccountBalance, Color(0xFF059669), Color(0xFFECFDF5), "maliye"),
-    DepartmentCategory("Büro Yönetimi", Icons.Default.Folder, Color(0xFF0891B2), Color(0xFFECFEFF), "büro"),
-    DepartmentCategory("Zabıta & Güvenlik", Icons.Default.Security, Color(0xFFEA580C), Color(0xFFFFF7ED), "güvenlik"),
-    DepartmentCategory("Psikoloji & PDR", Icons.Default.Psychology, Color(0xFF7C3AED), Color(0xFFF5F3FF), "psikolog"),
-    DepartmentCategory("Fen & Temel Bilimler", Icons.Default.Science, Color(0xFF0F766E), Color(0xFFF0FDFA), "biyolog"),
-    DepartmentCategory("Ziraat & Veterinerlik", Icons.Default.Agriculture, Color(0xFF16A34A), Color(0xFFF0FDF4), "ziraat"),
-    DepartmentCategory("İlahiyat & Diyanet", Icons.Default.Mosque, Color(0xFFCA8A04), Color(0xFFFEFCE8), "imam"),
-    DepartmentCategory("İletişim & Medya", Icons.Default.Campaign, Color(0xFFDB2777), Color(0xFFFDF2F8), "iletişim"),
-    DepartmentCategory("Turizm & Otelcilik", Icons.Default.Hotel, Color(0xFFD97706), Color(0xFFFFFBEB), "turizm"),
-    DepartmentCategory("Teknik Hizmetler", Icons.Default.Build, Color(0xFF475569), Color(0xFFF8FAFC), "teknisyen")
-)
 
 @Composable
 fun CategoriesScreen(
+    homeViewModel: HomeViewModel,
     onCategoryClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val uiState by homeViewModel.uiState.collectAsState()
+
+    // Canlı ilan sayılarını hesapla (Web sitesiyle 1-e-1 aynı matching)
+    val departmentCounts = remember(uiState.allJobs) {
+        YokDepartments.calculateCounts(uiState.allJobs)
+    }
+
     AmbientGlassBackground(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
         ) {
-            // Başlık Alanı (Hero)
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Üst Rozet
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(Color.White.copy(alpha = 0.85f))
+                    .border(1.dp, Slate200, RoundedCornerShape(20.dp))
+                    .padding(horizontal = 10.dp, vertical = 5.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.School,
+                    contentDescription = null,
+                    tint = BrandPrimary,
+                    modifier = Modifier.size(14.dp)
+                )
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    text = "YÖK Atlas & Mezuniyet Alanları",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = BrandPrimary
+                )
+            }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Hero başlık
             Text(
-                text = "Bölümünüze Göre İlanlar",
+                text = "Mezuniyet Alanınızı Seçin",
                 fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                color = Slate900
+                fontWeight = FontWeight.ExtraBold,
+                color = Slate900,
+                letterSpacing = (-0.4).sp
             )
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(3.dp))
             Text(
-                text = "Mezuniyet alanınızı seçerek ilgili kamu kadrolarına anında ulaşın",
-                fontSize = 13.sp,
-                color = Slate500
+                text = "Alanınıza dokunarak güncel ilanları ve canlı açık pozisyon sayılarını görün",
+                fontSize = 12.sp,
+                color = Slate500,
+                lineHeight = 17.sp
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            // 16 Kategori Grid Listesi
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalArrangement = Arrangement.spacedBy(10.dp),
-                contentPadding = PaddingValues(bottom = 80.dp),
+                contentPadding = PaddingValues(bottom = 88.dp),
                 modifier = Modifier.fillMaxSize()
             ) {
-                items(POPULAR_CATEGORIES) { category ->
-                    CategoryCard(
-                        category = category,
-                        onClick = { onCategoryClick(category.queryKeyword) }
+                items(YokDepartments.LIST) { dept ->
+                    val count = departmentCounts[dept.id] ?: 0
+                    YokCategoryCard(
+                        category = dept,
+                        count = count,
+                        onClick = { onCategoryClick(dept.id) }
                     )
                 }
             }
@@ -129,70 +142,142 @@ fun CategoriesScreen(
 }
 
 @Composable
-fun CategoryCard(
+fun YokCategoryCard(
     category: DepartmentCategory,
+    count: Int,
     onClick: () -> Unit
 ) {
-    val cardShape = RoundedCornerShape(14.dp)
-    Card(
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+    val scale by animateFloatAsState(
+        targetValue = if (isPressed) 0.96f else 1f,
+        animationSpec = spring(dampingRatio = 0.55f, stiffness = 380f),
+        label = "cat_scale"
+    )
+    val elevation by animateFloatAsState(
+        targetValue = if (isPressed) 1f else 3f,
+        label = "cat_elevation"
+    )
+
+    val cardShape = RoundedCornerShape(16.dp)
+
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
-            .border(width = 1.dp, color = Slate200, shape = cardShape),
-        shape = cardShape,
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.5.dp)
+            .graphicsLayer { scaleX = scale; scaleY = scale }
+            .shadow(
+                elevation = elevation.dp,
+                shape = cardShape,
+                spotColor = category.color.copy(alpha = 0.2f)
+            )
+            .clip(cardShape)
+            .background(Color.White)
+            .border(1.dp, Slate200.copy(alpha = 0.8f), cardShape)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                onClick = onClick
+            )
     ) {
+        // Üst degrade parlaklık
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(65.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            category.bgColor,
+                            Color.White
+                        )
+                    )
+                )
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp)
+                .padding(12.dp)
         ) {
-            // İkon Kutusu
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(color = category.bgColor, shape = RoundedCornerShape(10.dp)),
-                contentAlignment = Alignment.Center
+            // İkon + Yeşil/Mavi Sayı Rozeti
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = category.icon,
-                    contentDescription = null,
-                    tint = category.color,
-                    modifier = Modifier.size(22.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .size(38.dp)
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(category.color, category.color.copy(alpha = 0.7f))
+                            ),
+                            shape = RoundedCornerShape(11.dp)
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = category.icon,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(19.dp)
+                    )
+                }
+
+                // Canlı İlan Sayısı Rozeti
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(
+                            if (count > 0) ActiveEmeraldBg else Color(0xFFF1F5F9)
+                        )
+                        .border(
+                            1.dp,
+                            if (count > 0) ActiveEmeraldBorder else Color(0xFFE2E8F0),
+                            RoundedCornerShape(12.dp)
+                        )
+                        .padding(horizontal = 7.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = "$count İlan",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if (count > 0) ActiveEmerald else Slate400
+                    )
+                }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
-            // Başlık
+            // Kategori Adı
             Text(
-                text = category.title,
-                fontSize = 13.sp,
+                text = category.name,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = Slate900,
-                lineHeight = 17.sp,
+                lineHeight = 16.sp,
+                minLines = 2,
                 maxLines = 2
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // İlanları Gör Linki
+            // İlanları İncele
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(3.dp)
             ) {
                 Text(
-                    text = "İlanları Gör",
-                    fontSize = 11.sp,
+                    text = "İlanları İncele",
+                    fontSize = 10.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = category.color
                 )
-                Spacer(modifier = Modifier.width(3.dp))
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null,
                     tint = category.color,
-                    modifier = Modifier.size(12.dp)
+                    modifier = Modifier.size(10.dp)
                 )
             }
         }

@@ -26,8 +26,8 @@ object JobParser {
         return when {
             text.contains("doktora") || text.contains("tıpta uzmanlık") -> "Doktora"
             text.contains("yüksek lisans") || text.contains("tezli yüksek") -> "Yüksek Lisans"
-            text.contains("lisans") || text.contains("fakülte") || text.contains("mühendis") || text.contains("avukat") || text.contains("tabip") -> "Lisans"
             text.contains("önlisans") || text.contains("ön lisans") || text.contains("meslek yüksekokul") || text.contains("myo") || text.contains("tekniker") -> "Önlisans"
+            text.contains("lisans") || text.contains("fakülte") || text.contains("mühendis") || text.contains("avukat") || text.contains("tabip") -> "Lisans"
             text.contains("lise") || text.contains("ortaöğretim") || text.contains("teknisyen") -> "Lise / Ortaöğretim"
             text.contains("ilköğretim") || text.contains("ilkokul") -> "İlköğretim"
             else -> "Belirtilmemiş"

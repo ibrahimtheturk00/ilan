@@ -33,10 +33,6 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -51,6 +47,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -69,6 +67,8 @@ import com.kamuilan.app.ui.components.SourceBadge
 import com.kamuilan.app.ui.components.TodayAddedBadge
 import com.kamuilan.app.ui.components.UrgentBadge
 import com.kamuilan.app.ui.screens.home.HomeViewModel
+import com.kamuilan.app.ui.theme.BrandDark
+import com.kamuilan.app.ui.theme.BrandLight
 import com.kamuilan.app.ui.theme.BrandPrimary
 import com.kamuilan.app.ui.theme.Slate100
 import com.kamuilan.app.ui.theme.Slate200
@@ -94,10 +94,21 @@ fun JobDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("İlan Detayı", fontSize = 17.sp, fontWeight = FontWeight.Bold, color = Slate900) },
+                title = {
+                    Text(
+                        "İlan Detayı",
+                        fontSize = 17.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Slate900
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Geri", tint = Slate700)
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Geri",
+                            tint = Slate700
+                        )
                     }
                 },
                 actions = {
@@ -110,13 +121,18 @@ fun JobDetailScreen(
                                 tint = if (isFavorite) UrgentRose else Slate700
                             )
                         }
-
                         IconButton(onClick = { shareJobDetails(context, job) }) {
-                            Icon(imageVector = Icons.Default.Share, contentDescription = "Paylaş", tint = Slate700)
+                            Icon(
+                                imageVector = Icons.Default.Share,
+                                contentDescription = "Paylaş",
+                                tint = Slate700
+                            )
                         }
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surface)
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                )
             )
         }
     ) { innerPadding ->
@@ -142,170 +158,251 @@ fun JobDetailScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
             ) {
-                // Kurum Bilgisi & İkon
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                // ── Hero Header ──────────────────────────────────────────────
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    BrandPrimary.copy(alpha = 0.06f),
+                                    Color.Transparent
+                                )
+                            )
+                        )
+                        .padding(horizontal = 16.dp, vertical = 16.dp)
                 ) {
+                    Column {
+                        // Kurum satırı
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier
+                                    .size(40.dp)
+                                    .background(
+                                        brush = Brush.linearGradient(
+                                            listOf(BrandPrimary.copy(alpha = 0.15f), BrandLight.copy(alpha = 0.08f))
+                                        ),
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .border(1.dp, BrandPrimary.copy(alpha = 0.2f), RoundedCornerShape(12.dp)),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Business,
+                                    contentDescription = null,
+                                    tint = BrandPrimary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column {
+                                Text(
+                                    text = job.institution ?: "T.C. Kamu Kurumu",
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Slate700
+                                )
+                                if (job.source != null) {
+                                    Text(
+                                        text = job.source.name,
+                                        fontSize = 11.sp,
+                                        color = Slate400
+                                    )
+                                }
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        // İlan Başlığı
+                        Text(
+                            text = job.title,
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = Slate900,
+                            lineHeight = 26.sp
+                        )
+
+                        Spacer(modifier = Modifier.height(14.dp))
+
+                        // Rozetler
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            if (isToday) TodayAddedBadge()
+                            if (isCancelled) CancelledBadge()
+                            else PostTypeBadge(postType = job.postType)
+                            if (!isCancelled && daysRemaining != null && daysRemaining <= 3)
+                                UrgentBadge(daysRemaining = daysRemaining)
+                            KpssBadge(kpssType = kpssType)
+                            EducationBadge(educationLevel = education)
+                            if (maxAge != null) AgeBadge(maxAge = maxAge)
+                            if (!job.city.isNullOrBlank()) CityBadge(city = job.city)
+                            if (job.positionCount != null && job.positionCount > 0)
+                                PositionCountBadge(count = job.positionCount)
+                            if (job.source != null) SourceBadge(sourceName = job.source.name)
+                        }
+                    }
+                }
+
+                HorizontalDivider(color = Slate200, thickness = 1.dp)
+
+                // ── Stat Kartları (3'lü grid) ────────────────────────────────
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        StatCard(
+                            label = "Yayın Tarihi",
+                            value = job.publishedAt?.take(10) ?: "—",
+                            icon = Icons.Default.CalendarToday,
+                            iconColor = BrandPrimary,
+                            modifier = Modifier.weight(1f)
+                        )
+                        StatCard(
+                            label = "Son Başvuru",
+                            value = job.deadlineAt?.take(10) ?: "—",
+                            icon = Icons.Default.CalendarToday,
+                            iconColor = UrgentRose,
+                            modifier = Modifier.weight(1f)
+                        )
+                    }
+
+                    if (!job.city.isNullOrBlank() || (job.positionCount != null && job.positionCount > 0)) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            if (!job.city.isNullOrBlank()) {
+                                StatCard(
+                                    label = "Görev İli",
+                                    value = job.city,
+                                    icon = Icons.Default.LocationOn,
+                                    iconColor = Color(0xFF059669),
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            if (job.positionCount != null && job.positionCount > 0) {
+                                StatCard(
+                                    label = "Kontenjan",
+                                    value = "${job.positionCount} Kişi",
+                                    icon = Icons.Default.People,
+                                    iconColor = Color(0xFF9333EA),
+                                    modifier = Modifier.weight(1f)
+                                )
+                            }
+                            if (job.city.isNullOrBlank() || job.positionCount == null || job.positionCount <= 0) {
+                                // Boş yer doldurucu
+                                Spacer(modifier = Modifier.weight(1f))
+                            }
+                        }
+                    }
+
+                    if (job.source != null) {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Slate100, RoundedCornerShape(12.dp))
+                                .border(1.dp, Slate200, RoundedCornerShape(12.dp))
+                                .padding(12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Public,
+                                contentDescription = null,
+                                tint = Slate400,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Column {
+                                Text("Resmî Kaynak", fontSize = 11.sp, color = Slate500)
+                                Text(
+                                    text = job.source.name,
+                                    fontSize = 13.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Slate900
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+
+                    // ── Açıklama ────────────────────────────────────────────
+                    Text(
+                        text = "İlan Detayları ve Başvuru Şartları",
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Slate900
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     Box(
                         modifier = Modifier
-                            .size(36.dp)
-                            .background(Slate100, RoundedCornerShape(10.dp)),
+                            .fillMaxWidth()
+                            .background(Color.White, RoundedCornerShape(14.dp))
+                            .border(1.dp, Slate200, RoundedCornerShape(14.dp))
+                            .padding(14.dp)
+                    ) {
+                        Text(
+                            text = job.description
+                                ?: "Bu ilan için ek açıklama bulunmamaktadır. Başvuru şartları, sınav takvimi ve kadro dağılımı için aşağıdaki bağlantıdan resmî ilana ulaşabilirsiniz.",
+                            fontSize = 13.sp,
+                            color = Slate700,
+                            lineHeight = 22.sp
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    // ── CTA Butonu ───────────────────────────────────────────
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(52.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(
+                                brush = Brush.horizontalGradient(
+                                    listOf(BrandDark, BrandPrimary, Color(0xFF4F46E5))
+                                )
+                            )
+                            .clickable {
+                                val url = job.originalUrl
+                                if (!url.isNullOrBlank()) {
+                                    context.startActivity(
+                                        Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                                    )
+                                }
+                            },
                         contentAlignment = Alignment.Center
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Business,
-                            contentDescription = null,
-                            tint = BrandPrimary,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Column {
-                        Text(
-                            text = job.institution ?: "T.C. Kamu Kurumu",
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Slate700
-                        )
-                        if (job.source != null) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.OpenInNew,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.size(18.dp)
+                            )
                             Text(
-                                text = job.source.name,
-                                fontSize = 11.sp,
-                                color = Slate400
+                                text = "Resmî İlana & Başvuruya Git",
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
                             )
                         }
                     }
-                }
 
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // İlan Başlığı
-                Text(
-                    text = job.title,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Slate900,
-                    lineHeight = 25.sp
-                )
-
-                Spacer(modifier = Modifier.height(14.dp))
-
-                // Rozetler
-                FlowRow(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    if (isToday) TodayAddedBadge()
-                    if (isCancelled) CancelledBadge() else PostTypeBadge(postType = job.postType)
-                    if (!isCancelled && daysRemaining != null && daysRemaining <= 3) UrgentBadge(daysRemaining = daysRemaining)
-                    KpssBadge(kpssType = kpssType)
-                    EducationBadge(educationLevel = education)
-                    if (maxAge != null) AgeBadge(maxAge = maxAge)
-                    if (!job.city.isNullOrBlank()) CityBadge(city = job.city)
-                    if (job.positionCount != null && job.positionCount > 0) PositionCountBadge(count = job.positionCount)
-                }
-
-                Spacer(modifier = Modifier.height(18.dp))
-
-                // Özet Bilgi Kartı (Tarihler & Şehir)
-                val cardShape = RoundedCornerShape(14.dp)
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .border(width = 1.dp, color = Slate200, shape = cardShape),
-                    shape = cardShape,
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
-                ) {
-                    Column(modifier = Modifier.padding(14.dp)) {
-                        DetailInfoRow(
-                            icon = Icons.Default.CalendarToday,
-                            label = "Yayın Tarihi:",
-                            value = job.publishedAt?.take(10) ?: "Belirtilmemiş",
-                            valueColor = Slate900
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        DetailInfoRow(
-                            icon = Icons.Default.CalendarToday,
-                            label = "Son Başvuru:",
-                            value = job.deadlineAt?.take(10) ?: "Belirtilmemiş",
-                            valueColor = UrgentRose,
-                            isBold = true
-                        )
-                        if (!job.city.isNullOrBlank()) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            DetailInfoRow(
-                                icon = Icons.Default.LocationOn,
-                                label = "Görev İli:",
-                                value = job.city,
-                                valueColor = Slate900
-                            )
-                        }
-                        if (job.positionCount != null && job.positionCount > 0) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            DetailInfoRow(
-                                icon = Icons.Default.People,
-                                label = "Kontenjan:",
-                                value = "${job.positionCount} Kişi",
-                                valueColor = Slate900,
-                                isBold = true
-                            )
-                        }
-                        if (job.source != null) {
-                            Spacer(modifier = Modifier.height(8.dp))
-                            DetailInfoRow(
-                                icon = Icons.Default.Public,
-                                label = "Resmî Kaynak:",
-                                value = job.source.name,
-                                valueColor = Slate900
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                // İlan Detayları ve Açıklama Başlığı
-                Text(
-                    text = "İlan Detayları ve Başvuru Şartları",
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Slate900
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = job.description ?: "Bu ilan için ek açıklama bulunmamaktadır. Başvuru şartları, sınav takvimi ve kadro dağılımı için aşağıdaki bağlantıdan resmî ilana ulaşabilirsiniz.",
-                    fontSize = 13.sp,
-                    color = Slate700,
-                    lineHeight = 22.sp
-                )
-
-                Spacer(modifier = Modifier.height(28.dp))
-
-                // Resmî İlana Git Butonu
-                Button(
-                    onClick = {
-                        val url = job.originalUrl
-                        if (!url.isNullOrBlank()) {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            context.startActivity(intent)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    shape = RoundedCornerShape(12.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
-                ) {
-                    Icon(imageVector = Icons.Default.OpenInNew, contentDescription = null, modifier = Modifier.size(18.dp))
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Resmî İlana & Başvuruya Git", fontSize = 14.sp, fontWeight = FontWeight.Bold)
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }
@@ -313,29 +410,45 @@ fun JobDetailScreen(
 }
 
 @Composable
-private fun DetailInfoRow(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+private fun StatCard(
     label: String,
     value: String,
-    valueColor: Color,
-    isBold: Boolean = false
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    iconColor: Color,
+    modifier: Modifier = Modifier
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+    Box(
+        modifier = modifier
+            .background(Color.White, RoundedCornerShape(12.dp))
+            .border(1.dp, Slate200, RoundedCornerShape(12.dp))
+            .padding(12.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(imageVector = icon, contentDescription = null, tint = Slate400, modifier = Modifier.size(14.dp))
-            Spacer(modifier = Modifier.width(6.dp))
-            Text(text = label, fontSize = 12.sp, color = Slate500)
+        Column {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    modifier = Modifier
+                        .size(28.dp)
+                        .background(iconColor.copy(alpha = 0.1f), RoundedCornerShape(8.dp)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = iconColor,
+                        modifier = Modifier.size(15.dp)
+                    )
+                }
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(label, fontSize = 11.sp, color = Slate500)
+            }
+            Spacer(modifier = Modifier.height(6.dp))
+            Text(
+                text = value,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.Bold,
+                color = Slate900
+            )
         }
-        Text(
-            text = value,
-            fontSize = 12.sp,
-            fontWeight = if (isBold) FontWeight.Bold else FontWeight.Medium,
-            color = valueColor
-        )
     }
 }
 

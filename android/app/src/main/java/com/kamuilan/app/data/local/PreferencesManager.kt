@@ -24,9 +24,6 @@ class PreferencesManager(private val context: Context) {
 
     companion object {
         private val KEY_FAVORITES = stringSetPreferencesKey("favorite_job_ids")
-        private val KEY_AUTH_TOKEN = stringPreferencesKey("auth_token")
-        private val KEY_USER_EMAIL = stringPreferencesKey("user_email")
-        private val KEY_USER_ID = stringPreferencesKey("user_id")
 
         // Kurulum (Onboarding) ve Profil Tercihleri
         private val KEY_ONBOARDING_COMPLETED = booleanPreferencesKey("onboarding_completed")
@@ -38,14 +35,6 @@ class PreferencesManager(private val context: Context) {
 
     val favoriteJobIdsFlow: Flow<Set<String>> = context.dataStore.data.map { preferences ->
         preferences[KEY_FAVORITES] ?: emptySet()
-    }
-
-    val userEmailFlow: Flow<String?> = context.dataStore.data.map { preferences ->
-        preferences[KEY_USER_EMAIL]
-    }
-
-    val authTokenFlow: Flow<String?> = context.dataStore.data.map { preferences ->
-        preferences[KEY_AUTH_TOKEN]
     }
 
     val userProfileFlow: Flow<UserPreferencesProfile> = context.dataStore.data.map { prefs ->
@@ -101,19 +90,9 @@ class PreferencesManager(private val context: Context) {
         return current.contains(jobId.toString())
     }
 
-    suspend fun saveAuthSession(token: String, email: String, userId: String) {
-        context.dataStore.edit { prefs ->
-            prefs[KEY_AUTH_TOKEN] = token
-            prefs[KEY_USER_EMAIL] = email
-            prefs[KEY_USER_ID] = userId
-        }
-    }
-
-    suspend fun clearAuthSession() {
-        context.dataStore.edit { prefs ->
-            prefs.remove(KEY_AUTH_TOKEN)
-            prefs.remove(KEY_USER_EMAIL)
-            prefs.remove(KEY_USER_ID)
+    suspend fun clearFavorites() {
+        context.dataStore.edit { preferences ->
+            preferences.remove(KEY_FAVORITES)
         }
     }
 }

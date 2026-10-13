@@ -25,20 +25,4 @@ interface SupabaseApiService {
         @Query("id") id: String,
         @Query("select") select: String = "*,sources(*)"
     ): Response<List<JobPost>>
-
-    // Auth Endpoints (Supabase GoTrue)
-    @POST("auth/v1/signup")
-    suspend fun signUp(
-        @Body body: Map<String, String>
-    ): Response<AuthSessionResponse>
-
-    @POST("auth/v1/token?grant_type=password")
-    suspend fun signInWithPassword(
-        @Body body: Map<String, String>
-    ): Response<AuthSessionResponse>
-
-    @GET("auth/v1/user")
-    suspend fun getCurrentUser(
-        @Header("Authorization") userAuthHeader: String
-    ): Response<AuthUser>
 }

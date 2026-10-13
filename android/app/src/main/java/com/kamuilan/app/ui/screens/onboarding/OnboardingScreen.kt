@@ -80,19 +80,9 @@ fun OnboardingScreen(
     var selectedKpss by remember { mutableStateOf("KPSS P3 (Lisans)") }
     var selectedCity by remember { mutableStateOf("Tüm Türkiye") }
 
-    val departments = listOf(
-        "bilisim" to "Bilişim & Yazılım",
-        "muhendislik" to "Mühendislik",
-        "saglik" to "Sağlık & Tıp",
-        "hemsirelik" to "Hemşirelik",
-        "egitim" to "Eğitim / Öğretmenlik",
-        "hukuk" to "Hukuk & Adalet",
-        "iktisat" to "İktisat & Maliye",
-        "buro" to "Büro & İdari",
-        "guvenlik" to "Zabıta & Güvenlik",
-        "ziraat" to "Ziraat & Orman",
-        "all" to "Farketmez / Tüm Alanlar"
-    )
+    val departments = remember {
+        com.kamuilan.app.data.model.YokDepartments.LIST.map { it.id to it.name } + listOf("all" to "Farketmez / Tüm Alanlar")
+    }
 
     val educationLevels = listOf(
         "Lisans",
