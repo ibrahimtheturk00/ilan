@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { JobPost } from "@/types";
-import { formatDate, getDaysRemaining, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
+import { formatDate, getJobApplicationStatus, resolveApplicationUrl, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
 import {
   X,
   Building,
@@ -39,7 +39,8 @@ export function JobModal({ job, onClose }: JobModalProps) {
 
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
-  const daysInfo = getDaysRemaining(job.deadline_at);
+  const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at);
+  const applicationUrl = resolveApplicationUrl(job.institution, job.original_url);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 dark:bg-black/70 backdrop-blur-sm animate-fadeIn">
@@ -62,15 +63,9 @@ export function JobModal({ job, onClose }: JobModalProps) {
               </span>
             )}
             <span
-              className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                daysInfo.isExpired
-                  ? "bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                  : daysInfo.isUrgent
-                  ? "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 font-bold"
-                  : "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"
-              }`}
+              className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${statusInfo.badgeClass}`}
             >
-              {daysInfo.text}
+              {statusInfo.fullBadgeText}
             </span>
           </div>
 
@@ -119,7 +114,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
 
             <div>
               <span className="text-slate-400 flex items-center gap-1 mb-1">
-                <Calendar className="w-3.5 h-3.5" /> Yayın
+                <Calendar className="w-3.5 h-3.5" /> Başvuru Başlangıç
               </span>
               <span className="font-semibold text-slate-800 dark:text-slate-200">
                 {formatDate(job.published_at)}
@@ -156,7 +151,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
           <button
             onClick={() => {
               if (typeof window !== "undefined") {
-                navigator.clipboard?.writeText(job.original_url);
+                navigator.clipboard?.writeText(applicationUrl);
                 alert("İlan bağlantısı panoya kopyalandı!");
               }
             }}
@@ -167,7 +162,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
           </button>
 
           <a
-            href={job.original_url}
+            href={applicationUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs sm:text-sm shadow-md shadow-brand-500/20 transition-all hover:scale-[1.02]"
