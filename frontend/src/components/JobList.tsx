@@ -6,11 +6,24 @@ import { useFilters } from "@/hooks/useFilters";
 import { JobCard } from "./JobCard";
 import { JobModal } from "./JobModal";
 import { AlertCircle, ChevronLeft, ChevronRight, Inbox } from "lucide-react";
-import { JobPost } from "@/types";
+import { JobPost, FilterState } from "@/types";
 
 export function JobList() {
   const filters = useFilters();
-  const { data, isLoading, isError, error } = useJobs(filters);
+  const filterState: FilterState = {
+    searchQuery: filters.searchQuery,
+    city: filters.city,
+    postType: filters.postType,
+    category: filters.category,
+    sourceSlug: filters.sourceSlug,
+    onlyActive: filters.onlyActive,
+    page: filters.page,
+    sortBy: filters.sortBy,
+    kpssType: filters.kpssType,
+    educationLevel: filters.educationLevel,
+    onlyUrgent: filters.onlyUrgent,
+  };
+  const { data, isLoading, isError, error } = useJobs(filterState);
   const [selectedJob, setSelectedJob] = useState<JobPost | null>(null);
 
   if (isLoading) {

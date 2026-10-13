@@ -155,6 +155,28 @@ export const MOCK_JOBS: JobPost[] = [
     scraped_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     sources: MOCK_SOURCES[5],
+  },
+  {
+    id: 481,
+    source_id: 6,
+    title: "Rize Belediyesi Sözleşmeli Personel Alım İptal İlanı (Gıda, Ziraat, Jeoloji Mühendisi ve Tekniker)",
+    institution: "Rize Belediyesi",
+    city: "Rize",
+    district: null,
+    post_type: "sozlesmeli",
+    category: "muhendislik",
+    position_count: null,
+    published_at: "2026-09-29",
+    deadline_at: null,
+    original_url: "https://yerelyonetimler.csb.gov.tr/rize-belediyesi-ilk-defa-sozlesmeli-personel-gida-muhendisi-alim-iptal-ilani-duyuru-477955",
+    url_hash: "05bb7cfbc609d09ed404eb1a68d6ba337a20fa1fb212d5eabc21777cbba65931",
+    content_hash: "1bcb24bdbfc490b18fcdcac1725ac4891aa3ba0c0788150cb745a0dfe13c2432",
+    description: "Rize Belediyesi bünyesinde istihdam edilmek üzere açılan Sözleşmeli Personel (Gıda Mühendisi, Ziraat Mühendisi, Jeoloji Mühendisi ve Tekniker) Alım İptal İlanı.",
+    raw_content: "Rize Belediyesi İlk Defa Sözleşmeli Personel Gıda Mühendisi Alım İptal İlanı. RİZE BELEDİYESİ İLK DEFA SÖZLEŞMELİ PERSONEL ( Gıda Mühendisi ) ALIM İPTAL İLANI...",
+    is_active: true,
+    scraped_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    sources: MOCK_SOURCES[5],
   }
 ];
 
@@ -190,7 +212,7 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
       }
 
       if (filters.city) {
-        query = query.eq("city", filters.city);
+        query = query.ilike("city", filters.city);
       }
 
       if (filters.postType) {
@@ -203,7 +225,7 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
 
       if (filters.searchQuery && !hasDerivedFilters) {
         const term = `%${filters.searchQuery.trim()}%`;
-        query = query.or(`title.ilike.${term},institution.ilike.${term},description.ilike.${term}`);
+        query = query.or(`title.ilike.${term},institution.ilike.${term},description.ilike.${term},city.ilike.${term}`);
       }
 
       // Dinamik Sıralama
@@ -236,7 +258,7 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
 
         if (filters.searchQuery) {
           filtered = filtered.filter((j) =>
-            fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""}`, filters.searchQuery)
+            fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""} ${j.city || ""}`, filters.searchQuery)
           );
         }
 
@@ -286,7 +308,7 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
 
   if (filters.searchQuery) {
     filtered = filtered.filter((j) =>
-      fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""}`, filters.searchQuery)
+      fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""} ${j.city || ""}`, filters.searchQuery)
     );
   }
 
