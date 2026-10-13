@@ -60,9 +60,25 @@ class IskurScraper(BaseScraper):
                                     deadline = parts[0] if len(parts) > 1 else None
                                     title = parts[1] if len(parts) > 1 else (parts[0] if parts else "İŞKUR Kamu İlanı")
 
+                                    # Eğer başlıkta kalan gün veya süre metni varsa PDF dosya adından temizle
+                                    title_lower = title.lower()
+                                    if any(w in title_lower for w in ["gün kaldı", "gn kald", "sona eriyor", "(son", "(bugün"]):
+                                        if file_url and "/" in file_url:
+                                            try:
+                                                import urllib.parse
+                                                pdf_name = urllib.parse.unquote(file_url.split("/")[-1]).replace(".pdf", "").replace("-", " ").replace("_", " ").strip().title()
+                                                if len(pdf_name) > 3 and not pdf_name.isdigit() and "doc0" not in pdf_name.lower() and "scan" not in pdf_name.lower():
+                                                    title = f"{pdf_name} Personel Alım İlanı"
+                                                else:
+                                                    title = f"{city_val.capitalize()} Kamu Personel Alım İlanı"
+                                            except Exception:
+                                                title = f"{city_val.capitalize()} Kamu Personel Alım İlanı"
+                                        else:
+                                            title = f"{city_val.capitalize()} Kamu Personel Alım İlanı"
+
                                     posts.append({
                                         "title": title,
-                                        "institution": title.split("Alım")[0].split("Sınav")[0].strip() or "İŞKUR Kamu Kurumu",
+                                        "institution": title.split("Alım")[0].split("Sınav")[0].strip() or f"{city_val.capitalize()} Kamu Kurumu",
                                         "city": city_val.capitalize() if city_val else None,
                                         "post_type": default_type,
                                         "deadline_at": deadline,

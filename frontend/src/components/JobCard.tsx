@@ -16,7 +16,7 @@ import {
   Check,
 } from "lucide-react";
 import { JobPost } from "@/types";
-import { formatDate, getJobApplicationStatus, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
+import { formatDate, getJobApplicationStatus, POST_TYPE_LABELS, CATEGORY_LABELS, cleanJobTitle, cleanInstitution } from "@/lib/utils";
 import { getJobMetaDetails } from "@/lib/jobParser";
 import { useFavorites } from "@/hooks/useFavorites";
 
@@ -31,6 +31,8 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   const [showShareMenu, setShowShareMenu] = useState(false);
 
   const isFav = isFavorite(job.id);
+  const displayTitle = cleanJobTitle(job.title, job.city, job.original_url);
+  const displayInstitution = cleanInstitution(job.institution, job.title, job.city, job.original_url);
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
   const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at, job.title);
@@ -191,13 +193,13 @@ export function JobCard({ job, onSelect }: JobCardProps) {
 
         {/* İlan Başlığı */}
         <h3 className="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2 leading-snug tracking-tight">
-          {job.title}
+          {displayTitle}
         </h3>
 
         {/* Kurum Adı */}
         <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-2">
           <Building className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-          <span className="truncate font-medium">{job.institution || "Resmi Kamu Kurumu"}</span>
+          <span className="truncate font-medium">{displayInstitution}</span>
         </div>
 
         {/* Zenginleştirilmiş Meta Rozetleri: KPSS, Eğitim, Yaş Sınırı */}

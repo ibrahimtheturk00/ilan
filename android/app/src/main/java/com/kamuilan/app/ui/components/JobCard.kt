@@ -98,7 +98,9 @@ fun JobCard(
 
     val isUrgent = !isCancelled && daysRemaining != null && daysRemaining <= 3
     val accentColor = if (isCancelled) CancelledRed else accentColorForPostType(job.postType)
-    val instInfo = InstitutionLogoDetector.detect(job.institution)
+    val displayTitle = JobParser.cleanJobTitle(job.title, job.city, job.originalUrl)
+    val displayInstitution = JobParser.cleanInstitution(job.institution, job.title, job.city, job.originalUrl)
+    val instInfo = InstitutionLogoDetector.detect(displayInstitution)
 
     val cardBorderColor = when {
         isCancelled -> Color(0xFFFECACA)
@@ -220,7 +222,7 @@ fun JobCard(
 
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = job.title,
+                        text = displayTitle,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Slate900,
@@ -230,7 +232,7 @@ fun JobCard(
                     )
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
-                        text = job.institution ?: "Resmi Kamu Kurumu",
+                        text = displayInstitution,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = Slate500,

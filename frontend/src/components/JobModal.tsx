@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { JobPost } from "@/types";
-import { formatDate, getJobApplicationStatus, resolveApplicationUrl, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
+import { formatDate, getJobApplicationStatus, resolveApplicationUrl, POST_TYPE_LABELS, CATEGORY_LABELS, cleanJobTitle, cleanInstitution } from "@/lib/utils";
 import { getJobMetaDetails } from "@/lib/jobParser";
 import { useFavorites } from "@/hooks/useFavorites";
 import {
@@ -48,13 +48,15 @@ export function JobModal({ job, onClose }: JobModalProps) {
   if (!job) return null;
 
   const isFav = isFavorite(job.id);
+  const displayTitle = cleanJobTitle(job.title, job.city, job.original_url);
+  const displayInstitution = cleanInstitution(job.institution, job.title, job.city, job.original_url);
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
   const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at, job.title);
-  const applicationUrl = resolveApplicationUrl(job.institution, job.original_url);
+  const applicationUrl = resolveApplicationUrl(displayInstitution, job.original_url);
   const meta = getJobMetaDetails(job);
 
-  const shareText = `📢 ${job.title}\n🏛️ ${job.institution || "Resmi Kamu Kurumu"}\n🔗 ${applicationUrl}`;
+  const shareText = `Kamu İlanı: ${displayTitle}\n${displayInstitution}\n${applicationUrl}`;
 
   const handleCopyLink = () => {
     if (typeof window !== "undefined") {
@@ -140,11 +142,11 @@ export function JobModal({ job, onClose }: JobModalProps) {
         <div className="p-6 overflow-y-auto space-y-5">
           <div>
             <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug tracking-tight">
-              {job.title}
+              {displayTitle}
             </h2>
             <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 mt-2">
               <Building className="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0" />
-              <span>{job.institution || "Resmi Kamu Kurumu"}</span>
+              <span>{displayInstitution}</span>
             </div>
           </div>
 

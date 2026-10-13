@@ -79,4 +79,80 @@ object JobParser {
             null
         }
     }
+
+    fun cleanJobTitle(title: String?, city: String?, originalUrl: String?): String {
+        if (title.isNullOrBlank()) return "Resmi Kamu İlanı"
+        val lower = title.lowercase()
+        val isFaulty = lower.contains("gün kaldı") ||
+                lower.contains("gn kald") ||
+                lower.contains("sona eriyor") ||
+                lower.startsWith("(son") ||
+                lower.startsWith("(bugün")
+
+        if (!isFaulty) return title
+
+        if (!originalUrl.isNullOrBlank() && originalUrl.contains("/")) {
+            try {
+                val fileName = java.net.URLDecoder.decode(originalUrl.substringAfterLast("/"), "UTF-8")
+                    .replace(Regex("""(?i)\.pdf$"""), "")
+                    .replace(Regex("""[-_]+"""), " ")
+                    .trim()
+
+                if (fileName.length > 3 && !fileName.all { it.isDigit() }) {
+                    val formatted = fileName.split(" ")
+                        .filter { it.isNotBlank() }
+                        .joinToString(" ") { word ->
+                            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                        }
+                    val formattedLower = formatted.lowercase()
+                    if (!formattedLower.contains("doc0") && !formattedLower.contains("scan")) {
+                        return "$formatted Personel Alım İlanı"
+                    }
+                }
+            } catch (e: Exception) {
+                // ignore
+            }
+        }
+
+        val prefix = if (!city.isNullOrBlank()) "$city " else ""
+        return "${prefix}Kamu Kurumu Personel Alım İlanı"
+    }
+
+    fun cleanInstitution(institution: String?, title: String?, city: String?, originalUrl: String?): String {
+        if (institution.isNullOrBlank()) return "Resmi Kamu Kurumu"
+        val lower = institution.lowercase()
+        val isFaulty = lower.contains("gün kaldı") ||
+                lower.contains("gn kald") ||
+                lower.contains("sona eriyor") ||
+                lower.startsWith("(son") ||
+                lower.startsWith("(bugün")
+
+        if (!isFaulty) return institution
+
+        if (!originalUrl.isNullOrBlank() && originalUrl.contains("/")) {
+            try {
+                val fileName = java.net.URLDecoder.decode(originalUrl.substringAfterLast("/"), "UTF-8")
+                    .replace(Regex("""(?i)\.pdf$"""), "")
+                    .replace(Regex("""[-_]+"""), " ")
+                    .trim()
+
+                if (fileName.length > 3 && !fileName.all { it.isDigit() }) {
+                    val formatted = fileName.split(" ")
+                        .filter { it.isNotBlank() }
+                        .joinToString(" ") { word ->
+                            word.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                        }
+                    val formattedLower = formatted.lowercase()
+                    if (!formattedLower.contains("doc0") && !formattedLower.contains("scan")) {
+                        return formatted
+                    }
+                }
+            } catch (e: Exception) {
+                // ignore
+            }
+        }
+
+        val prefix = if (!city.isNullOrBlank()) "$city " else ""
+        return "${prefix}Belediyesi / Kamu Kurumu"
+    }
 }

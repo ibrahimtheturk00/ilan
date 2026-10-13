@@ -19,6 +19,90 @@ export function formatDate(dateStr: string | null | undefined): string {
   }
 }
 
+/**
+ * İŞKUR veya diğer kaynaklardan gelen hatalı/süreli başlıkları düzeltir.
+ * Örn: "(son 1 gün kaldı)" veya "(bugün sona eriyor)" gibi metinler başlık veya kurum adı
+ * olarak girilmişse, PDF dosya adından veya şehirden temiz başlık ve kurum türetir.
+ */
+export function cleanJobTitle(title: string | null | undefined, city?: string | null, originalUrl?: string | null): string {
+  if (!title) return "Resmi Kamu İlanı";
+  const lower = title.toLowerCase();
+  const isFaulty =
+    lower.includes("gün kaldı") ||
+    lower.includes("gn kald") ||
+    lower.includes("sona eriyor") ||
+    lower.startsWith("(son") ||
+    lower.startsWith("(bugün");
+
+  if (!isFaulty) return title;
+
+  // URL'den dosya adını çıkarıp güzelleştir
+  if (originalUrl && originalUrl.includes("/")) {
+    try {
+      const fileName = decodeURIComponent(originalUrl.split("/").pop() || "")
+        .replace(/\.pdf$/i, "")
+        .replace(/[-_]+/g, " ")
+        .trim();
+
+      if (fileName && fileName.length > 3 && !/^\d+$/.test(fileName)) {
+        // İlk harfleri büyüt
+        const formatted = fileName
+          .split(" ")
+          .map((w) => w.charAt(0).toLocaleUpperCase("tr-TR") + w.slice(1).toLocaleLowerCase("tr-TR"))
+          .join(" ");
+
+        if (!formatted.toLowerCase().includes("doc0") && !formatted.toLowerCase().includes("scan")) {
+          return `${formatted} Personel Alım İlanı`;
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const prefix = city ? `${city} ` : "";
+  return `${prefix}Kamu Kurumu Personel Alım İlanı`;
+}
+
+export function cleanInstitution(institution: string | null | undefined, title: string | null | undefined, city?: string | null, originalUrl?: string | null): string {
+  if (!institution) return "Resmi Kamu Kurumu";
+  const lower = institution.toLowerCase();
+  const isFaulty =
+    lower.includes("gün kaldı") ||
+    lower.includes("gn kald") ||
+    lower.includes("sona eriyor") ||
+    lower.startsWith("(son") ||
+    lower.startsWith("(bugün");
+
+  if (!isFaulty) return institution;
+
+  // Başlıktan veya URL'den kurum türet
+  if (originalUrl && originalUrl.includes("/")) {
+    try {
+      const fileName = decodeURIComponent(originalUrl.split("/").pop() || "")
+        .replace(/\.pdf$/i, "")
+        .replace(/[-_]+/g, " ")
+        .trim();
+
+      if (fileName && fileName.length > 3 && !/^\d+$/.test(fileName)) {
+        const formatted = fileName
+          .split(" ")
+          .map((w) => w.charAt(0).toLocaleUpperCase("tr-TR") + w.slice(1).toLocaleLowerCase("tr-TR"))
+          .join(" ");
+
+        if (!formatted.toLowerCase().includes("doc0") && !formatted.toLowerCase().includes("scan")) {
+          return formatted;
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }
+
+  const prefix = city ? `${city} ` : "";
+  return `${prefix}Belediyesi / Kamu Kurumu`;
+}
+
 export interface ApplicationStatusInfo {
   type: "cancelled" | "upcoming" | "active" | "urgent" | "expired" | "unknown";
   statusTitle: string;
