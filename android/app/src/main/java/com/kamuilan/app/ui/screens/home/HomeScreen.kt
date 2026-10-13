@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.ui.screens.home
+package com.kamuilan.app.ui.screens.home
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -375,7 +375,7 @@ fun HomeScreen(
                         color = Slate500
                     )
                     Text(
-                        text = "",
+                        text = "${uiState.filteredJobs.size}",
                         fontSize = 13.sp,
                         fontWeight = FontWeight.ExtraBold,
                         color = BrandPrimary

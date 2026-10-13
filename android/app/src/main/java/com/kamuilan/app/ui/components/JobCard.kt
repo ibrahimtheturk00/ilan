@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.ui.components
+package com.kamuilan.app.ui.components
 
 import android.content.Context
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -336,152 +336,160 @@ fun JobCard(
                             }
                         }
 
-                        if (job.positionCount != null && job.positionCount > 0) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(3.dp)
+                    if (job.positionCount != null && job.positionCount > 0) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(3.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.People,
+                                contentDescription = null,
+                                tint = Slate400,
+                                modifier = Modifier.size(13.dp)
+                            )
+                            Text(
+                                text = "${job.positionCount} Kişi",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Slate700,
+                                maxLines = 1
+                            )
+                        }
+                    }
+                }
+
+                // Sağ Bölüm: Durum Rozeti (Pulse Efektli) + İncele Butonu (Asla taşmaz)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    modifier = Modifier.weight(1f, fill = false)
+                ) {
+                    when {
+                        isCancelled -> {
+                            Box(
+                                modifier = Modifier
+                                    .background(CancelledRed, RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 7.dp, vertical = 3.dp)
                             ) {
-                                Icon(
-                                    imageVector = Icons.Default.People,
-                                    contentDescription = null,
-                                    tint = Slate400,
-                                    modifier = Modifier.size(13.dp)
-                                )
                                 Text(
-                                    text = " Kişi",
-                                    fontSize = 12.sp,
+                                    text = "İptal Edildi",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                        daysRemaining == null -> {
+                            Box(
+                                modifier = Modifier
+                                    .border(1.dp, Slate200, RoundedCornerShape(6.dp))
+                                    .background(Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                            ) {
+                                Text(
+                                    text = "Başvuru Aktif",
+                                    fontSize = 10.sp,
                                     fontWeight = FontWeight.Medium,
-                                    color = Slate700
+                                    color = Slate700,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                        daysRemaining < 0 -> {
+                            Box(
+                                modifier = Modifier
+                                    .border(1.dp, Slate200, RoundedCornerShape(6.dp))
+                                    .background(Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 7.dp, vertical = 3.dp)
+                            ) {
+                                Text(
+                                    text = "Süresi Doldu",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Slate500,
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                        daysRemaining <= 3 -> {
+                            // ── Kalan Gün Geri Sayım Rozeti: Animasyonlu Pulse ────
+                            val pulseTransition = rememberInfiniteTransition(label = "pulse_trans")
+                            val pulseScale by pulseTransition.animateFloat(
+                                initialValue = 1f,
+                                targetValue = 1.05f,
+                                animationSpec = infiniteRepeatable(
+                                    animation = tween(durationMillis = 650, easing = FastOutSlowInEasing),
+                                    repeatMode = RepeatMode.Reverse
+                                ),
+                                label = "pulse_scale"
+                            )
+
+                            val urgentText = if (daysRemaining == 0L) "Bugün Son Gün!" else "Son $daysRemaining gün!"
+                            Box(
+                                modifier = Modifier
+                                    .graphicsLayer {
+                                        scaleX = pulseScale
+                                        scaleY = pulseScale
+                                    }
+                                    .border(1.dp, Color(0xFFFECDD3), RoundedCornerShape(6.dp))
+                                    .background(Color(0xFFFFF1F2), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 6.dp, vertical = 3.dp)
+                            ) {
+                                Text(
+                                    text = urgentText,
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color(0xFFBE123C),
+                                    maxLines = 1
+                                )
+                            }
+                        }
+                        else -> {
+                            Box(
+                                modifier = Modifier
+                                    .border(1.dp, Color(0xFFFECDD3).copy(alpha = 0.8f), RoundedCornerShape(6.dp))
+                                    .background(Color(0xFFFFF1F2), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 6.dp, vertical = 3.dp)
+                            ) {
+                                Text(
+                                    text = "$daysRemaining gün kaldı",
+                                    fontSize = 10.sp,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color(0xFFBE123C),
+                                    maxLines = 1
                                 )
                             }
                         }
                     }
 
-                    // Sağ Bölüm: Durum Rozeti (Pulse Efektli) + İncele Butonu
+                    // İncele Linki (Her zaman görünür, shrink-0)
                     Row(
+                        modifier = Modifier
+                            .clickable { onClick() }
+                            .padding(vertical = 3.dp, horizontal = 2.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        horizontalArrangement = Arrangement.spacedBy(2.dp)
                     ) {
-                        when {
-                            isCancelled -> {
-                                Box(
-                                    modifier = Modifier
-                                        .background(CancelledRed, RoundedCornerShape(6.dp))
-                                        .padding(horizontal = 7.dp, vertical = 3.dp)
-                                ) {
-                                    Text(
-                                        text = "İptal Edildi",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color.White
-                                    )
-                                }
-                            }
-                            daysRemaining == null -> {
-                                Box(
-                                    modifier = Modifier
-                                        .border(1.dp, Slate200, RoundedCornerShape(6.dp))
-                                        .background(Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
-                                        .padding(horizontal = 7.dp, vertical = 3.dp)
-                                ) {
-                                    Text(
-                                        text = "Başvuru Aktif",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = Slate700
-                                    )
-                                }
-                            }
-                            daysRemaining < 0 -> {
-                                Box(
-                                    modifier = Modifier
-                                        .border(1.dp, Slate200, RoundedCornerShape(6.dp))
-                                        .background(Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
-                                        .padding(horizontal = 7.dp, vertical = 3.dp)
-                                ) {
-                                    Text(
-                                        text = "Süresi Doldu",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = Slate500
-                                    )
-                                }
-                            }
-                            daysRemaining <= 3 -> {
-                                // ── Kalan Gün Geri Sayım Rozeti: Animasyonlu Pulse ────
-                                val pulseTransition = rememberInfiniteTransition(label = "pulse_trans")
-                                val pulseScale by pulseTransition.animateFloat(
-                                    initialValue = 1f,
-                                    targetValue = 1.05f,
-                                    animationSpec = infiniteRepeatable(
-                                        animation = tween(durationMillis = 650, easing = FastOutSlowInEasing),
-                                        repeatMode = RepeatMode.Reverse
-                                    ),
-                                    label = "pulse_scale"
-                                )
-
-                                val text = if (daysRemaining == 0L) "Bugün Son Gün!" else "Son  gün kaldı!"
-                                Box(
-                                    modifier = Modifier
-                                        .graphicsLayer {
-                                            scaleX = pulseScale
-                                            scaleY = pulseScale
-                                        }
-                                        .border(1.dp, Color(0xFFFECDD3), RoundedCornerShape(6.dp))
-                                        .background(Color(0xFFFFF1F2), RoundedCornerShape(6.dp))
-                                        .padding(horizontal = 7.dp, vertical = 3.dp)
-                                ) {
-                                    Text(
-                                        text = text,
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = Color(0xFFBE123C)
-                                    )
-                                }
-                            }
-                            else -> {
-                                Box(
-                                    modifier = Modifier
-                                        .border(1.dp, Color(0xFFFECDD3).copy(alpha = 0.8f), RoundedCornerShape(6.dp))
-                                        .background(Color(0xFFFFF1F2), RoundedCornerShape(6.dp))
-                                        .padding(horizontal = 7.dp, vertical = 3.dp)
-                                ) {
-                                    Text(
-                                        text = "Başvuru Aktif •  gün kaldı",
-                                        fontSize = 10.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = Color(0xFFBE123C)
-                                    )
-                                }
-                            }
-                        }
-
-                        // İncele Linki (Web stili: Brand mavi renk + sağ ok)
-                        Row(
-                            modifier = Modifier
-                                .clickable { onClick() }
-                                .padding(vertical = 4.dp, horizontal = 2.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(2.dp)
-                        ) {
-                            Text(
-                                text = "İncele",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = BrandPrimary
-                            )
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                                contentDescription = null,
-                                tint = BrandPrimary,
-                                modifier = Modifier.size(13.dp)
-                            )
-                        }
+                        Text(
+                            text = "İncele",
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = BrandPrimary,
+                            maxLines = 1
+                        )
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                            contentDescription = null,
+                            tint = BrandPrimary,
+                            modifier = Modifier.size(12.dp)
+                        )
                     }
                 }
             }
         }
     }
+}
 }
 
 // ── Web Tarzı Rozetler ──────────────────────────────────────────────────────────

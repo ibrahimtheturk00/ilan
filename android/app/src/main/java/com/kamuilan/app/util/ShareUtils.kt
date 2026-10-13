@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.util
+package com.kamuilan.app.util
 
 import android.content.Context
 import android.content.Intent
@@ -11,20 +11,20 @@ object ShareUtils {
         val deadlineText = when {
             daysRemaining == null -> "Belirtilmemiş"
             daysRemaining <= 0 -> "Bugün Son Gün!"
-            else -> " Gün Kaldı ()"
+            else -> "$daysRemaining Gün Kaldı (${job.deadlineAt?.take(10) ?: ""})"
         }
 
         val url = job.originalUrl ?: "https://kamuilanmerkezi.com"
         val kpss = com.kamuilan.app.data.model.JobParser.detectKpssType(job)
-        val kpssInfo = if (kpss != "Belirtilmemiş") " • " else ""
+        val kpssInfo = if (kpss != "Belirtilmemiş") " • $kpss" else ""
 
         return buildString {
-            append("🏛️ **\n")
-            append("🏢 *Kurum:* \n")
-            if (!job.city.isNullOrBlank()) append("📍 *Şehir:* \n")
-            if (job.positionCount != null && job.positionCount > 0) append("👥 *Kontenjan:*  Kişi\n")
-            append("⏳ *Son Başvuru:* \n\n")
-            append("🔗 *İlan ve Başvuru Detayı:*\n\n\n")
+            append("🏛️ *${job.title}*\n")
+            append("🏢 *Kurum:* ${job.institution ?: "T.C. Kamu Kurumu"}\n")
+            if (!job.city.isNullOrBlank()) append("📍 *Şehir:* ${job.city}\n")
+            if (job.positionCount != null && job.positionCount > 0) append("👥 *Kontenjan:* ${job.positionCount} Kişi\n")
+            append("⏳ *Son Başvuru:* $deadlineText$kpssInfo\n\n")
+            append("🔗 *İlan ve Başvuru Detayı:*\n$url\n\n")
             append("📱 *Kamu İlan* mobil uygulamasından paylaşıldı.")
         }
     }
