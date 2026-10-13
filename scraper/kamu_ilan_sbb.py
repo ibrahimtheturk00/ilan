@@ -22,6 +22,24 @@ class KamuIlanSbbScraper(BaseScraper):
 
         url = "https://kamuilan.sbb.gov.tr/"
 
+        # Kariyer Kapısı doğrudan IlanDetay tekil başvuru haritasını çek
+        kariyer_kapisi_map = {}
+        try:
+            with httpx.Client(timeout=10.0) as kk_client:
+                kk_resp = kk_client.post(
+                    "https://api.kariyerkapisi.gov.tr/api/ilan/SearchIlanPublic",
+                    json={"krM_ID": 0, "searchText": "", "il": "0", "ilanTuru": "0"},
+                    headers={"Content-Type": "application/json", "Origin": "https://kariyerkapisi.gov.tr"}
+                )
+                if kk_resp.status_code == 200:
+                    for it in kk_resp.json():
+                        k_name = (it.get("kurumAdi") or "").strip().lower()
+                        k_guid = it.get("guid")
+                        if k_name and k_guid:
+                            kariyer_kapisi_map[k_name] = f"https://kariyerkapisi.gov.tr/IlanDetay?i={k_guid}"
+        except Exception as e:
+            self.logger.warning(f"Kariyer Kapısı haritası yüklenemedi: {e}")
+
         try:
             with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True, verify=False) as client:
                 resp = client.get(url)
@@ -73,12 +91,20 @@ class KamuIlanSbbScraper(BaseScraper):
 
                         description = f"{institution} bünyesinde istihdam edilmek üzere personel alım ilanı. Başvuru Şartları: {title_info}. Başvuru Tarihleri: {date_text}."
 
+                        # Kariyer Kapısı doğrudan tekil başvuru ekranı eşleştirmesi
+                        final_url = href
+                        inst_lower = institution.lower()
+                        for kk_inst, kk_url in kariyer_kapisi_map.items():
+                            if (kk_inst in inst_lower or inst_lower in kk_inst) and len(inst_lower) > 5:
+                                final_url = kk_url
+                                break
+
                         posts.append({
                             "title": full_title,
                             "institution": institution,
                             "published_at": published_at,
                             "deadline_at": deadline_at,
-                            "original_url": href,
+                            "original_url": final_url,
                             "description": description,
                         })
         except Exception as e:

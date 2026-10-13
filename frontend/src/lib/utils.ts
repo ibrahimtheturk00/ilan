@@ -218,27 +218,38 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
       return "https://kariyerkapisi.gov.tr/isealim";
     }
 
-    // 4. Belediyeler
-    if (inst.includes("şile") || inst.includes("sile")) {
-      return "https://www.sile.bel.tr/";
+    // 4. Belediyeler (Dinamik ilçe/belde/şehir tespiti)
+    if (inst.includes("şile") || inst.includes("sile")) return "https://www.sile.bel.tr/";
+    if (inst.includes("çeltik") || inst.includes("celtik")) return "https://www.celtik.bel.tr/";
+    if (inst.includes("sarıidris") || inst.includes("sariidris")) return "https://www.sariidris.bel.tr/";
+    if (inst.includes("eleşkirt") || inst.includes("eleskirt")) return "http://www.eleskirt.bel.tr/";
+    if (inst.includes("keşan") || inst.includes("kesan")) return "https://www.kesan.bel.tr/";
+    if (inst.includes("ortahisar")) return "https://www.ortahisar.bel.tr/";
+
+    // Genel Otomatik Belediye Domain Çıkarımı: "<İsim> Belediye..." -> "https://www.<isim>.bel.tr/"
+    const belMatch = inst.match(/([a-zçğıöşü]+)\s+belediye/i);
+    if (belMatch && belMatch[1]) {
+      const rawName = belMatch[1].toLowerCase();
+      const trMap: Record<string, string> = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", i: "i" };
+      const slug = rawName.split("").map((c) => trMap[c] || c).join("");
+      if (slug.length >= 3 && !["buyuksehir", "büyükşehir", "merkez"].includes(slug)) {
+        return `https://www.${slug}.bel.tr/`;
+      }
     }
-    if (inst.includes("çeltik") || inst.includes("celtik")) {
-      return "https://www.celtik.bel.tr/";
-    }
-    if (inst.includes("sarıidris") || inst.includes("sariidris")) {
-      return "https://www.sariidris.bel.tr/";
-    }
-    if (inst.includes("eleşkirt") || inst.includes("eleskirt")) {
-      return "http://www.eleskirt.bel.tr/";
-    }
-    if (inst.includes("keşan") || inst.includes("kesan")) {
-      return "https://www.kesan.bel.tr/";
-    }
-    if (inst.includes("ortahisar")) {
-      return "https://www.ortahisar.bel.tr/";
-    }
+
     if (inst.includes("belediye") || inst.includes("belediyesi")) {
       return "https://yerelyonetimler.csb.gov.tr/";
+    }
+
+    // Genel Otomatik Üniversite Domain Çıkarımı: "<İsim> Üniversite..." -> "https://www.<isim>.edu.tr/"
+    const uniMatch = inst.match(/([a-zçğıöşü]+)\s+üniversite/i);
+    if (uniMatch && uniMatch[1]) {
+      const rawName = uniMatch[1].toLowerCase();
+      const trMap: Record<string, string> = { ç: "c", ğ: "g", ı: "i", ö: "o", ş: "s", ü: "u", i: "i" };
+      const slug = rawName.split("").map((c) => trMap[c] || c).join("");
+      if (slug.length >= 3 && slug !== "teknik") {
+        return `https://www.${slug}.edu.tr/`;
+      }
     }
 
     // 5. Resmi Kamu Kariyer Kapısı (Cumhurbaşkanlığı İşe Alım Portalı - Tüm bakanlık ve kamu kurumlarının tek adresi)
