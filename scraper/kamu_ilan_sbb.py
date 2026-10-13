@@ -33,18 +33,38 @@ class KamuIlanSbbScraper(BaseScraper):
                     self.logger.info(f"SBB sayfasında {len(links)} adet ilan kartı bulundu.")
 
                     for a in links:
+                        # 1. Tip: Üst kartlar (.black, .patrol, .h5date)
                         black_el = a.select_one(".black")
                         patrol_el = a.select_one(".patrol")
                         date_el = a.select_one(".h5date")
 
-                        institution = clean_text(black_el.get_text(strip=True)) if black_el else "Kamu Kurumu"
-                        title_info = clean_text(patrol_el.get_text(strip=True)) if patrol_el else "Personel Alımı"
-                        
+                        # 2. Tip: Alt kartlar (.alt_p1, .alt_p2, em)
+                        alt_p1 = a.select_one(".alt_p1")
+                        alt_p2 = a.select_one(".alt_p2")
+
+                        institution = ""
+                        title_info = ""
+                        date_text = ""
+
+                        if black_el or patrol_el:
+                            institution = clean_text(black_el.get_text(strip=True)) if black_el else "Kamu Kurumu"
+                            title_info = clean_text(patrol_el.get_text(strip=True)) if patrol_el else "Personel Alımı"
+                            date_text = clean_text(date_el.get_text(strip=True)) if date_el else ""
+                        elif alt_p1 or alt_p2:
+                            institution = clean_text(alt_p1.get_text(strip=True)) if alt_p1 else "Kamu Kurumu"
+                            if alt_p2:
+                                em = alt_p2.select_one("em")
+                                if em:
+                                    date_text = clean_text(em.get_text(strip=True)).strip("()")
+                                    em.decompose()
+                                title_info = clean_text(alt_p2.get_text(strip=True))
+                        else:
+                            continue
+
                         full_title = f"{institution} {title_info}".strip()
                         if len(full_title) < 5:
                             continue
 
-                        date_text = clean_text(date_el.get_text(strip=True)) if date_el else ""
                         published_at, deadline_at = parse_turkish_date_range(date_text)
 
                         href = a.get("href", "")

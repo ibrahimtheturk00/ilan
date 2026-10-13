@@ -123,16 +123,28 @@ export function getDaysRemaining(deadlineStr: string | null | undefined) {
 }
 
 export function resolveApplicationUrl(institution: string | null | undefined, originalUrl: string): string {
-  if (!originalUrl) return "https://kamuilan.sbb.gov.tr/";
+  if (!originalUrl) return "https://isealimkariyerkapisi.cbiko.gov.tr/";
   const inst = (institution || "").toLowerCase();
 
-  // Eğer SBB'nin süresi dolan geçici oturum linki ise (ilanDetay.aspx?kod=...)
+  // Eğer SBB'nin linki ise (ilanDetay.aspx?kod=...)
   if (originalUrl.includes("kamuilan.sbb.gov.tr/ilanDetay.aspx")) {
+    // 1. Askeri / Güvenlik Kurumları
     if (inst.includes("milli savunma") || inst.includes("millî savunma") || inst.includes("msb")) {
       return "https://personeltemin.msb.gov.tr/";
     }
     if (inst.includes("jandarma")) {
       return "https://vatandas.jandarma.gov.tr/ptm/giris";
+    }
+    if (inst.includes("sahil güvenlik")) {
+      return "https://www.sg.gov.tr/";
+    }
+    if (inst.includes("emniyet") || inst.includes("polis")) {
+      return "https://www.pa.edu.tr/";
+    }
+
+    // 2. Bakanlıklar ve Bağlı Kuruluşlar
+    if (inst.includes("tapu ve kadastro") || inst.includes("tkgm")) {
+      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
     }
     if (inst.includes("adalet bakanlığı") || inst.includes("icra")) {
       return "https://pgm.adalet.gov.tr/";
@@ -143,17 +155,82 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     if (inst.includes("tübitak")) {
       return "https://kariyer.tubitak.gov.tr/";
     }
-    if (inst.includes("tmsf")) {
+    if (inst.includes("tmsf") || inst.includes("tasarruf mevduatı")) {
       return "https://www.tmsf.org.tr/";
     }
-    if (inst.includes("bddk")) {
+    if (inst.includes("bddk") || inst.includes("bankacılık düzenleme")) {
       return "https://www.bddk.org.tr/";
     }
     if (inst.includes("vakıflar")) {
-      return "https://www.vgm.gov.tr/";
+      return "https://vgm.gov.tr/";
     }
-    // Genel güvenli SBB ana portal sayfası
-    return "https://kamuilan.sbb.gov.tr/";
+    if (inst.includes("yargıtay")) {
+      return "https://www.yargitay.gov.tr/";
+    }
+    if (inst.includes("danıştay")) {
+      return "https://www.danistay.gov.tr/";
+    }
+    if (inst.includes("gelir idaresi") || inst.includes("gib")) {
+      return "https://www.gib.gov.tr/";
+    }
+    if (inst.includes("özeleştirme") || inst.includes("özelleştirme")) {
+      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+    }
+    if (inst.includes("iletişim başkanlığı")) {
+      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+    }
+    if (inst.includes("savunma sanayii") || inst.includes("ssb")) {
+      return "https://www.ssb.gov.tr/";
+    }
+    if (inst.includes("türk patent")) {
+      return "https://www.turkpatent.gov.tr/";
+    }
+    if (inst.includes("spk") || inst.includes("sermaye piyasası")) {
+      return "https://spk.gov.tr/";
+    }
+
+    // 3. Üniversiteler (Akademik Personel / İdari Başvuru)
+    if (inst.includes("şırnak") || inst.includes("sirnak")) {
+      return "https://www.sirnak.edu.tr/";
+    }
+    if (inst.includes("ondokuz mayıs")) {
+      return "https://www.omu.edu.tr/";
+    }
+    if (inst.includes("necmettin erbakan")) {
+      return "https://www.erbakan.edu.tr/";
+    }
+    if (inst.includes("ankara üniversitesi")) {
+      return "https://www.ankara.edu.tr/";
+    }
+    if (inst.includes("atatürk üniversitesi")) {
+      return "https://atauni.edu.tr/";
+    }
+    if (inst.includes("batman üniversitesi")) {
+      return "https://batman.edu.tr/";
+    }
+    if (inst.includes("istanbul teknik") || inst.includes("itü")) {
+      return "https://www.itu.edu.tr/";
+    }
+    if (inst.includes("üniversite") || inst.includes("universite")) {
+      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
+    }
+
+    // 4. Belediyeler
+    if (inst.includes("keşan") || inst.includes("kesan")) {
+      return "https://www.kesan.bel.tr/";
+    }
+    if (inst.includes("ortahisar")) {
+      return "https://www.ortahisar.bel.tr/";
+    }
+    if (inst.includes("sarıidris") || inst.includes("sariidris")) {
+      return "https://sariidris.bel.tr/";
+    }
+    if (inst.includes("belediye") || inst.includes("belediyesi")) {
+      return "https://yerelyonetimler.csb.gov.tr/";
+    }
+
+    // 5. Resmi Kamu Kariyer Kapısı (Cumhurbaşkanlığı İşe Alım Portalı - Tüm bakanlık ve kamu kurumlarının tek adresi)
+    return "https://isealimkariyerkapisi.cbiko.gov.tr/";
   }
 
   return originalUrl;
