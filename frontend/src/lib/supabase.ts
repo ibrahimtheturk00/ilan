@@ -158,6 +158,23 @@ export const MOCK_JOBS: JobPost[] = [
   }
 ];
 
+export function deduplicateJobs(jobs: JobPost[]): JobPost[] {
+  const seen = new Set<string>();
+  const result: JobPost[] = [];
+  for (const job of jobs) {
+    const urlKey = job.original_url ? job.original_url.trim().toLowerCase() : "";
+    const titleKey = `${(job.institution || "").trim().toLowerCase()}_${job.title.trim().toLowerCase()}`;
+    
+    if (urlKey && seen.has(urlKey)) continue;
+    if (seen.has(titleKey)) continue;
+    
+    if (urlKey) seen.add(urlKey);
+    seen.add(titleKey);
+    result.push(job);
+  }
+  return result;
+}
+
 export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPost[]; count: number }> {
   const hasDerivedFilters = Boolean(filters.kpssType || filters.educationLevel || filters.onlyUrgent);
   const pageSize = 12;
@@ -212,45 +229,36 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
           break;
       }
 
-      if (hasDerivedFilters || filters.searchQuery) {
-        // İstemci tarafında türetilen filtreler veya fuzzy arama için tüm adayları çekip süzüyoruz
-        const { data, error } = await query.limit(500);
-        if (!error && data) {
-          let filtered = data as JobPost[];
+      // İlanları çekip otomatik tekilleştirmeden geçiriyoruz
+      const { data, error } = await query.limit(500);
+      if (!error && data) {
+        let filtered = deduplicateJobs(data as JobPost[]);
 
-          if (filters.searchQuery) {
-            filtered = filtered.filter((j) =>
-              fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""}`, filters.searchQuery)
-            );
-          }
-
-          if (filters.kpssType) {
-            filtered = filtered.filter((j) => detectKpssType(j).type === filters.kpssType);
-          }
-
-          if (filters.educationLevel) {
-            filtered = filtered.filter((j) => detectEducationLevel(j).level === filters.educationLevel);
-          }
-
-          if (filters.onlyUrgent) {
-            filtered = filtered.filter((j) => {
-              const status = getJobApplicationStatus(j.published_at, j.deadline_at, j.title);
-              return status.type === "urgent";
-            });
-          }
-
-          const count = filtered.length;
-          const from = (filters.page - 1) * pageSize;
-          const pageData = filtered.slice(from, from + pageSize);
-          return { data: pageData, count };
+        if (filters.searchQuery) {
+          filtered = filtered.filter((j) =>
+            fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""}`, filters.searchQuery)
+          );
         }
-      } else {
+
+        if (filters.kpssType) {
+          filtered = filtered.filter((j) => detectKpssType(j).type === filters.kpssType);
+        }
+
+        if (filters.educationLevel) {
+          filtered = filtered.filter((j) => detectEducationLevel(j).level === filters.educationLevel);
+        }
+
+        if (filters.onlyUrgent) {
+          filtered = filtered.filter((j) => {
+            const status = getJobApplicationStatus(j.published_at, j.deadline_at, j.title);
+            return status.type === "urgent";
+          });
+        }
+
+        const count = filtered.length;
         const from = (filters.page - 1) * pageSize;
-        const to = from + pageSize - 1;
-        const { data, count, error } = await query.range(from, to);
-        if (!error && data) {
-          return { data: data as JobPost[], count: count || data.length };
-        }
+        const pageData = filtered.slice(from, from + pageSize);
+        return { data: pageData, count };
       }
     } catch (err) {
       console.warn("Supabase fetch hatası, mock veriye dönülüyor:", err);
@@ -258,7 +266,7 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
   }
 
   // Mock Filtreleme Motoru
-  let filtered = [...MOCK_JOBS];
+  let filtered = deduplicateJobs([...MOCK_JOBS]);
 
   if (filters.onlyActive) {
     filtered = filtered.filter((j) => j.is_active);
@@ -432,6 +440,8 @@ export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
   if (jobs.length === 0) {
     jobs = MOCK_JOBS;
   }
+
+  jobs = deduplicateJobs(jobs);
 
   const totalActiveJobs = jobs.length;
   let totalPositions = 0;

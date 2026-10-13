@@ -52,6 +52,7 @@ class YerelYonetimlerScraper(BaseScraper):
                     links = soup.find_all("a", href=lambda h: h and "duyuru-" in str(h))
                     
                     seen_urls = set()
+                    seen_cancellations = set()
                     for a in links:
                         href = a.get("href", "")
                         if not href or href in seen_urls:
@@ -75,6 +76,13 @@ class YerelYonetimlerScraper(BaseScraper):
                                 if i + 1 < len(words) and "başkanlığı" in words[i+1].lower():
                                     institution += " " + words[i+1]
                                 break
+
+                        # İptal ilanlarında aynı kurumun mükerrer duyurularını tekilleştir
+                        if "iptal" in title.lower():
+                            canc_key = f"{institution.lower()}_iptal"
+                            if canc_key in seen_cancellations:
+                                continue
+                            seen_cancellations.add(canc_key)
 
                         # İlan / Yayın tarihi
                         date_el = a.find(class_="date")
