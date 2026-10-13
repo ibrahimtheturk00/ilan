@@ -190,6 +190,9 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     }
 
     // 3. Üniversiteler (Akademik Personel / İdari Başvuru)
+    if (inst.includes("eskişehir teknik") || inst.includes("eskisehir teknik")) {
+      return "https://www.eskisehir.edu.tr/";
+    }
     if (inst.includes("şırnak") || inst.includes("sirnak")) {
       return "https://www.sirnak.edu.tr/";
     }
@@ -216,6 +219,15 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     }
 
     // 4. Belediyeler
+    if (inst.includes("şile") || inst.includes("sile")) {
+      return "https://www.sile.bel.tr/";
+    }
+    if (inst.includes("çeltik") || inst.includes("celtik")) {
+      return "https://www.celtik.bel.tr/";
+    }
+    if (inst.includes("sarıidris") || inst.includes("sariidris")) {
+      return "https://www.sariidris.bel.tr/";
+    }
     if (inst.includes("eleşkirt") || inst.includes("eleskirt")) {
       return "http://www.eleskirt.bel.tr/";
     }
@@ -224,9 +236,6 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     }
     if (inst.includes("ortahisar")) {
       return "https://www.ortahisar.bel.tr/";
-    }
-    if (inst.includes("sarıidris") || inst.includes("sariidris")) {
-      return "https://sariidris.bel.tr/";
     }
     if (inst.includes("belediye") || inst.includes("belediyesi")) {
       return "https://yerelyonetimler.csb.gov.tr/";
