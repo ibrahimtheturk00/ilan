@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Building2, ShieldCheck, Mail, Users, Github } from "lucide-react";
+import { Building2, ShieldCheck, Mail, Users, Github, Smartphone, Download } from "lucide-react";
 import { ThemeToggle } from "./ThemeToggle";
 import { trackUniqueVisitor } from "@/lib/visitor";
 
@@ -34,7 +34,7 @@ export function Header() {
         </Link>
 
         {/* Sağ Üst: İletişim Bilgisi, Ziyaretçi Sayacı ve Butonlar */}
-        <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 self-end sm:self-auto">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 self-end sm:self-auto">
           {/* İletişim & Öneri Kutusu */}
           <div className="flex flex-col items-end text-right pr-2 border-r border-slate-200 dark:border-slate-800 hidden md:flex">
             <a
@@ -60,6 +60,18 @@ export function Header() {
             <span>Ziyaretçi:</span>
             <strong>{visitorCount !== null ? visitorCount : "..."}</strong>
           </div>
+
+          {/* Mobil Uygulama (APK) İndirme Butonu */}
+          <a
+            href="/kamu-ilan.apk"
+            download="kamu-ilan.apk"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm shadow-emerald-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            title="Kamu İlan Android uygulamasını (.apk) doğrudan indirin"
+          >
+            <Smartphone className="w-3.5 h-3.5" />
+            <span>Mobil Uygulama</span>
+            <Download className="w-3 h-3 opacity-80" />
+          </a>
 
           <ThemeToggle />
 
