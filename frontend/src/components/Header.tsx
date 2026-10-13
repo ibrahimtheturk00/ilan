@@ -63,8 +63,10 @@ export function Header() {
 
           {/* Mobil Uygulama (APK) İndirme Butonu */}
           <a
-            href="/kamu-ilan.apk"
+            href="https://raw.githubusercontent.com/ibrahimtheturk00/ilan/main/frontend/public/kamu-ilan.apk"
             download="kamu-ilan.apk"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-semibold shadow-sm shadow-emerald-600/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
             title="Kamu İlan Android uygulamasını (.apk) doğrudan indirin"
           >
