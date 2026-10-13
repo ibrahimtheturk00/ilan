@@ -329,7 +329,7 @@ fun ProfileScreen(
             // 4. Uygulama Bilgisi Kartı
             SettingsCard(
                 title = "Hakkında",
-                subtitle = "Kamu İlan Merkezi Mobil Uygulaması",
+                subtitle = "Kamu İlan Mobil Uygulaması",
                 icon = Icons.Default.Info,
                 iconColor = Slate500
             ) {

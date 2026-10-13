@@ -142,7 +142,7 @@ fun OnboardingScreen(
 
                 Column {
                     Text(
-                        text = "Kamu İlan Merkezi",
+                        text = "Kamu İlan",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Slate900

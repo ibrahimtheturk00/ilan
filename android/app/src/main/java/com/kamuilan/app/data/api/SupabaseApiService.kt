@@ -17,7 +17,7 @@ interface SupabaseApiService {
         @Query("select") select: String = "*,sources(*)",
         @Query("is_active") isActive: String = "eq.true",
         @Query("order") order: String = "published_at.desc.nullslast",
-        @Query("limit") limit: Int = 100
+        @Query("limit") limit: Int = 500
     ): Response<List<JobPost>>
 
     @GET("rest/v1/job_posts")

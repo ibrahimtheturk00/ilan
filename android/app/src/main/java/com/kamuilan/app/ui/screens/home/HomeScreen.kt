@@ -124,8 +124,8 @@ fun HomeScreen(
 
                     Column {
                         Text(
-                            text = "Kamu İlan Merkezi",
-                            fontSize = 17.sp,
+                            text = "Kamu İlan",
+                            fontSize = 18.sp,
                             fontWeight = FontWeight.ExtraBold,
                             color = Slate900,
                             letterSpacing = (-0.4).sp
@@ -321,21 +321,19 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .background(BrandPrimary.copy(alpha = 0.1f), RoundedCornerShape(6.dp))
-                            .padding(horizontal = 8.dp, vertical = 3.dp)
-                    ) {
-                        Text(
-                            text = "${uiState.filteredJobs.size}",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = BrandPrimary
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(6.dp))
                     Text(
-                        text = "ilan bulundu",
+                        text = "Toplam ",
+                        fontSize = 12.sp,
+                        color = Slate500
+                    )
+                    Text(
+                        text = "${uiState.filteredJobs.size}",
+                        fontSize = 13.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = BrandPrimary
+                    )
+                    Text(
+                        text = " güncel ilan listeleniyor",
                         fontSize = 12.sp,
                         color = Slate500
                     )
