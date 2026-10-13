@@ -52,23 +52,21 @@ export function JobModal({ job, onClose }: JobModalProps) {
         {/* Modal Üst Başlık */}
         <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
           <div className="flex flex-wrap items-center gap-1.5">
-            {statusInfo.isCancelled ? (
-              <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-red-600 text-white uppercase tracking-wider">
-                {statusInfo.statusTitle}
+            {typeInfo && (
+              <span className={`text-[11px] px-2.5 py-0.5 rounded-md ${typeInfo.color}`}>
+                {typeInfo.label}
               </span>
-            ) : (
-              typeInfo && (
-                <span className={`text-[11px] px-2.5 py-0.5 rounded-md ${typeInfo.color}`}>
-                  {typeInfo.label}
-                </span>
-              )
             )}
             {categoryInfo && (
               <span className="text-[11px] px-2.5 py-0.5 rounded font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                 {categoryInfo.label}
               </span>
             )}
-            {!statusInfo.isCancelled && (
+            {statusInfo.isCancelled ? (
+              <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-red-600 text-white uppercase tracking-wider shadow-sm">
+                {statusInfo.statusTitle}
+              </span>
+            ) : (
               <span
                 className={`text-[11px] font-semibold px-2.5 py-0.5 rounded ${statusInfo.badgeClass}`}
               >

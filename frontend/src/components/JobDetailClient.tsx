@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useJobDetail } from "@/hooks/useJobs";
-import { formatDate, getDaysRemaining, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
+import { formatDate, getJobApplicationStatus, POST_TYPE_LABELS, CATEGORY_LABELS } from "@/lib/utils";
 import {
   ArrowLeft,
   Building,
@@ -54,7 +54,7 @@ export function JobDetailClient({ id }: { id: string }) {
 
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
-  const daysInfo = getDaysRemaining(job.deadline_at);
+  const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at, job.title);
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors">
@@ -98,17 +98,17 @@ export function JobDetailClient({ id }: { id: string }) {
                   {categoryInfo.label}
                 </span>
               )}
-              <span
-                className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${
-                  daysInfo.isExpired
-                    ? "bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                    : daysInfo.isUrgent
-                    ? "bg-rose-100 dark:bg-rose-950/60 text-rose-700 dark:text-rose-400 font-bold animate-pulse"
-                    : "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400"
-                }`}
-              >
-                {daysInfo.text}
-              </span>
+              {statusInfo.isCancelled ? (
+                <span className="text-xs font-bold px-2.5 py-0.5 rounded-md bg-red-600 text-white shadow-sm uppercase tracking-wide">
+                  {statusInfo.statusTitle}
+                </span>
+              ) : (
+                <span
+                  className={`text-xs font-bold px-2.5 py-0.5 rounded-full ${statusInfo.badgeClass}`}
+                >
+                  {statusInfo.fullBadgeText}
+                </span>
+              )}
             </div>
 
             {/* Başlık */}
@@ -176,23 +176,27 @@ export function JobDetailClient({ id }: { id: string }) {
                 </div>
               )}
 
-              <div className="flex items-start justify-between">
-                <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                  <Calendar className="w-3.5 h-3.5 text-slate-400" /> Yayın Tarihi:
-                </span>
-                <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">
-                  {formatDate(job.published_at)}
-                </span>
-              </div>
+              {!statusInfo.isCancelled && (
+                <>
+                  <div className="flex items-start justify-between">
+                    <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" /> Yayın Tarihi:
+                    </span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200 text-right">
+                      {formatDate(job.published_at)}
+                    </span>
+                  </div>
 
-              <div className="flex items-start justify-between">
-                <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-slate-400" /> Son Başvuru:
-                </span>
-                <span className="font-semibold text-rose-600 dark:text-rose-400 text-right">
-                  {formatDate(job.deadline_at)}
-                </span>
-              </div>
+                  <div className="flex items-start justify-between">
+                    <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" /> Son Başvuru:
+                    </span>
+                    <span className="font-semibold text-rose-600 dark:text-rose-400 text-right">
+                      {formatDate(job.deadline_at)}
+                    </span>
+                  </div>
+                </>
+              )}
 
               <div className="flex items-start justify-between pt-2 border-t border-slate-100 dark:border-slate-700/60">
                 <span className="text-slate-500 dark:text-slate-400">Kaynak:</span>

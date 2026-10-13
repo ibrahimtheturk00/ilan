@@ -36,10 +36,18 @@ export function getJobApplicationStatus(
   deadlineStr: string | null | undefined,
   title?: string
 ): ApplicationStatusInfo {
-  // 0. İptal / Düzeltme İlanı Kontrolü
-  const titleLower = (title || "").toLowerCase();
-  if (titleLower.includes("iptal") || titleLower.includes("düzeltme") || titleLower.includes("duzeltme")) {
-    const isIptal = titleLower.includes("iptal");
+  // 0. İptal / Düzeltme İlanı Kontrolü (Türkçe büyük/küçük İ-ı duyarlı kontrol)
+  const rawTitle = title || "";
+  const titleLower = rawTitle.toLocaleLowerCase("tr-TR");
+  // Bazı tarayıcılarda I->ı veya i̇ dönüşüm varyasyonlarını da yakalamak için normalize et
+  const normalized = titleLower
+    .replace(/i̇/g, "i")
+    .replace(/ı/g, "i");
+
+  const isIptal = titleLower.includes("iptal") || normalized.includes("iptal");
+  const isDuzeltme = titleLower.includes("düzeltme") || normalized.includes("duzeltme");
+
+  if (isIptal || isDuzeltme) {
     return {
       type: "cancelled",
       statusTitle: isIptal ? "İptal İlanı" : "Düzeltme İlanı",

@@ -32,17 +32,11 @@ export function JobCard({ job, onSelect }: JobCardProps) {
       <div>
         {/* Üst Rozetler */}
         <div className="flex flex-wrap items-center gap-1.5 mb-3">
-          {/* İptal Rozeti veya Kadro Türü */}
-          {statusInfo.isCancelled ? (
-            <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase shadow-sm">
-              {statusInfo.statusTitle}
+          {/* Kadro Türü Rozeti */}
+          {typeInfo && (
+            <span className={`text-[11px] px-2.5 py-0.5 rounded-md ${typeInfo.color}`}>
+              {typeInfo.label}
             </span>
-          ) : (
-            typeInfo && (
-              <span className={`text-[11px] px-2.5 py-0.5 rounded-md ${typeInfo.color}`}>
-                {typeInfo.label}
-              </span>
-            )
           )}
 
           {categoryInfo && (
@@ -51,15 +45,19 @@ export function JobCard({ job, onSelect }: JobCardProps) {
             </span>
           )}
 
-          {/* Kaynak Rozeti (Örn: CBİKO, SBB, vb. - Şık İndigo/Slate Tonu) */}
+          {/* Kaynak Rozeti (Örn: CBİKO, SBB, vb.) */}
           {job.sources?.name && (
             <span className="text-[11px] px-2 py-0.5 rounded font-medium bg-indigo-50/80 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/40">
               {job.sources.name}
             </span>
           )}
 
-          {/* Başvuru Durum Rozeti (İptal değilse göster) */}
-          {!statusInfo.isCancelled && (
+          {/* İptal / Düzeltme Rozeti veya Normal Başvuru Durum Rozeti (En Sağda) */}
+          {statusInfo.isCancelled ? (
+            <span className="ml-auto text-[11px] px-2.5 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase shadow-sm">
+              {statusInfo.statusTitle}
+            </span>
+          ) : (
             <span
               className={`ml-auto text-[11px] px-2 py-0.5 rounded font-medium ${statusInfo.badgeClass}`}
             >
