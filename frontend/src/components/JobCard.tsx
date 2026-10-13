@@ -39,9 +39,8 @@ export function JobCard({ job, onSelect }: JobCardProps) {
             </span>
           ) : (
             typeInfo && (
-              <span className={`inline-flex items-center gap-1.5 text-[11px] px-2.5 py-0.5 rounded-md border ${typeInfo.color}`}>
-                <span className={`w-1.5 h-1.5 rounded-full ${typeInfo.dot}`} />
-                <span>{typeInfo.label}</span>
+              <span className={`text-[11px] px-2.5 py-0.5 rounded-md ${typeInfo.color}`}>
+                {typeInfo.label}
               </span>
             )
           )}

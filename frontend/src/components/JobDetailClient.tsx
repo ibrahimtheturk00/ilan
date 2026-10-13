@@ -89,9 +89,8 @@ export function JobDetailClient({ id }: { id: string }) {
             {/* Rozetler */}
             <div className="flex flex-wrap items-center gap-2 mb-4">
               {typeInfo && (
-                <span className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-0.5 rounded-md font-semibold border ${typeInfo.color}`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${typeInfo.dot}`} />
-                  <span>{typeInfo.label}</span>
+                <span className={`text-xs px-2.5 py-0.5 rounded-md ${typeInfo.color}`}>
+                  {typeInfo.label}
                 </span>
               )}
               {categoryInfo && (
