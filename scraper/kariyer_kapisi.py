@@ -14,37 +14,65 @@ class KariyerKapisiScraper(BaseScraper):
     def scrape(self) -> List[Dict[str, Any]]:
         posts = []
         
-        # 1. Öncelikli olarak API veya HTTP istekleri denenir
         import httpx
         headers = {
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+            "Content-Type": "application/json",
             "Accept": "application/json, text/plain, */*",
-            "Referer": "https://kariyerkapisi.cbiko.gov.tr/"
+            "Origin": "https://kariyerkapisi.gov.tr",
+            "Referer": "https://kariyerkapisi.gov.tr/isealim"
         }
         
         try:
             with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True) as client:
-                # Kamu iş ilanları API veya anasayfa
-                url = "https://isealimkariyerkapisi.cbiko.gov.tr/api/announcements/public"
-                resp = client.get(url)
+                url = "https://api.kariyerkapisi.gov.tr/api/ilan/SearchIlanPublic"
+                payload = {
+                    "krM_ID": 0,
+                    "searchText": "",
+                    "il": "0",
+                    "ilanTuru": "0"
+                }
+                resp = client.post(url, json=payload)
                 if resp.status_code == 200:
-                    data = resp.json()
-                    items = data if isinstance(data, list) else data.get("items", data.get("data", []))
+                    items = resp.json()
+                    self.logger.info(f"Kariyer Kapısı API'den {len(items)} adet resmi kamu ilanı çekildi.")
                     for item in items:
+                        guid = item.get("guid")
+                        if not guid:
+                            continue
+                        
+                        inst = (item.get("kurumAdi") or "").strip()
+                        raw_title = (item.get("ilanBaslik") or "").strip()
+                        
+                        # Başlık kurum adıyla başlıyorsa temizle veya düzgün birleştir
+                        if raw_title.startswith(inst):
+                            title = raw_title.lstrip(inst).lstrip(" -").strip()
+                            full_title = f"{inst} {title}".strip()
+                        else:
+                            full_title = f"{inst} {raw_title}".strip() if inst else raw_title
+                            
+                        # Başvuru ekranına doğrudan giden URL:
+                        direct_url = f"https://kariyerkapisi.gov.tr/IlanDetay?i={guid}"
+                        
+                        start_date = (item.get("basTarih") or "").split("T")[0] if item.get("basTarih") else None
+                        end_date = (item.get("bitTarih") or "").split("T")[0] if item.get("bitTarih") else None
+                        ilan_turu = item.get("ilanTuru") or "Personel Alımı"
+                        birim = item.get("birimAdi") or ""
+                        
+                        description = f"{inst} bünyesinde istihdam edilmek üzere {ilan_turu}. {birim}. Başvuru Tarihleri: {start_date} - {end_date}."
+
                         posts.append({
-                            "title": item.get("title") or item.get("jobTitle") or "Kamu Personeli Alımı",
-                            "institution": item.get("organizationName") or item.get("institution"),
-                            "city": item.get("city"),
-                            "published_at": item.get("startDate") or item.get("createdDate"),
-                            "deadline_at": item.get("endDate") or item.get("applicationEndDate"),
-                            "position_count": item.get("quota") or item.get("positionCount"),
-                            "original_url": item.get("url") or f"https://isealimkariyerkapisi.cbiko.gov.tr/announcement/{item.get('id', '')}",
-                            "description": item.get("summary") or item.get("description", "")
+                            "title": full_title,
+                            "institution": inst,
+                            "published_at": start_date,
+                            "deadline_at": end_date,
+                            "original_url": direct_url,
+                            "description": description,
                         })
                     if posts:
                         return posts
         except Exception as e:
-            self.logger.warning(f"HTTP/API çağrısı başarısız, Playwright deneniyor: {e}")
+            self.logger.warning(f"Kariyer Kapısı API çağrısı başarısız: {e}")
 
         # 2. API sonuç vermezse Playwright ile headless tarama
         try:
