@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #e3e3e3;
+  --background: #f8f9fa;
   --foreground: #0f0f0f;
   --font-bricolage: 'Bricolage Grotesque', sans-serif;
   --font-manrope: 'Manrope', sans-serif;
@@ -73,10 +73,10 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   transform: translateX(-100%);
   background-image: linear-gradient(
     90deg,
-    rgba(227, 227, 227, 0) 0,
-    rgba(227, 227, 227, 0.3) 20%,
-    rgba(227, 227, 227, 0.6) 60%,
-    rgba(227, 227, 227, 0)
+    rgba(248, 249, 250, 0) 0,
+    rgba(248, 249, 250, 0.3) 20%,
+    rgba(248, 249, 250, 0.6) 60%,
+    rgba(248, 249, 250, 0)
   );
   animation: shimmer 1.8s infinite;
   content: '';

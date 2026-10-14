@@ -106,7 +106,7 @@ fun AmbientGlassBackground(
 fun GlassCard(
     modifier: Modifier = Modifier,
     shape: Shape = RoundedCornerShape(10.dp),
-    backgroundColor: Color = Color(0xFFE3E3E3),
+    backgroundColor: Color = Color(0xFFF8F9FA),
     borderColor: Color = Color(0xFFE4E4E7),
     content: @Composable () -> Unit
 ) {

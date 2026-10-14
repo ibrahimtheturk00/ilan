@@ -170,7 +170,7 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Default.Business,
                             contentDescription = "Logo",
-                            tint = Color(0xFFE3E3E3),
+                            tint = Color(0xFFF8F9FA),
                             modifier = Modifier.size(22.dp)
                         )
                     }
@@ -358,7 +358,7 @@ fun HomeScreen(
                                     text = tag,
                                     fontSize = 13.sp,
                                     fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                                    color = if (isSelected) (if (isDark) Color(0xFF090D16) else Color(0xFFE3E3E3)) else brandCol
+                                    color = if (isSelected) (if (isDark) Color(0xFF090D16) else Color(0xFFF8F9FA)) else brandCol
                                 )
                             }
                         }
@@ -606,7 +606,7 @@ fun HomeScreen(
                                 shape = RoundedCornerShape(12.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = if (isDark) MaterialTheme.colorScheme.primary else Color(0xFF0F172A),
-                                    contentColor = Color(0xFFE3E3E3)
+                                    contentColor = Color(0xFFF8F9FA)
                                 )
                             ) {
                                 Text("Tüm Filtreleri Temizle")
@@ -651,7 +651,7 @@ private fun FilterGridTile(
     val bg = when {
         isSelected -> activeColor
         isDark -> Color(0xFF1E293B)
-        else -> Color(0xFFE3E3E3)
+        else -> Color(0xFFF8F9FA)
     }
     val borderCol = when {
         isSelected -> activeColor
@@ -659,7 +659,7 @@ private fun FilterGridTile(
         else -> Color(0xFFCBD5E1)
     }
     val textCol = when {
-        isSelected -> Color(0xFFE3E3E3)
+        isSelected -> Color(0xFFF8F9FA)
         isDark -> Color(0xFFF1F5F9)
         else -> Color(0xFF0F172A)
     }
@@ -682,7 +682,7 @@ private fun FilterGridTile(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isSelected) Color(0xFFE3E3E3) else (if (isDark) Color(0xFF34D399) else Color(0xFF059669)),
+                    tint = if (isSelected) Color(0xFFF8F9FA) else (if (isDark) Color(0xFF34D399) else Color(0xFF059669)),
                     modifier = Modifier.size(15.dp)
                 )
                 Spacer(modifier = Modifier.width(4.dp))

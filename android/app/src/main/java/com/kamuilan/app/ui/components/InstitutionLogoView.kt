@@ -278,25 +278,25 @@ private fun getLogoMeta(type: InstitutionLogoType): LogoVisualMeta {
         InstitutionLogoType.HEALTH -> LogoVisualMeta(
             icon = Icons.Default.LocalHospital,
             primaryColor = Color(0xFFE11D48),
-            iconTint = Color(0xFFE3E3E3),
+            iconTint = Color(0xFFF8F9FA),
             label = "Sağlık Bakanlığı"
         )
         InstitutionLogoType.UNIVERSITY -> LogoVisualMeta(
             icon = Icons.Default.School,
             primaryColor = Color(0xFF4338CA),
-            iconTint = Color(0xFFE3E3E3),
+            iconTint = Color(0xFFF8F9FA),
             label = "Üniversite"
         )
         InstitutionLogoType.MUNICIPALITY -> LogoVisualMeta(
             icon = Icons.Default.Apartment,
             primaryColor = Color(0xFF0284C7),
-            iconTint = Color(0xFFE3E3E3),
+            iconTint = Color(0xFFF8F9FA),
             label = "Belediye"
         )
         InstitutionLogoType.ISKUR -> LogoVisualMeta(
             icon = Icons.Default.Handshake,
             primaryColor = Color(0xFF0D9488),
-            iconTint = Color(0xFFE3E3E3),
+            iconTint = Color(0xFFF8F9FA),
             label = "İŞKUR / SGK"
         )
         InstitutionLogoType.FINANCE -> LogoVisualMeta(
@@ -308,7 +308,7 @@ private fun getLogoMeta(type: InstitutionLogoType): LogoVisualMeta {
         InstitutionLogoType.DEVELOPMENT -> LogoVisualMeta(
             icon = Icons.Default.Explore,
             primaryColor = Color(0xFF059669),
-            iconTint = Color(0xFFE3E3E3),
+            iconTint = Color(0xFFF8F9FA),
             label = "Kalkınma Ajansı"
         )
         InstitutionLogoType.MINISTRY -> LogoVisualMeta(
@@ -345,7 +345,7 @@ fun InstitutionLogoView(
         modifier = modifier
             .size(size)
             .clip(RoundedCornerShape(8.dp))
-            .background(Color(0xFFE3E3E3))
+            .background(Color(0xFFF8F9FA))
             .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.Center
     ) {

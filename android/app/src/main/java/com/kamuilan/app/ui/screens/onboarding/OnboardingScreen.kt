@@ -135,7 +135,7 @@ fun OnboardingScreen(
                     Icon(
                         imageVector = Icons.Default.Business,
                         contentDescription = null,
-                        tint = Color(0xFFE3E3E3),
+                        tint = Color(0xFFF8F9FA),
                         modifier = Modifier.size(26.dp)
                     )
                 }
@@ -296,8 +296,8 @@ fun OnboardingScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = BrandPrimary,
                     disabledContainerColor = BrandPrimary.copy(alpha = 0.35f),
-                    contentColor = Color(0xFFE3E3E3),
-                    disabledContentColor = Color(0xFFE3E3E3).copy(alpha = 0.7f)
+                    contentColor = Color(0xFFF8F9FA),
+                    disabledContentColor = Color(0xFFF8F9FA).copy(alpha = 0.7f)
                 )
             ) {
                 Text(
@@ -393,7 +393,7 @@ private fun SelectablePill(
             Icon(
                 imageVector = Icons.Default.Check,
                 contentDescription = null,
-                tint = Color(0xFFE3E3E3),
+                tint = Color(0xFFF8F9FA),
                 modifier = Modifier.size(14.dp)
             )
             Spacer(modifier = Modifier.width(5.dp))
@@ -402,7 +402,7 @@ private fun SelectablePill(
             text = text,
             fontSize = 12.sp,
             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-            color = if (isSelected) Color(0xFFE3E3E3) else Slate700
+            color = if (isSelected) Color(0xFFF8F9FA) else Slate700
         )
     }
 }

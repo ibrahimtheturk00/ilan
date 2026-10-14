@@ -16,7 +16,7 @@ const config: Config = {
         mono: ["var(--font-jetbrains-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
       colors: {
-        white: "#e3e3e3",
+        white: "#f8f9fa",
         slate: colors.zinc,
         brand: {
           50: "#f0f7ff",

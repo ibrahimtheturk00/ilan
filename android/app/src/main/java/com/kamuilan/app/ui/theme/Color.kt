@@ -11,7 +11,7 @@ val BrandSubtle       = Color(0xFFEFF6FF)
 // ─── 2026 Glassmorphic Additions ──────────────────────────────────────────────
 val BrandGradientStart = Color(0xFF1D4ED8)
 val BrandGradientEnd   = Color(0xFF7C3AED)
-val SurfaceGlass       = Color(0xFFE3E3E3)
+val SurfaceGlass       = Color(0xFFF8F9FA)
 val GlowBlue           = Color(0x332563EB)
 val GlowPurple         = Color(0x337C3AED)
 val CardShadow         = Color(0x14000000)
@@ -67,15 +67,15 @@ val Slate200 = Color(0xFFE2E8F0)
 val Slate100 = Color(0xFFF1F5F9)
 val Slate50  = Color(0xFFF8FAFC)
 
-val BackgroundLight = Color(0xFFE3E3E3)
-val SurfaceLight    = Color(0xFFE3E3E3)
+val BackgroundLight = Color(0xFFF8F9FA)
+val SurfaceLight    = Color(0xFFF8F9FA)
 
 // ─── Web Tema Dinamik Renkleri ────────────────────────────────────────────────
 // Açık tema: Zümrüt Yeşili birincil, Kraliyet Mavi ikincil
 val LightThemePrimary   = Color(0xFF059669) // Emerald-600
 val LightThemeSecondary = Color(0xFF2563EB) // Blue-600
-val LightThemeBg        = Color(0xFFE3E3E3)
-val LightThemeSurface   = Color(0xFFE3E3E3)
+val LightThemeBg        = Color(0xFFF8F9FA)
+val LightThemeSurface   = Color(0xFFF8F9FA)
 val LightThemeBorder    = Color(0xFFCBD5E1)
 
 // Koyu tema: Elektrik Gök Mavisi birincil, İndigo/Mor ikincil
@@ -147,7 +147,7 @@ val GenelLightBorder    = Color(0xFFE4E4E7)
 
 val GenelDarkBg         = Color(0xFF27272A)
 val GenelDarkText       = Color(0xFFE4E4E7)
-val GenelDarkBorder     = Color(0x26E3E3E3)
+val GenelDarkBorder     = Color(0x26F8F9FA)
 
 val GenelSlate           = Color(0xFF475569)
 val GenelSlateBg         = Color(0xFFF8FAFC)

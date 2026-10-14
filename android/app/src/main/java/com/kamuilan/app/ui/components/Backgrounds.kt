@@ -108,7 +108,7 @@ fun DotGridBackground(
     val bgColor = MaterialTheme.colorScheme.background
 
     // Nokta temel renkleri
-    val baseDotColor = if (isDark) Color(0xFFE3E3E3) else Color(0xFF0F172A)
+    val baseDotColor = if (isDark) Color(0xFFF8F9FA) else Color(0xFF0F172A)
     val flareGlowColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF059669)
 
     // Rastgele parıldayan özel noktaların animasyon fazları
