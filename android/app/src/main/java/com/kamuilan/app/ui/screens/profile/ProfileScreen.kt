@@ -190,14 +190,14 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Default.Edit,
                                 contentDescription = null,
-                                tint = Color.White,
+                                tint = Color(0xFFE3E3E3),
                                 modifier = Modifier.size(16.dp)
                             )
                             Text(
                                 text = "Kriterlerimi Güncelle",
                                 fontSize = 13.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color(0xFFE3E3E3)
                             )
                         }
                     }
@@ -306,7 +306,7 @@ fun ProfileScreen(
                             checked = notificationsEnabled,
                             onCheckedChange = { viewModel.toggleNotifications(it) },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
+                                checkedThumbColor = Color(0xFFE3E3E3),
                                 checkedTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.primary
                             )
                         )
@@ -336,7 +336,7 @@ fun ProfileScreen(
                             checked = uiState.urgentJobAlertsEnabled,
                             onCheckedChange = { viewModel.toggleUrgentJobAlerts(it) },
                             colors = SwitchDefaults.colors(
-                                checkedThumbColor = Color.White,
+                                checkedThumbColor = Color(0xFFE3E3E3),
                                 checkedTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.primary
                             )
                         )

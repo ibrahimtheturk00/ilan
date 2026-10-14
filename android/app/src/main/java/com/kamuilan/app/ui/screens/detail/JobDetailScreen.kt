@@ -411,14 +411,14 @@ fun JobDetailScreen(
                             Icon(
                                 imageVector = Icons.Default.OpenInNew,
                                 contentDescription = null,
-                                tint = Color.White,
+                                tint = Color(0xFFE3E3E3),
                                 modifier = Modifier.size(18.dp)
                             )
                             Text(
                                 text = "Resmî İlana & Başvuruya Git",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White
+                                color = Color(0xFFE3E3E3)
                             )
                         }
                     }

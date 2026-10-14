@@ -219,7 +219,7 @@ fun YokCategoryCard(
                     Icon(
                         imageVector = category.icon,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = Color(0xFFE3E3E3),
                         modifier = Modifier.size(19.dp)
                     )
                 }

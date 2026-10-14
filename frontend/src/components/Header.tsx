@@ -6,7 +6,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-200/80 dark:border-zinc-800/80 bg-[#F7F7F5]/90 dark:bg-[#0F1117]/90 backdrop-blur-md transition-all">
+    <header className="sticky top-0 z-40 w-full border-b border-zinc-200/80 dark:border-zinc-800/80 bg-[#e3e3e3]/90 dark:bg-[#0F1117]/90 backdrop-blur-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
         {/* Sol: Logo ve İsim */}
         <Link href="/" className="flex items-center gap-2.5 group">

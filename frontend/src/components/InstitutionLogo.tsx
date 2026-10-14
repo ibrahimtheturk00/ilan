@@ -178,7 +178,7 @@ export function InstitutionLogo({ institution, className = "", size = "md" }: In
               <path d="M14 16h20" stroke="#F1D28C" strokeWidth="2" strokeLinecap="round" />
               <path d="M14 16l-4 7h8l-4-7z" fill="#F1D28C" />
               <path d="M34 16l-4 7h8l-4-7z" fill="#F1D28C" />
-              <circle cx="24" cy="8.5" r="2.5" fill="#FFFFFF" />
+              <circle cx="24" cy="8.5" r="2.5" fill="#e3e3e3" />
             </svg>
           )}
 
@@ -189,15 +189,15 @@ export function InstitutionLogo({ institution, className = "", size = "md" }: In
               <path d="M15 33L33 15M33 33L15 15" stroke="#C59B27" strokeWidth="2" strokeLinecap="round" />
               <path d="M24 13c5 0 9 3 9 9 0 7-9 13-9 13s-9-6-9-13c0-6 4-9 9-9z" fill="#0C2340" stroke="#C59B27" strokeWidth="1.8" />
               <circle cx="24" cy="21" r="4" fill="#E11D48" />
-              <path d="M24 19l.7 1.5 1.6.2-1.2 1.1.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.1 1.6-.2z" fill="#FFFFFF" />
+              <path d="M24 19l.7 1.5 1.6.2-1.2 1.1.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.1 1.6-.2z" fill="#e3e3e3" />
             </svg>
           )}
 
           {type === "health" && (
             <svg viewBox="0 0 48 48" fill="none" className={iconSizeClasses}>
               <circle cx="24" cy="24" r="22" fill="#E11D48" />
-              <circle cx="24" cy="24" r="20" stroke="#FFFFFF" strokeWidth="1.5" />
-              <path d="M29 16a9 9 0 100 16 11 11 0 110-16z" fill="#FFFFFF" />
+              <circle cx="24" cy="24" r="20" stroke="#e3e3e3" strokeWidth="1.5" />
+              <path d="M29 16a9 9 0 100 16 11 11 0 110-16z" fill="#e3e3e3" />
               <path d="M24 12v24M21 16c2-2 4-2 6 0s-2 4-4 6 4 4 4 6-4 4-6 0" stroke="#F59E0B" strokeWidth="2.2" strokeLinecap="round" fill="none" />
               <circle cx="24" cy="11" r="2.5" fill="#F59E0B" />
             </svg>
@@ -207,7 +207,7 @@ export function InstitutionLogo({ institution, className = "", size = "md" }: In
             <svg viewBox="0 0 48 48" fill="none" className={iconSizeClasses}>
               <circle cx="24" cy="24" r="22" fill="#4338CA" />
               <circle cx="24" cy="24" r="20" stroke="#A5B4FC" strokeWidth="1.5" strokeDasharray="4 2" />
-              <path d="M12 28c4-2 8-1 12 2 4-3 8-4 12-2v-11c-4-2-8-1-12 2-4-3-8-4-12-2v11z" fill="#FFFFFF" fillOpacity="0.95" />
+              <path d="M12 28c4-2 8-1 12 2 4-3 8-4 12-2v-11c-4-2-8-1-12 2-4-3-8-4-12-2v11z" fill="#e3e3e3" fillOpacity="0.95" />
               <path d="M24 15v15" stroke="#4338CA" strokeWidth="1.8" />
               <path d="M24 9c2 2 3 4 1 6-2-2-3-4-1-6z" fill="#F59E0B" />
               <path d="M22 15h4v3h-4z" fill="#CBD5E1" />
@@ -218,7 +218,7 @@ export function InstitutionLogo({ institution, className = "", size = "md" }: In
             <svg viewBox="0 0 48 48" fill="none" className={iconSizeClasses}>
               <circle cx="24" cy="24" r="22" fill="#0284C7" />
               <circle cx="24" cy="24" r="20" stroke="#BAE6FD" strokeWidth="1.5" />
-              <path d="M15 31V21l3-2 3 2v-2l3-2 3 2v2l3-2 3 2v10H15z" fill="#FFFFFF" />
+              <path d="M15 31V21l3-2 3 2v-2l3-2 3 2v2l3-2 3 2v10H15z" fill="#e3e3e3" />
               <path d="M21 31v-5a3 3 0 016 0v5h-6z" fill="#0284C7" />
               <circle cx="24" cy="14" r="3.5" fill="#FDE047" />
             </svg>
@@ -228,9 +228,9 @@ export function InstitutionLogo({ institution, className = "", size = "md" }: In
             <svg viewBox="0 0 48 48" fill="none" className={iconSizeClasses}>
               <circle cx="24" cy="24" r="22" fill="#0D9488" />
               <circle cx="24" cy="24" r="20" stroke="#99F6E4" strokeWidth="1.5" />
-              <path d="M14 26l7-7 6 6 7-7" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M14 26l7-7 6 6 7-7" stroke="#e3e3e3" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
               <circle cx="24" cy="15" r="3" fill="#FDE047" />
-              <path d="M18 32h12" stroke="#FFFFFF" strokeWidth="2.5" strokeLinecap="round" />
+              <path d="M18 32h12" stroke="#e3e3e3" strokeWidth="2.5" strokeLinecap="round" />
             </svg>
           )}
 
@@ -247,7 +247,7 @@ export function InstitutionLogo({ institution, className = "", size = "md" }: In
             <svg viewBox="0 0 48 48" fill="none" className={iconSizeClasses}>
               <circle cx="24" cy="24" r="22" fill="#059669" />
               <circle cx="24" cy="24" r="20" stroke="#A7F3D0" strokeWidth="1.5" />
-              <path d="M24 11l3 10 10 3-10 3-3 10-3-10-10-3 10-3 3-10z" fill="#FFFFFF" />
+              <path d="M24 11l3 10 10 3-10 3-3 10-3-10-10-3 10-3 3-10z" fill="#e3e3e3" />
               <circle cx="24" cy="24" r="2.5" fill="#059669" />
             </svg>
           )}
@@ -257,8 +257,8 @@ export function InstitutionLogo({ institution, className = "", size = "md" }: In
               <circle cx="24" cy="24" r="22" fill="#B91C1C" />
               <circle cx="24" cy="24" r="19.5" stroke="#FCD34D" strokeWidth="1.5" />
               <circle cx="24" cy="24" r="14" fill="#991B1B" />
-              <path d="M24 17a6 6 0 100 12 7.5 7.5 0 110-12z" fill="#FFFFFF" />
-              <path d="M27 21l.6 1.3 1.4.2-1 1 .2 1.4-1.2-.7-1.2.7.2-1.4-1-1 1.4-.2z" fill="#FFFFFF" />
+              <path d="M24 17a6 6 0 100 12 7.5 7.5 0 110-12z" fill="#e3e3e3" />
+              <path d="M27 21l.6 1.3 1.4.2-1 1 .2 1.4-1.2-.7-1.2.7.2-1.4-1-1 1.4-.2z" fill="#e3e3e3" />
               {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => {
                 const rad = (angle * Math.PI) / 180;
                 const x = 24 + 17 * Math.cos(rad);
