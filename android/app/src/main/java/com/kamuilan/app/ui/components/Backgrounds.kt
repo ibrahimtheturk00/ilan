@@ -38,9 +38,9 @@ fun OnwardBackground(
     val isDark = isSystemInDarkTheme()
     val bgColor = MaterialTheme.colorScheme.background
 
-    // Açık temada tok kömür arduvaz, koyu temada çelik mavisi
-    val arrowColor = if (isDark) Color(0xFF94A3B8).copy(alpha = 0.12f)
-                     else Color(0xFF475569).copy(alpha = 0.16f)
+    // Açık temada tok kömür arduvaz, koyu temada çelik mavisi (mobilde net görünür kontrast)
+    val arrowColor = if (isDark) Color(0xFF94A3B8).copy(alpha = 0.22f)
+                     else Color(0xFF334155).copy(alpha = 0.24f)
 
     Box(
         modifier = modifier
@@ -49,7 +49,7 @@ fun OnwardBackground(
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val cellPx = 28.dp.toPx()
-            val strokePx = 1.25.dp.toPx()
+            val strokePx = 1.4.dp.toPx()
             val h = cellPx * 0.28f
 
             val cols = (size.width / cellPx).toInt() + 1
