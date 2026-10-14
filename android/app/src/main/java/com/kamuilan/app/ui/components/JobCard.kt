@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.MilitaryTech
@@ -190,22 +191,6 @@ fun JobCard(
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
-
-                        if (isToday) {
-                            Box(
-                                modifier = Modifier
-                                    .background(if (isDark) Color(0x3310B981) else Color(0xFFECFDF5), RoundedCornerShape(6.dp))
-                                    .border(1.dp, if (isDark) Color(0x6610B981) else Color(0xFFA7F3D0), RoundedCornerShape(6.dp))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
-                            ) {
-                                Text(
-                                    text = "Bugün",
-                                    fontSize = 12.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (isDark) Color(0xFF6EE7B7) else Color(0xFF047857)
-                                )
-                            }
-                        }
                     }
 
                     Row(
@@ -275,18 +260,21 @@ fun JobCard(
                     )
                 }
 
-                // ── Meta Rozetleri: KPSS, Eğitim, Yaş Sınırı ───────────────────────────
+                // ── Meta Rozetleri: Bugün, KPSS, Eğitim, Yaş Sınırı ───────────────────────────
                 val hasKpss = kpssType != "Belirtilmemiş"
                 val hasEdu = education != "Belirtilmemiş"
                 val hasAge = maxAge != null
 
-                if (hasKpss || hasEdu || hasAge) {
+                if (isToday || hasKpss || hasEdu || hasAge) {
                     Spacer(modifier = Modifier.height(10.dp))
                     FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(6.dp),
                         verticalArrangement = Arrangement.spacedBy(6.dp),
                         modifier = Modifier.fillMaxWidth()
                     ) {
+                        if (isToday) {
+                            CardTodayBadge()
+                        }
                         if (hasKpss) {
                             WebMetaBadge(
                                 text = kpssType,
@@ -608,5 +596,40 @@ private fun getWebCategoryLabel(category: String?): String {
         "hukuk" -> "Hukuk"
         "maliye" -> "Maliye"
         else -> "Genel"
+    }
+}
+
+@Composable
+private fun CardTodayBadge() {
+    val isDark = isAppDark()
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = Modifier
+            .border(
+                1.dp,
+                if (isDark) Color(0x6610B981) else Color(0xFFA7F3D0),
+                RoundedCornerShape(6.dp)
+            )
+            .background(
+                if (isDark) Color(0x3310B981) else Color(0xFFECFDF5),
+                RoundedCornerShape(6.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 3.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.AutoAwesome,
+            contentDescription = null,
+            tint = if (isDark) Color(0xFF34D399) else Color(0xFF059669),
+            modifier = Modifier.size(13.dp)
+        )
+        Text(
+            text = "Bugün",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold,
+            color = if (isDark) Color(0xFF6EE7B7) else Color(0xFF047857),
+            maxLines = 1,
+            softWrap = false
+        )
     }
 }
