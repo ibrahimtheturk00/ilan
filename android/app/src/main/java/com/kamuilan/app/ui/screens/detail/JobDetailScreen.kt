@@ -33,6 +33,7 @@ import androidx.compose.material.icons.filled.People
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -43,8 +44,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +61,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kamuilan.app.data.model.JobParser
 import com.kamuilan.app.data.model.JobPost
+import com.kamuilan.app.data.repository.JobRepository
 import com.kamuilan.app.ui.components.InstitutionLogoView
 import com.kamuilan.app.ui.theme.BricolageGrotesque
 import com.kamuilan.app.ui.theme.Manrope
@@ -92,7 +98,21 @@ fun JobDetailScreen(
     val uiState by homeViewModel.uiState.collectAsState()
     val favoriteIds by homeViewModel.favoriteIds.collectAsState()
 
-    val job = uiState.allJobs.firstOrNull { it.id == jobId }
+    var networkJob by remember { mutableStateOf<JobPost?>(null) }
+    var isFetching by remember { mutableStateOf(false) }
+    val repository = remember { JobRepository() }
+
+    val cachedJob = uiState.allJobs.firstOrNull { it.id == jobId }
+    val job = cachedJob ?: networkJob
+
+    LaunchedEffect(jobId, cachedJob) {
+        if (cachedJob == null && networkJob == null) {
+            isFetching = true
+            val res = repository.fetchJobById(jobId)
+            networkJob = res.getOrNull()
+            isFetching = false
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -146,7 +166,14 @@ fun JobDetailScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("İlan bilgisi bulunamadı.", color = Slate500, fontSize = 14.sp)
+                if (isFetching || uiState.isLoading) {
+                    CircularProgressIndicator(
+                        color = BrandPrimary,
+                        modifier = Modifier.size(36.dp)
+                    )
+                } else {
+                    Text("İlan bilgisi bulunamadı.", color = Slate500, fontSize = 14.sp)
+                }
             }
         } else {
             val daysRemaining = JobParser.calculateDaysRemaining(job.deadlineAt)

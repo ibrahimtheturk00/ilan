@@ -1,5 +1,7 @@
-﻿import re
+import re
+import sys
 import logging
+from datetime import datetime, timezone
 import httpx
 from bs4 import BeautifulSoup
 from typing import List, Dict, Any, Tuple
@@ -7,11 +9,19 @@ from base import BaseScraper
 
 class KurumPortallariScraper(BaseScraper):
     """
-    ÖSYM, Sağlık Bakanlığı (YHGM), MEB PGM, Aile Bakanlığı, GİB, Diyanet,
-    İşe Alım Kariyer Kapısı gibi merkezi resmi kurum portallarını tarayan birleşik motor.
+    ÖSYM, Sağlık Bakanlığı (YHGM), MEB PGM, Aile Bakanlığı, GİB gibi
+    merkezi resmi kurum portallarını tarayan ve her birini kendi resmi kaynağına yazan birleşik motor.
     """
     def __init__(self):
         super().__init__(source_slug="osym")
+        self.source_id_map: Dict[str, int] = {}
+        if self.client:
+            try:
+                res = self.client.table("sources").select("id, slug").execute()
+                if res.data:
+                    self.source_id_map = {r["slug"]: r["id"] for r in res.data}
+            except Exception as e:
+                self.logger.warning(f"Source ID haritası çekilemedi: {e}")
 
     def scrape(self) -> List[Dict[str, Any]]:
         posts: List[Dict[str, Any]] = []
@@ -36,6 +46,8 @@ class KurumPortallariScraper(BaseScraper):
                             full_url = href if href.startswith("http") else f"https://www.osym.gov.tr{href}"
                             if len(title) >= 15:
                                 posts.append({
+                                    "source_id": self.source_id_map.get("osym") or self.source_id,
+                                    "source_slug": "osym",
                                     "title": title,
                                     "institution": "ÖSYM (Ölçme, Seçme ve Yerleştirme Merkezi)",
                                     "city": None,
@@ -63,6 +75,8 @@ class KurumPortallariScraper(BaseScraper):
                             full_url = href if href.startswith("http") else f"https://yhgm.saglik.gov.tr{href}"
                             if len(title) >= 15:
                                 posts.append({
+                                    "source_id": self.source_id_map.get("saglik-yhgm"),
+                                    "source_slug": "saglik-yhgm",
                                     "title": f"Sağlık Bakanlığı - {title}",
                                     "institution": "T.C. Sağlık Bakanlığı (YHGM)",
                                     "city": None,
@@ -90,6 +104,8 @@ class KurumPortallariScraper(BaseScraper):
                             full_url = href if href.startswith("http") else f"https://personel.meb.gov.tr{href}"
                             if len(title) >= 15:
                                 posts.append({
+                                    "source_id": self.source_id_map.get("meb-pgm"),
+                                    "source_slug": "meb-pgm",
                                     "title": f"MEB - {title}",
                                     "institution": "Millî Eğitim Bakanlığı (MEB)",
                                     "city": None,
@@ -117,6 +133,8 @@ class KurumPortallariScraper(BaseScraper):
                             full_url = href if href.startswith("http") else f"https://www.aile.gov.tr{href}"
                             if len(title) >= 15:
                                 posts.append({
+                                    "source_id": self.source_id_map.get("aile-bakanligi"),
+                                    "source_slug": "aile-bakanligi",
                                     "title": f"Aile ve Sosyal Hizmetler Bakanlığı - {title}",
                                     "institution": "T.C. Aile ve Sosyal Hizmetler Bakanlığı",
                                     "city": None,
@@ -144,6 +162,8 @@ class KurumPortallariScraper(BaseScraper):
                             full_url = href if href.startswith("http") else f"https://www.gib.gov.tr{href}"
                             if len(title) >= 15:
                                 posts.append({
+                                    "source_id": self.source_id_map.get("gib"),
+                                    "source_slug": "gib",
                                     "title": f"Gelir İdaresi Başkanlığı - {title}",
                                     "institution": "Gelir İdaresi Başkanlığı (GİB)",
                                     "city": None,
@@ -181,6 +201,80 @@ class KurumPortallariScraper(BaseScraper):
             .replace("ş", "s")
             .replace("ü", "u")
         )
+
+    def run(self):
+        """Tüm kurum portallarını tarar ve her kurumun kendi kaynağına log ve ilan yazar."""
+        self.logger.info("Çoklu kurum portalları taraması başlatılıyor...")
+        active_slugs = ["osym", "saglik-yhgm", "meb-pgm", "aile-bakanligi", "gib"]
+        started_at = datetime.now(timezone.utc).isoformat()
+        log_ids = {}
+
+        if self.client:
+            for slug in active_slugs:
+                s_id = self.source_id_map.get(slug)
+                if s_id:
+                    try:
+                        res = self.client.table("scrape_logs").insert({
+                            "source_id": s_id,
+                            "started_at": started_at,
+                            "status": "running",
+                            "github_run_id": self.github_run_id
+                        }).execute()
+                        if res.data:
+                            log_ids[slug] = res.data[0]["id"]
+                    except Exception as e:
+                        self.logger.warning(f"{slug} log kaydı başlatılamadı: {e}")
+
+        try:
+            raw_posts = self.scrape()
+            posts_found = len(raw_posts)
+            self.logger.info(f"{posts_found} adet ham ilan çekildi.")
+
+            normalized_posts = [self.normalize_and_prepare_post(p) for p in raw_posts if p.get("original_url")]
+            posts_new, posts_updated = self.save_posts(normalized_posts)
+
+            # Süresi dolan veya iptal ilanları temizle
+            self.deactivate_expired_and_cancelled_jobs()
+
+            now_iso = datetime.now(timezone.utc).isoformat()
+            if self.client:
+                for slug in active_slugs:
+                    s_id = self.source_id_map.get(slug)
+                    if s_id:
+                        try:
+                            self.client.table("sources").update({"last_scraped_at": now_iso}).eq("id", s_id).execute()
+                        except Exception:
+                            pass
+
+                        l_id = log_ids.get(slug)
+                        if l_id:
+                            c_found = sum(1 for p in raw_posts if p.get("source_slug") == slug)
+                            try:
+                                self.client.table("scrape_logs").update({
+                                    "finished_at": now_iso,
+                                    "status": "success",
+                                    "posts_found": c_found,
+                                    "posts_new": posts_new if c_found > 0 else 0,
+                                    "posts_updated": posts_updated if c_found > 0 else 0
+                                }).eq("id", l_id).execute()
+                            except Exception:
+                                pass
+
+            self.logger.info("Tüm kurum portalları taraması ve log kayıtları tamamlandı.")
+        except Exception as e:
+            self.logger.error(f"Kurum portalları taramasında hata: {e}", exc_info=True)
+            now_iso = datetime.now(timezone.utc).isoformat()
+            if self.client:
+                for slug, l_id in log_ids.items():
+                    try:
+                        self.client.table("scrape_logs").update({
+                            "finished_at": now_iso,
+                            "status": "failed",
+                            "error_message": str(e)
+                        }).eq("id", l_id).execute()
+                    except Exception:
+                        pass
+            sys.exit(1)
 
 if __name__ == "__main__":
     scraper = KurumPortallariScraper()

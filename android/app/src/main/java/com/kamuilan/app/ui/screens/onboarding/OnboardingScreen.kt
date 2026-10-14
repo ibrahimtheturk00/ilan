@@ -75,10 +75,12 @@ fun OnboardingScreen(
     val coroutineScope = rememberCoroutineScope()
     val preferencesManager = remember { PreferencesManager(context) }
 
-    var selectedDepartment by remember { mutableStateOf("bilisim") }
-    var selectedEducation by remember { mutableStateOf("Lisans") }
-    var selectedKpss by remember { mutableStateOf("KPSS P3 (Lisans)") }
+    var selectedDepartment by remember { mutableStateOf("") }
+    var selectedEducation by remember { mutableStateOf("") }
+    var selectedKpss by remember { mutableStateOf("") }
     var selectedCity by remember { mutableStateOf("Tüm Türkiye") }
+
+    val isFormValid = selectedDepartment.isNotEmpty() && selectedEducation.isNotEmpty() && selectedKpss.isNotEmpty()
 
     val departments = remember {
         com.kamuilan.app.data.model.YokDepartments.LIST.map { it.id to it.name } + listOf("all" to "Farketmez / Tüm Alanlar")
@@ -281,19 +283,25 @@ fun OnboardingScreen(
                             department = selectedDepartment,
                             educationLevel = selectedEducation,
                             kpssType = selectedKpss,
-                            city = selectedCity
+                            city = selectedCity.ifBlank { "Tüm Türkiye" }
                         )
                         onComplete()
                     }
                 },
+                enabled = isFormValid,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = BrandPrimary,
+                    disabledContainerColor = BrandPrimary.copy(alpha = 0.35f),
+                    contentColor = Color.White,
+                    disabledContentColor = Color.White.copy(alpha = 0.7f)
+                )
             ) {
                 Text(
-                    text = "Kurulumu Tamamla & Bana Özel İlanları Gör",
+                    text = if (isFormValid) "Kurulumu Tamamla & Bana Özel İlanları Gör" else "Lütfen Kriterlerinizi Seçin",
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold
                 )

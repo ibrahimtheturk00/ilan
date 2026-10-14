@@ -37,8 +37,9 @@ def normalize_city(text: str) -> Optional[str]:
         pattern = r'\b' + re.escape(city.lower()) + r'\b'
         if re.search(pattern, lower_text):
             return city
-    # Bakanlıklar veya Genel Müdürlükler genellikle Ankara merkezlidir
-    if any(k in lower_text for k in ["bakanlığı", "başkanlığı", "müsteşarlığı", "genel müdürlüğü", "yargıtay", "danıştay"]):
+    # Yerel yönetim (belediye, kaymakamlık vb.) değilse ve merkezi kamu kurumu ise Ankara merkezlidir
+    is_local_gov = any(k in lower_text for k in ["belediye", "belediyesi", "kaymakamlığ", "valiliğ", "özel idare", "ilçe"])
+    if not is_local_gov and any(k in lower_text for k in ["bakanlığı", "başkanlığı", "müsteşarlığı", "genel müdürlüğü", "yargıtay", "danıştay", "sayıştay"]):
         return "Ankara"
     return None
 
@@ -96,19 +97,19 @@ def parse_turkish_date_range(range_str: Optional[str]) -> Tuple[Optional[str], O
         return single, single
 
 def extract_position_count(text: str) -> Optional[int]:
-    """Metin içinden 'X adet', 'X kişi', 'X personel' gibi kadro sayılarını bulur. Tarih ve yılları (örn. 2026, 17102026) eler."""
+    """Metin içinden 'X adet', 'X kişi', 'X personel' gibi kadro sayılarını bulur. Tarih ve yılları (örn. 2026) eler."""
     if not text:
         return None
-    # 1 ile 4 basamaklı sayıları ara (5 basamak ve üzeri tarih veya kod olabilir)
-    matches = re.finditer(r'\b(\d{1,4})\s*(adet|kişi|personel|memur|işçi|öğretim\s+üyesi|uzman|subay|mühendis|avukat|müdür)', text, re.IGNORECASE)
+    # 1 ile 5 basamaklı sayıları ara (Sağlık Bakanlığı 15.000, MEB 20.000 gibi kitlesel alımları da kapsar)
+    matches = re.finditer(r'\b(\d{1,5})\s*(adet|kişi|personel|memur|işçi|öğretim\s+üyesi|uzman|subay|mühendis|avukat|müdür|sağlık\s+personeli|öğretmen)', text, re.IGNORECASE)
     for match in matches:
         try:
             val = int(match.group(1))
             # Takvim yılı kontrolü (2020..2035) örn. "2026 Personel Alımı"
             if 2020 <= val <= 2035:
                 continue
-            # Gerçekçi olmayan sayılar (Tek ilanda 5000'den fazla kontenjan olamaz)
-            if val > 5000 or val <= 0:
+            # 50.000'den büyük sayılar veya 0 elenir
+            if val > 50000 or val <= 0:
                 continue
             return val
         except ValueError:

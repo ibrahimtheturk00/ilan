@@ -140,8 +140,24 @@ class BaseScraper(ABC):
         url_hash = generate_url_hash(original_url)
         content_hash = generate_content_hash(title, institution, deadline_at)
 
+        # Aktiflik kontrolü (Süresi geçmiş veya iptal edilmiş ilanlar aktif olamaz)
+        is_active = True
+        title_lower = title.lower()
+        desc_lower = clean_desc.lower()
+        if "iptal" in title_lower or "iptal edildi" in desc_lower or "iptal ilanı" in title_lower:
+            is_active = False
+
+        if deadline_at:
+            try:
+                deadline_date = datetime.strptime(deadline_at[:10], "%Y-%m-%d").date()
+                today_date = datetime.now(timezone.utc).date()
+                if deadline_date < today_date:
+                    is_active = False
+            except Exception:
+                pass
+
         return {
-            "source_id": self.source_id,
+            "source_id": raw_post.get("source_id") or self.source_id,
             "title": title,
             "institution": institution,
             "city": city,
@@ -156,7 +172,7 @@ class BaseScraper(ABC):
             "content_hash": content_hash,
             "description": clean_desc,
             "raw_content": raw_post.get("raw_content") or raw_description,
-            "is_active": True,
+            "is_active": is_active,
             "updated_at": datetime.now(timezone.utc).isoformat()
         }
 
@@ -225,6 +241,30 @@ class BaseScraper(ABC):
         """
         pass
 
+    def deactivate_expired_and_cancelled_jobs(self):
+        """Veritabanındaki son başvuru tarihi geçmiş veya iptal edilmiş ilanları otomatik olarak is_active=False yapar."""
+        if not self.client:
+            return
+        try:
+            today_str = datetime.now(timezone.utc).date().isoformat()
+            now_iso = datetime.now(timezone.utc).isoformat()
+            
+            # 1. Süresi dolan aktif ilanları pasife al
+            self.client.table("job_posts").update({
+                "is_active": False,
+                "updated_at": now_iso
+            }).eq("is_active", True).lt("deadline_at", today_str).execute()
+
+            # 2. İptal ilanlarını pasife al
+            self.client.table("job_posts").update({
+                "is_active": False,
+                "updated_at": now_iso
+            }).eq("is_active", True).ilike("title", "%iptal%").execute()
+
+            self.logger.info("Süresi dolan ve iptal edilen ilanlar başarıyla pasife alındı.")
+        except Exception as e:
+            self.logger.warning(f"Süresi dolan ilanları pasife alma uyarısı: {e}")
+
     def run(self):
         """Tüm tarama döngüsünü yönetir."""
         self.logger.info(f"'{self.source_slug}' taraması başlatılıyor...")
@@ -238,6 +278,9 @@ class BaseScraper(ABC):
             normalized_posts = [self.normalize_and_prepare_post(p) for p in raw_posts if p.get("original_url")]
             posts_new, posts_updated = self.save_posts(normalized_posts)
             
+            # Eski veya iptal ilanları temizle
+            self.deactivate_expired_and_cancelled_jobs()
+
             self.logger.info(f"Tarama başarıyla bitti. Yeni/Güncellenen: {posts_new}, Bulunan: {posts_found}")
             self.end_log(status="success", posts_found=posts_found, posts_new=posts_new, posts_updated=posts_updated)
         except Exception as e:

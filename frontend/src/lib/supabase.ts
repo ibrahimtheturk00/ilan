@@ -254,6 +254,13 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
         query = query.eq("category", filters.category);
       }
 
+      if (filters.sourceSlug) {
+        const matchedSource = MOCK_SOURCES.find((s) => s.slug === filters.sourceSlug);
+        if (matchedSource) {
+          query = query.eq("source_id", matchedSource.id);
+        }
+      }
+
       // Dinamik Sıralama
       switch (filters.sortBy) {
         case "deadline_asc":
@@ -342,6 +349,14 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
     }
   }
 
+  if (filters.sourceSlug) {
+    filtered = filtered.filter(
+      (j) =>
+        j.sources?.slug === filters.sourceSlug ||
+        (j.source_id && MOCK_SOURCES.find((s) => s.id === j.source_id)?.slug === filters.sourceSlug)
+    );
+  }
+
   if (filters.searchQuery) {
     filtered = filtered.filter((j) => fuzzyTurkishMatch(j, filters.searchQuery));
   }
@@ -396,7 +411,7 @@ export async function fetchJobById(id: number | string): Promise<JobPost | null>
     }
   }
 
-  return MOCK_JOBS.find((j) => j.id === numericId) || MOCK_JOBS[0] || null;
+  return MOCK_JOBS.find((j) => j.id === numericId) || null;
 }
 
 export async function fetchJobsByIds(ids: number[]): Promise<JobPost[]> {
@@ -507,7 +522,7 @@ export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
         .from("job_posts")
         .select("*")
         .eq("is_active", true)
-        .limit(1000);
+        .range(0, 4999);
       if (!error && data) {
         jobs = data as JobPost[];
       }

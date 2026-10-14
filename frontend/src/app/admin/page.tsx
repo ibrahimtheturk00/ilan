@@ -111,7 +111,7 @@ export default function AdminDashboardPage() {
             <span>Entegre Kaynaklar</span>
             <Server className="w-4 h-4 text-brand-600 dark:text-brand-400" />
           </div>
-          <div className="text-base font-bold text-slate-800 dark:text-slate-100">6 Resmi Port</div>
+          <div className="text-base font-bold text-slate-800 dark:text-slate-100">{sources.length} Resmî Kaynak & Port</div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Tüm kaynaklar aktif ve zamanlanmış</p>
         </div>
 
