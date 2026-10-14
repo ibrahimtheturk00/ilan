@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { JobPost } from "@/types";
 import { formatDate, getJobApplicationStatus, resolveApplicationUrl, POST_TYPE_LABELS, CATEGORY_LABELS, cleanJobTitle, cleanInstitution } from "@/lib/utils";
 import { getJobMetaDetails } from "@/lib/jobParser";
+import { detectInstitutionVisual } from "@/lib/institutionIcons";
 import { useFavorites } from "@/hooks/useFavorites";
 import {
   X,
-  Building,
   Calendar,
   ExternalLink,
   MapPin,
@@ -55,6 +55,8 @@ export function JobModal({ job, onClose }: JobModalProps) {
   const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at, job.title);
   const applicationUrl = resolveApplicationUrl(displayInstitution, job.original_url);
   const meta = getJobMetaDetails(job);
+  const institutionVisual = detectInstitutionVisual(displayInstitution);
+  const InstIcon = institutionVisual.icon;
 
   const shareText = `Kamu İlanı: ${displayTitle}\n${displayInstitution}\n${applicationUrl}`;
 
@@ -79,43 +81,43 @@ export function JobModal({ job, onClose }: JobModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/50 dark:bg-black/70 backdrop-blur-sm animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md animate-fadeIn">
       {/* Arka plan tıklama */}
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Modal Kartı */}
-      <div className="relative w-full max-w-2xl bg-white dark:bg-slate-900 rounded-2xl shadow-xl border border-slate-200/80 dark:border-slate-800 max-h-[90vh] flex flex-col z-10 overflow-hidden transition-colors">
+      <div className="relative w-full max-w-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200/80 dark:border-slate-800 max-h-[90vh] flex flex-col z-10 overflow-hidden transition-colors">
         {/* Modal Üst Başlık */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-100 dark:border-slate-800">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800/80">
           <div className="flex flex-wrap items-center gap-1.5 flex-1 pr-3">
             {typeInfo && (
-              <span className={`text-[11px] px-2.5 py-0.5 rounded-md ${typeInfo.color}`}>
+              <span className={`text-[11px] px-2.5 py-0.5 rounded-lg ${typeInfo.color}`}>
                 {typeInfo.label}
               </span>
             )}
             {categoryInfo && (
-              <span className="text-[11px] px-2.5 py-0.5 rounded font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+              <span className="text-[11px] px-2.5 py-0.5 rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                 {categoryInfo.label}
               </span>
             )}
             {statusInfo.isCancelled ? (
-              <span className="text-[11px] px-2.5 py-0.5 rounded font-bold bg-red-600 text-white uppercase tracking-wider shadow-sm">
+              <span className="text-[11px] px-2.5 py-0.5 rounded-lg font-bold bg-red-600 text-white uppercase tracking-wider shadow-sm">
                 {statusInfo.statusTitle}
               </span>
             ) : (
               <span
-                className={`text-[11px] font-semibold px-2.5 py-0.5 rounded ${statusInfo.badgeClass}`}
+                className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-lg ${statusInfo.badgeClass}`}
               >
                 {statusInfo.fullBadgeText}
               </span>
             )}
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {/* Favori Butonu */}
             <button
               onClick={() => toggleFavorite(job.id)}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+              className="p-2 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
               title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
             >
               <Heart
@@ -130,7 +132,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
             {/* Kapat Butonu */}
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title="Kapat"
             >
               <X className="w-5 h-5" />
@@ -140,13 +142,23 @@ export function JobModal({ job, onClose }: JobModalProps) {
 
         {/* Modal İçerik (Scroll edilebilir) */}
         <div className="p-6 overflow-y-auto space-y-5">
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug tracking-tight">
-              {displayTitle}
-            </h2>
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 mt-2">
-              <Building className="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0" />
-              <span>{displayInstitution}</span>
+          {/* Kurum Görseli ve Başlık */}
+          <div className="flex items-start gap-4">
+            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${institutionVisual.bgColor} ${institutionVisual.iconColor} ${institutionVisual.borderColor} shadow-sm`}>
+              <InstIcon className="w-6 h-6" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  {displayInstitution}
+                </span>
+                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${institutionVisual.bgColor} ${institutionVisual.iconColor}`}>
+                  {institutionVisual.categoryLabel}
+                </span>
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white leading-snug tracking-tight">
+                {displayTitle}
+              </h2>
             </div>
           </div>
 

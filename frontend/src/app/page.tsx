@@ -43,13 +43,28 @@ export default function HomePage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-colors">
-      {/* Hero Başlık */}
-      <div className="text-center max-w-2xl mx-auto mb-8">
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
-          Kamu Personeli ve Memur Alımları
+      {/* 2026 Modern Hero Başlık & Canlı Durum Rozeti */}
+      <div className="relative text-center max-w-3xl mx-auto mb-10 pt-2">
+        {/* Canlı Sistem Senkronizasyon Rozeti */}
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm text-xs font-semibold mb-4 text-slate-700 dark:text-slate-300">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span>6 Resmî Kaynak Canlı Eşzamanlanıyor</span>
+          <span className="text-slate-300 dark:text-slate-700">•</span>
+          <span className="text-brand-600 dark:text-brand-400 font-bold">2026 Güncel</span>
+        </div>
+
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
+          Kamu Personeli ve <br className="hidden sm:inline" />
+          <span className="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            Memur Alımları Portalı
+          </span>
         </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2.5 leading-relaxed">
-          Kariyer Kapısı, SBB Kamu İlan, İlan.gov.tr ve Resmî Gazete ilanları anlık taranıp tek adreste listelenir.
+
+        <p className="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-3 max-w-xl mx-auto leading-relaxed">
+          Kariyer Kapısı, SBB Kamu İlan, İlan.gov.tr, İŞKUR ve Resmî Gazete ilanları anlık taranıp tek adreste listelenir.
         </p>
       </div>
 
