@@ -228,9 +228,25 @@ export function deduplicateJobs(jobs: JobPost[]): JobPost[] {
   return result;
 }
 
-export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPost[]; count: number }> {
+export async function fetchJobPosts(rawFilters: Partial<FilterState> = {}): Promise<{ data: JobPost[]; count: number }> {
+  const filters: FilterState = {
+    searchQuery: rawFilters.searchQuery || "",
+    city: rawFilters.city || "",
+    postType: rawFilters.postType || "",
+    category: rawFilters.category || "",
+    sourceSlug: rawFilters.sourceSlug || "",
+    onlyActive: rawFilters.onlyActive !== undefined ? rawFilters.onlyActive : true,
+    page: rawFilters.page || 1,
+    sortBy: rawFilters.sortBy || "published_desc",
+    kpssType: rawFilters.kpssType,
+    educationLevel: rawFilters.educationLevel,
+    onlyUrgent: rawFilters.onlyUrgent,
+    onlyToday: rawFilters.onlyToday,
+    pageSize: rawFilters.pageSize || 12,
+  };
   const hasDerivedFilters = Boolean(filters.kpssType || filters.educationLevel || filters.onlyUrgent);
-  const pageSize = 12;
+  const pageSize = filters.pageSize || 12;
+  const page = filters.page;
 
   if (supabase) {
     try {
@@ -279,8 +295,11 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
           query = query.order("title", { ascending: false }).order("id", { ascending: false });
           break;
         case "deadline_desc":
-        default:
           query = query.order("deadline_at", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
+          break;
+        case "published_desc":
+        default:
+          query = query.order("published_at", { ascending: false, nullsFirst: false }).order("id", { ascending: false });
           break;
       }
 
@@ -317,7 +336,7 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
         }
 
         const count = filtered.length;
-        const from = (filters.page - 1) * pageSize;
+        const from = (page - 1) * pageSize;
         const pageData = filtered.slice(from, from + pageSize);
         return { data: pageData, count };
       }
@@ -385,7 +404,7 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
   }
 
   const count = filtered.length;
-  const from = (filters.page - 1) * pageSize;
+  const from = (page - 1) * pageSize;
   const pageData = filtered.slice(from, from + pageSize);
 
   return {

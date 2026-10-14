@@ -25,7 +25,7 @@ const initialState: FilterState = {
   sourceSlug: "",
   onlyActive: true,
   page: 1,
-  sortBy: "deadline_desc",
+  sortBy: "published_desc",
   kpssType: "",
   educationLevel: "",
   onlyUrgent: false,

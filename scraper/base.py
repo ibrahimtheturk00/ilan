@@ -157,6 +157,11 @@ class BaseScraper(ABC):
             except Exception:
                 pass
 
+        now_dt = datetime.now(timezone.utc)
+        if not published_at:
+            scraped_val = raw_post.get("scraped_at")
+            published_at = str(scraped_val)[:10] if scraped_val else now_dt.date().isoformat()
+
         return {
             "source_id": raw_post.get("source_id") or self.source_id,
             "title": title,
@@ -174,7 +179,7 @@ class BaseScraper(ABC):
             "description": clean_desc,
             "raw_content": raw_post.get("raw_content") or raw_description,
             "is_active": is_active,
-            "updated_at": datetime.now(timezone.utc).isoformat()
+            "updated_at": now_dt.isoformat()
         }
 
     def save_posts(self, posts: List[Dict[str, Any]]) -> Tuple[int, int]:
@@ -243,43 +248,47 @@ class BaseScraper(ABC):
         pass
 
     def deactivate_expired_and_cancelled_jobs(self):
-        """Veritabanındaki süresi geçmiş, iptal edilmiş veya eski tarihli (90 günden eski/geçmiş yıllara ait) ilanları is_active=False yapar."""
+        """Veritabanındaki süresi geçmiş, iptal edilmiş veya eski tarihli (60 günden eski/geçmiş yıllara ait) ilanları is_active=False yapar."""
         if not self.client:
             return
         try:
             now = datetime.now(timezone.utc)
             today_str = now.date().isoformat()
             now_iso = now.isoformat()
-            cutoff_90_days = (now - timedelta(days=90)).strftime("%Y-%m-%d")
+            cutoff_60_days = (now - timedelta(days=60)).isoformat()
             current_year = now.year
-            
+
             # 1. Süresi dolan aktif ilanları pasife al
             self.client.table("job_posts").update({
                 "is_active": False,
                 "updated_at": now_iso
             }).eq("is_active", True).lt("deadline_at", today_str).execute()
 
-            # 2. İptal ilanlarını pasife al
-            self.client.table("job_posts").update({
-                "is_active": False,
-                "updated_at": now_iso
-            }).eq("is_active", True).ilike("title", "%iptal%").execute()
+            # 2. Aktif ilanları çekip geçmiş yıl, iptal veya atıl null-deadline kontrolü yap
+            active_res = self.client.table("job_posts").select("id, title, deadline_at, scraped_at").eq("is_active", True).execute()
+            active_jobs = active_res.data or []
 
-            # 3. Son başvuru tarihi boş olup yayın tarihi 90 günden eski olanları pasife al
-            self.client.table("job_posts").update({
-                "is_active": False,
-                "updated_at": now_iso
-            }).eq("is_active", True).is_("deadline_at", "null").lt("published_at", cutoff_90_days).execute()
-
-            # 4. Son başvuru tarihi boş olup başlığında geçmiş yıl bulunan (örn. 2013-2025 atama kurası) eski duyuruları pasife al
             past_years = [str(y) for y in range(2000, current_year)]
             year_pattern = re.compile(r'\b(' + '|'.join(past_years) + r')\b')
-            active_null_deadline = self.client.table("job_posts").select("id, title").eq("is_active", True).is_("deadline_at", "null").execute().data or []
-            old_ids = [j["id"] for j in active_null_deadline if year_pattern.search(j.get("title", ""))]
+            cancelled_pattern = re.compile(r'(iptal|iptali|ertelenme|naklen atama kuras)', re.IGNORECASE)
 
-            if old_ids:
-                for i in range(0, len(old_ids), 50):
-                    batch = old_ids[i:i+50]
+            to_deactivate = []
+            for j in active_jobs:
+                t = j.get("title", "")
+                scraped = j.get("scraped_at") or ""
+                # Geçmiş yıl
+                if year_pattern.search(t):
+                    to_deactivate.append(j["id"])
+                # İptal / naklen atama
+                elif cancelled_pattern.search(t):
+                    to_deactivate.append(j["id"])
+                # Deadline boş ve 60 günden eski
+                elif not j.get("deadline_at") and scraped and scraped < cutoff_60_days:
+                    to_deactivate.append(j["id"])
+
+            if to_deactivate:
+                for i in range(0, len(to_deactivate), 50):
+                    batch = to_deactivate[i:i+50]
                     self.client.table("job_posts").update({
                         "is_active": False,
                         "updated_at": now_iso

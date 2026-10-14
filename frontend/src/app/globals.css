@@ -124,23 +124,3 @@ h1, h2, h3, h4, h5, h6, .font-heading {
   scrollbar-width: none !important; /* Firefox */
 }
 
-/* Micro-interaction Fade In Animation */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-    transform: translateY(3px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-/* Crisp Minimal Drop Shadow Utility */
-.shadow-xs {
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}

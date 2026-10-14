@@ -202,9 +202,10 @@ export function detectMaxAge(job: JobPost): number | null {
  * İlanın bugün yayınlanıp yayınlanmadığını kontrol eder.
  */
 export function isJobPublishedToday(job: JobPost): boolean {
-  if (!job.published_at) return false;
+  const dateStr = job.published_at || (job as any).scraped_at;
+  if (!dateStr) return false;
   try {
-    const pub = new Date(job.published_at);
+    const pub = new Date(dateStr);
     const now = new Date();
     // Tarihlerin aynı gün/ay/yıl olduğunu kontrol et
     return (

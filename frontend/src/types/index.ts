@@ -71,6 +71,7 @@ export interface FilterState {
   educationLevel?: string;
   onlyUrgent?: boolean;
   onlyToday?: boolean;
+  pageSize?: number;
 }
 
 export type JobFilters = FilterState;

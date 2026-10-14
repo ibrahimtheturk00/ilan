@@ -233,15 +233,32 @@ export function OnwardSummitBackground() {
       ctx.globalAlpha = 1;
     };
 
+    // Reduced motion preference
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let prefersReducedMotion = mediaQuery.matches;
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      prefersReducedMotion = e.matches;
+      if (prefersReducedMotion) {
+        if (raf) cancelAnimationFrame(raf);
+        raf = 0;
+        draw(performance.now());
+      } else if (!raf) {
+        raf = requestAnimationFrame(loop);
+      }
+    };
+    mediaQuery.addEventListener("change", handleMotionChange);
+
     const loop = (t: number) => {
       raf = 0;
       draw(t);
-      if (visible) raf = requestAnimationFrame(loop);
+      if (visible && !prefersReducedMotion) raf = requestAnimationFrame(loop);
     };
 
     layout();
     draw(performance.now());
-    raf = requestAnimationFrame(loop);
+    if (!prefersReducedMotion) {
+      raf = requestAnimationFrame(loop);
+    }
 
     const onResize = () => {
       layout();
@@ -250,6 +267,7 @@ export function OnwardSummitBackground() {
     window.addEventListener("resize", onResize);
 
     const onPointerMove = (e: MouseEvent) => {
+      if (prefersReducedMotion) return;
       const r = wrap.getBoundingClientRect();
       ptr.x = e.clientX - r.left;
       ptr.y = e.clientY - r.top;
@@ -261,6 +279,7 @@ export function OnwardSummitBackground() {
     };
 
     const onPointerDown = (e: MouseEvent) => {
+      if (prefersReducedMotion) return;
       const r = wrap.getBoundingClientRect();
       ripples.push({
         x: e.clientX - r.left,
@@ -275,7 +294,8 @@ export function OnwardSummitBackground() {
     window.addEventListener("mousedown", onPointerDown);
 
     return () => {
-      cancelAnimationFrame(raf);
+      if (raf) cancelAnimationFrame(raf);
+      mediaQuery.removeEventListener("change", handleMotionChange);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("mousemove", onPointerMove);
       document.removeEventListener("mouseleave", onPointerLeave);

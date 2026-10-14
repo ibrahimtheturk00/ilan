@@ -226,27 +226,55 @@ class DiyanetScraper(BaseScraper):
         try:
             with httpx.Client(timeout=25.0, headers=HEADERS, follow_redirects=True, verify=False) as client:
                 self.logger.info("Diyanet İşleri Başkanlığı duyuruları taranıyor...")
-                res = client.get("https://www.diyanet.gov.tr/tr-TR/Kurumsal/Duyurular")
+                res = client.get("https://www.diyanet.gov.tr/tr-TR/Haberler/Indeks/19")
                 if res.status_code == 200:
                     soup = BeautifulSoup(res.text, "html.parser")
-                    for a in soup.find_all("a", href=True):
-                        title = a.get_text(separator=" ", strip=True)
-                        norm = normalize_tr(title)
-                        if any(k in norm for k in ["alim", "sinav", "personel", "sozlesmeli", "vaiz", "imam", "muezzin", "kuran", "kadro"]):
-                            href = a["href"]
-                            full_url = href if href.startswith("http") else f"https://www.diyanet.gov.tr{href}"
-                            if len(title) >= 15:
-                                posts.append({
-                                    "title": f"Diyanet İşleri Başkanlığı - {title}",
-                                    "institution": "T.C. Diyanet İşleri Başkanlığı",
-                                    "city": "Ankara",
-                                    "published_at": None,
-                                    "deadline_at": None,
-                                    "original_url": full_url,
-                                    "description": title,
-                                    "post_type": "sozlesmeli" if "sozlesmeli" in norm else "memur",
-                                    "category": "diger"
-                                })
+                    for post in soup.find_all("div", class_="post"):
+                        title_el = post.find("h2", class_="post-title")
+                        a = title_el.find("a", href=True) if title_el else None
+                        if not a:
+                            continue
+                        
+                        raw_title = a.get_text(separator=" ", strip=True)
+                        norm = normalize_tr(raw_title)
+                        
+                        # Alım, sınav veya personel duyuruları
+                        if not any(k in norm for k in ["alim", "sinav", "personel", "sozlesmeli", "vaiz", "imam", "muezzin", "kuran", "kadro", "yerlestirme", "murakip", "atamalari"]):
+                            continue
+                        
+                        href = a["href"]
+                        full_url = href if href.startswith("http") else f"https://www.diyanet.gov.tr{href}"
+                        
+                        # Tarih
+                        date_el = post.find("abbr", class_="post-date")
+                        pub_date = None
+                        if date_el:
+                            d_txt = date_el.get_text(strip=True)
+                            # Örn: 14.10.2026 veya 8.10.2026
+                            d_parts = d_txt.split(".")
+                            if len(d_parts) == 3:
+                                d = d_parts[0].zfill(2)
+                                m = d_parts[1].zfill(2)
+                                y = d_parts[2]
+                                pub_date = f"{y}-{m}-{d}"
+                        
+                        # Açıklama
+                        content_el = post.find("div", class_="post-content")
+                        desc = content_el.get_text(separator=" ", strip=True) if content_el else raw_title
+                        if len(desc) < 20:
+                            desc = raw_title
+
+                        posts.append({
+                            "title": f"Diyanet İşleri Başkanlığı - {raw_title}",
+                            "institution": "T.C. Diyanet İşleri Başkanlığı",
+                            "city": "Ankara",
+                            "published_at": pub_date,
+                            "deadline_at": None,
+                            "original_url": full_url,
+                            "description": desc,
+                            "post_type": "sozlesmeli" if "sozlesmeli" in norm else "memur",
+                            "category": "diger"
+                        })
         except Exception as e:
             self.logger.warning(f"Diyanet tarama uyarısı: {e}")
 

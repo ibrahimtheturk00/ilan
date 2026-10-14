@@ -2,7 +2,7 @@ import httpx
 from bs4 import BeautifulSoup
 from typing import List, Dict, Any
 from base import BaseScraper
-from normalizer import normalize_city
+from normalizer import normalize_city, parse_turkish_date
 
 class YerelYonetimlerScraper(BaseScraper):
     """
@@ -87,13 +87,14 @@ class YerelYonetimlerScraper(BaseScraper):
                         # İlan / Yayın tarihi
                         date_el = a.find(class_="date")
                         d_txt = date_el.get_text(" ", strip=True) if date_el else ""
-                        parts = d_txt.split()
-                        published_date = None
-                        if len(parts) >= 3 and parts[0].isdigit() and parts[2].isdigit():
-                            day = parts[0].zfill(2)
-                            month = months.get(parts[1], "10")
-                            year = parts[2]
-                            published_date = f"{year}-{month}-{day}"
+                        published_date = parse_turkish_date(d_txt)
+                        if not published_date:
+                            parts = d_txt.split()
+                            if len(parts) >= 3 and parts[0].isdigit() and parts[2].isdigit():
+                                day = parts[0].zfill(2)
+                                month = months.get(parts[1], "10")
+                                year = parts[2]
+                                published_date = f"{year}-{month}-{day}"
 
                         city = normalize_city(institution) or normalize_city(title)
 
