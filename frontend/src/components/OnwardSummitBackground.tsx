@@ -73,9 +73,9 @@ export function OnwardSummitBackground() {
     if (!ctx) return;
 
     // Palette:
-    // Dark: cobalt blue/cyan glow (#60a5fa)
-    // Light: crisp azure (#2563eb)
-    const arrowColor = isDark ? "#60a5fa" : "#2563eb";
+    // Dark mode: Refined steel/slate gray (#94a3b8) with crisp contrast against dark background
+    // Light mode: Deep charcoal slate (#475569) for clearer, darker visibility
+    const arrowColor = isDark ? "#94a3b8" : "#475569";
 
     let W = 0;
     let H = 0;
@@ -103,7 +103,7 @@ export function OnwardSummitBackground() {
       if (!g) return c;
       g.scale(px / cell, px / cell);
       g.strokeStyle = color;
-      g.lineWidth = Math.max(1.15, cell * 0.095);
+      g.lineWidth = Math.max(1.3, cell * 0.11);
       g.lineCap = "round";
       g.lineJoin = "round";
       drawArrowGlyph(g, cell);
@@ -209,9 +209,10 @@ export function OnwardSummitBackground() {
         ang[i] += (tA - ang[i]) * 0.12;
         scl[i] += (tS - scl[i]) * 0.16;
 
-        const shimmer = 0.85 + 0.15 * Math.sin((x + y * 0.8) * 0.009 - t * 0.001);
+        const shimmer = 0.88 + 0.12 * Math.sin((x + y * 0.8) * 0.009 - t * 0.001);
         const g = grain[i] * shimmer;
-        const opacity = clamp((a0 + boost) * g * (isDark ? 0.38 : 0.25), 0, isDark ? 0.7 : 0.5);
+        // Noticeably darker, richer visibility
+        const opacity = clamp((a0 + boost) * g * (isDark ? 0.55 : 0.48), 0, isDark ? 0.85 : 0.75);
 
         if (opacity < 0.02) continue;
 
@@ -289,12 +290,12 @@ export function OnwardSummitBackground() {
       aria-hidden="true"
     >
       {/* 
-        Onward Summit Hero Gradient Atmosphere:
-        Dark Mode: Navy / Cobalt deep wash (#06174a) fading to ambient dark slate (#0F1117)
-        Light Mode: Fresh sky azure frost fading to clean linen
+        Onward Summit Hero Gradient Atmosphere (Neutral Slate / Dark):
+        Dark Mode: Charcoal/Midnight graphite (#080b12) fading to dark slate (#0F1117)
+        Light Mode: Clean platinum/zinc tone fading into paper linen (#F7F7F5)
       */}
-      <div className="absolute inset-0 bg-gradient-to-b from-blue-100/40 via-blue-50/20 to-transparent dark:from-[#06174a]/50 dark:via-[#091536]/30 dark:to-transparent" />
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-b from-blue-400/15 via-indigo-500/8 to-transparent dark:from-blue-600/20 dark:via-indigo-500/12 dark:to-transparent rounded-full blur-3xl opacity-80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-zinc-200/50 via-zinc-100/25 to-transparent dark:from-[#0a0f1d]/60 dark:via-[#090d18]/40 dark:to-transparent" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[550px] bg-gradient-to-b from-zinc-400/10 via-zinc-500/5 to-transparent dark:from-slate-600/15 dark:via-zinc-500/8 dark:to-transparent rounded-full blur-3xl opacity-75" />
 
       {/* Interactive Glyph Canvas */}
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
