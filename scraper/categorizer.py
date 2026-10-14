@@ -63,16 +63,23 @@ CATEGORY_PATTERNS = {
         r'\bjeoloji\b', r'\bmaden\b', r'\bendüstri\b'
     ],
     'saglik': [
-        r'\bdoktor\b', r'\btabip\b', r'\bhekim\b', r'\bhemşire\b', r'\bhemsire\b',
-        r'\bebe\b', r'\bsağlık\s+teknikeri', r'\bsaglik\s+teknikeri', r'\beczacı\b',
-        r'\beczaci\b', r'\bbiyolog\b', r'\bpsikolog\b', r'\bfizyoterapist\b',
+        r'\bdoktor\b', r'\btabip\b', r'\bdiş\s+tabibi', r'\bhekim\b', r'\bhemşire\b', r'\bhemsire\b',
+        r'\bebe\b', r'\bsağlık\s+teknikeri', r'\bsaglik\s+teknikeri', r'\bsağlık\s+memuru',
+        r'\beczacı\b', r'\beczaci\b', r'\bbiyolog\b', r'\bpsikolog\b', r'\bfizyoterapist\b',
         r'\bhastane\b', r'\bsağlık\b', r'\bsaglik\b', r'\blaborant\b', r'\bdiyetisyen\b',
-        r'\bacil\s+tıp'
+        r'\bacil\s+tıp', r'\btıp\s+fakültesi', r'\bveteriner\b', r'\bparamedik\b', r'\bmedikal\b'
+    ],
+    'buro': [
+        r'\bbüro\s+personeli', r'\bburo\s+personeli', r'\bbüro\b', r'\bburo\b',
+        r'\bv\.?h\.?k\.?i\b', r'\bveri\s+hazırlama', r'\bsekreter\b', r'\bsekreterlik\b',
+        r'\bidari\s+personel\b', r'\bidari\s+memur\b', r'\bzabıt\s+katibi\b', r'\bkatip\b',
+        r'\byazı\s+işleri\b', r'\barşiv\b', r'\bkütüphaneci\b', r'\bveznedar\b',
+        r'\bambar\s+memuru\b', r'\bsantral\b', r'\bdanışma\s+görevlisi\b', r'\bmemur\s+kadroları\b'
     ],
     'egitim': [
-        r'\böğretim\s+üyesi', r'\bogretim\s+uyesi', r'\böğretim\s+elemanı',
-        r'\baraştırma\s+görevlisi', r'\böğretmen\b', r'\bogretmen\b', r'\beğitmen\b',
-        r'\bakademisyen\b', r'\bpedagog\b', r'\bprofesör\b', r'\bdoçent\b',
+        r'\böğretim\s+üyesi', r'\bogretim\s+uyesi', r'\böğretim\s+elemanı', r'\böğretim\s+görevlisi',
+        r'\bogretim\s+gorevlisi', r'\baraştırma\s+görevlisi', r'\böğretmen\b', r'\bogretmen\b',
+        r'\beğitmen\b', r'\bakademisyen\b', r'\bpedagog\b', r'\bprofesör\b', r'\bdoçent\b',
         r'\büniversite\b', r'\brektörlük\b'
     ]
 }

@@ -266,20 +266,169 @@ function levenshteinDistance(a: string, b: string): number {
 }
 
 /**
- * Türkçe toleranslı ve yazım hatası tolere eden metin araması.
- * Örneğin: "muhends" -> "mühendis", "hemsire" -> "hemşire", "ankra" -> "ankara"
+ * Türkçe toleranslı, semantik eşanlamlı ve yazım hatası tolere eden akıllı arama motoru.
+ * Hem metin hem de doğrudan JobPost nesnesi alabilir.
+ * Örneğin:
+ * - "sağlık" -> Tabip, Hemşire, Doktor, Hastane, Ebe, Sağlık Teknikeri ilanlarını getirir.
+ * - "büro personeli" -> Büro, Memur, VHKİ, Sekreter, Zabıt Katibi, İdari Personel ilanlarını getirir.
+ * - "öğretim görevlisi" -> Tüm Öğretim Üyesi, Araştırma Görevlisi ve Akademik kadroları getirir.
  */
-export function fuzzyTurkishMatch(targetText: string, searchQuery: string): boolean {
-  if (!searchQuery.trim()) return true;
-  if (!targetText) return false;
+export function fuzzyTurkishMatch(target: string | JobPost, searchQuery: string): boolean {
+  if (!searchQuery || !searchQuery.trim()) return true;
+  if (!target) return false;
 
-  const targetNorm = normalizeTurkish(targetText);
+  let title = "";
+  let institution = "";
+  let description = "";
+  let city = "";
+  let category = "";
+  let postType = "";
+  let combinedText = "";
+  let jobObj: JobPost | null = null;
+
+  if (typeof target === "string") {
+    combinedText = target;
+  } else {
+    jobObj = target;
+    title = target.title || "";
+    institution = target.institution || "";
+    description = target.description || "";
+    city = target.city || "";
+    category = target.category || "";
+    postType = target.post_type || "";
+    combinedText = `${title} ${institution} ${description} ${city} ${category} ${postType}`;
+  }
+
   const queryNorm = normalizeTurkish(searchQuery);
+  const targetNorm = normalizeTurkish(combinedText);
+  const titleNorm = normalizeTurkish(title);
 
   // 1. Doğrudan alt metin eşleşmesi
   if (targetNorm.includes(queryNorm)) return true;
 
-  // 2. Kelime bazında fuzzy kontrol
+  // 2. Semantik & Eş Anlamlı Akıllı Filtreleme
+  // A. SAĞLIK
+  if (
+    queryNorm.includes("saglik") ||
+    queryNorm === "doktor" ||
+    queryNorm === "hemsire" ||
+    queryNorm === "tabip" ||
+    queryNorm === "hekim" ||
+    queryNorm === "ebe"
+  ) {
+    if (category === "saglik") return true;
+    const healthWords = [
+      "saglik", "tabip", "hekim", "doktor", "hemsire", "ebe", "hastane", "hastanesi",
+      "tibbi", "eczaci", "fizyoterapist", "diyetisyen", "laborant", "paramedik", "veteriner",
+      "biyolog", "psikolog", "tip fakultesi"
+    ];
+    if (healthWords.some((w) => targetNorm.includes(w))) return true;
+  }
+
+  // B. BÜRO PERSONELİ / MEMUR / İDARİ
+  if (
+    queryNorm.includes("buro") ||
+    queryNorm.includes("idari") ||
+    queryNorm === "memur" ||
+    queryNorm === "sekreter" ||
+    queryNorm === "katip"
+  ) {
+    if (category === "buro") return true;
+    const buroTerms = [
+      "buro", "vhki", "veri hazirlama", "sekreter", "zabit katibi", "katip",
+      "yazi isleri", "arsiv", "danisma", "santral", "veznedar", "ambar", "idari"
+    ];
+    if (buroTerms.some((w) => targetNorm.includes(w))) return true;
+    if (titleNorm.includes("memur") || titleNorm.includes("idari") || titleNorm.includes("buro")) return true;
+    if (postType === "memur") return true;
+  }
+
+  // C. ÖĞRETİM GÖREVLİSİ / ÜYESİ / AKADEMİK
+  if (
+    queryNorm.includes("ogretim") ||
+    queryNorm.includes("akademik") ||
+    queryNorm.includes("arastirma gorevlisi") ||
+    queryNorm === "hoca" ||
+    queryNorm.includes("profesor") ||
+    queryNorm.includes("docent")
+  ) {
+    if (postType === "akademik" || category === "egitim") return true;
+    const acadTerms = [
+      "ogretim uyesi", "ogretim elemani", "ogretim gorevlisi", "arastirma gorevlisi",
+      "docent", "profesor", "akademik", "rektorluk", "fakulte"
+    ];
+    if (acadTerms.some((w) => targetNorm.includes(w))) return true;
+  }
+
+  // D. BİLİŞİM / YAZILIM
+  if (
+    queryNorm.includes("bilisim") ||
+    queryNorm.includes("yazilim") ||
+    queryNorm.includes("programci") ||
+    queryNorm.includes("bilgisayar")
+  ) {
+    if (category === "bilisim") return true;
+    const itTerms = [
+      "bilisim", "yazilim", "programci", "bilgisayar", "siber", "network",
+      "sistem uzmani", "sistem yoneticisi", "web", "cozumleyici", "veri analist"
+    ];
+    if (itTerms.some((w) => targetNorm.includes(w))) return true;
+  }
+
+  // E. MÜHENDİS / TEKNİK
+  if (
+    queryNorm.includes("muhendis") ||
+    queryNorm.includes("mimar") ||
+    queryNorm.includes("tekniker") ||
+    queryNorm.includes("teknisyen")
+  ) {
+    if (category === "muhendislik") return true;
+    const engTerms = [
+      "muhendis", "mimar", "tekniker", "teknisyen", "harita", "insaat",
+      "makine", "elektrik", "elektronik", "jeoloji", "maden", "sehir plancisi"
+    ];
+    if (engTerms.some((w) => targetNorm.includes(w))) return true;
+  }
+
+  // F. TEMİZLİK / DESTEK PERSONELİ
+  if (
+    queryNorm.includes("temizlik") ||
+    queryNorm.includes("hizmetli") ||
+    queryNorm.includes("asci") ||
+    queryNorm.includes("kaloriferci")
+  ) {
+    const cleanTerms = ["temizlik", "hizmetli", "asci", "kaloriferci", "beden iscisi", "destek personeli", "sofor", "guvenlik"];
+    if (cleanTerms.some((w) => targetNorm.includes(w))) return true;
+  }
+
+  // G. BELEDİYE
+  if (queryNorm.includes("belediye") || queryNorm.includes("buyuksehir")) {
+    const muniTerms = ["belediye", "belediyesi", "buyuksehir", "belpas", "beltas", "personel as", "personel a.s"];
+    if (muniTerms.some((w) => targetNorm.includes(w))) return true;
+  }
+
+  // H. KPSS ŞARTSIZ
+  if (
+    queryNorm.includes("kpss sartsiz") ||
+    queryNorm.includes("sinavsiz") ||
+    queryNorm.includes("kpsssiz") ||
+    queryNorm.includes("kpss siz")
+  ) {
+    if (jobObj) {
+      const kpss = detectKpssType(jobObj);
+      if (kpss.type === "sartsiz") return true;
+    }
+    if (
+      targetNorm.includes("kpss sartsiz") ||
+      targetNorm.includes("kpss puani aranmaksizin") ||
+      targetNorm.includes("sinavsiz") ||
+      postType === "akademik"
+    ) {
+      return true;
+    }
+  }
+
+  // 3. Kelime bazında fuzzy kontrol (Levenshtein toleransı)
   const queryTokens = queryNorm.split(/\s+/).filter((t) => t.length >= 2);
   const targetTokens = targetNorm.split(/[\s,\.\-\/\(\)]+/).filter((t) => t.length >= 2);
 

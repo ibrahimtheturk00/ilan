@@ -5,12 +5,12 @@ import { Search, X, Sparkles } from "lucide-react";
 import { useFilters } from "@/hooks/useFilters";
 
 const QUICK_SEARCH_TAGS = [
-  "Mühendis",
   "Sağlık",
   "Büro Personeli",
-  "KPSS Şartsız",
+  "Mühendis",
   "Bilişim",
   "Öğretim Görevlisi",
+  "KPSS Şartsız",
   "Temizlik",
   "Belediye",
 ];

@@ -222,13 +222,8 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
         query = query.eq("post_type", filters.postType);
       }
 
-      if (filters.category) {
+      if (filters.category && filters.category !== "buro") {
         query = query.eq("category", filters.category);
-      }
-
-      if (filters.searchQuery && !hasDerivedFilters) {
-        const term = `%${filters.searchQuery.trim()}%`;
-        query = query.or(`title.ilike.${term},institution.ilike.${term},description.ilike.${term},city.ilike.${term}`);
       }
 
       // Dinamik Sıralama
@@ -259,10 +254,12 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
       if (!error && data) {
         let filtered = deduplicateJobs(data as JobPost[]);
 
+        if (filters.category === "buro") {
+          filtered = filtered.filter((j) => j.category === "buro" || fuzzyTurkishMatch(j, "büro"));
+        }
+
         if (filters.searchQuery) {
-          filtered = filtered.filter((j) =>
-            fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""} ${j.city || ""}`, filters.searchQuery)
-          );
+          filtered = filtered.filter((j) => fuzzyTurkishMatch(j, filters.searchQuery));
         }
 
         if (filters.kpssType) {
@@ -310,13 +307,15 @@ export async function fetchJobPosts(filters: FilterState): Promise<{ data: JobPo
   }
 
   if (filters.category) {
-    filtered = filtered.filter((j) => j.category === filters.category);
+    if (filters.category === "buro") {
+      filtered = filtered.filter((j) => j.category === "buro" || fuzzyTurkishMatch(j, "büro"));
+    } else {
+      filtered = filtered.filter((j) => j.category === filters.category);
+    }
   }
 
   if (filters.searchQuery) {
-    filtered = filtered.filter((j) =>
-      fuzzyTurkishMatch(`${j.title} ${j.institution || ""} ${j.description || ""} ${j.city || ""}`, filters.searchQuery)
-    );
+    filtered = filtered.filter((j) => fuzzyTurkishMatch(j, filters.searchQuery));
   }
 
   if (filters.kpssType) {
@@ -516,6 +515,7 @@ export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
     .slice(0, 5);
 
   const CAT_NAMES: Record<string, string> = {
+    buro: "Büro & Memur",
     bilisim: "Bilişim & Yazılım",
     saglik: "Sağlık & Tıp",
     egitim: "Eğitim & Akademi",

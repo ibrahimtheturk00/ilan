@@ -1,5 +1,5 @@
 export type PostType = 'memur' | 'isci' | 'akademik' | 'sozlesmeli' | 'diger';
-export type CategoryType = 'bilisim' | 'saglik' | 'egitim' | 'muhendislik' | 'hukuk' | 'maliye' | 'diger';
+export type CategoryType = 'bilisim' | 'saglik' | 'egitim' | 'muhendislik' | 'hukuk' | 'maliye' | 'buro' | 'diger';
 
 export interface Source {
   id: number;

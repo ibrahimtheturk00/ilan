@@ -498,8 +498,9 @@ export const POST_TYPE_LABELS: Record<string, { label: string; color: string }> 
 };
 
 export const CATEGORY_LABELS: Record<string, { label: string; icon: string }> = {
-  bilisim: { label: "Bilişim & Yazılım", icon: "Code" },
+  buro: { label: "Büro & Memur", icon: "FileText" },
   saglik: { label: "Sağlık & Tıp", icon: "HeartPulse" },
+  bilisim: { label: "Bilişim & Yazılım", icon: "Code" },
   egitim: { label: "Eğitim & Akademi", icon: "GraduationCap" },
   muhendislik: { label: "Mühendislik & Teknik", icon: "Wrench" },
   hukuk: { label: "Hukuk & Adalet", icon: "Scale" },
