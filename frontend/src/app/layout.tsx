@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Manrope, JetBrains_Mono } from "next/font/google";
+import { Manrope, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Providers } from "@/components/Providers";
 import { Footer } from "@/components/Footer";
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-});
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -34,11 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="tr" suppressHydrationWarning className={`${spaceGrotesk.variable} ${manrope.variable} ${jetbrainsMono.variable}`}>
+    <html lang="tr" suppressHydrationWarning className={`${manrope.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen flex flex-col bg-[#F7F7F5] dark:bg-[#0F1117] text-zinc-900 dark:text-zinc-100 font-sans antialiased transition-colors relative selection:bg-zinc-800 selection:text-white">
+        {/* Subtle Film Grain Noise Overlay */}
+        <div className="bg-grain-overlay" aria-hidden="true" />
         <Providers>
           <Header />
-          <div className="flex-1 relative">{children}</div>
+          <div className="flex-1 relative z-10">{children}</div>
           <Footer />
         </Providers>
       </body>

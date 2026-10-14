@@ -56,6 +56,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.kamuilan.app.data.model.JobParser
 import com.kamuilan.app.data.model.JobPost
+import com.kamuilan.app.ui.components.InstitutionLogoView
+import com.kamuilan.app.ui.theme.BricolageGrotesque
+import com.kamuilan.app.ui.theme.Manrope
 import com.kamuilan.app.ui.components.AgeBadge
 import com.kamuilan.app.ui.components.CancelledBadge
 import com.kamuilan.app.ui.components.CityBadge
@@ -176,37 +179,24 @@ fun JobDetailScreen(
                     Column {
                         // Kurum satırı
                         Row(verticalAlignment = Alignment.CenterVertically) {
-                            Box(
-                                modifier = Modifier
-                                    .size(40.dp)
-                                    .background(
-                                        brush = Brush.linearGradient(
-                                            listOf(BrandPrimary.copy(alpha = 0.15f), BrandLight.copy(alpha = 0.08f))
-                                        ),
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                    .border(1.dp, BrandPrimary.copy(alpha = 0.2f), RoundedCornerShape(12.dp)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Business,
-                                    contentDescription = null,
-                                    tint = BrandPrimary,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.width(10.dp))
+                            InstitutionLogoView(
+                                institution = job.institution,
+                                size = 42.dp
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
                             Column {
                                 Text(
                                     text = job.institution ?: "T.C. Kamu Kurumu",
-                                    fontSize = 13.sp,
+                                    fontFamily = Manrope,
+                                    fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     color = Slate700
                                 )
                                 if (job.source != null) {
                                     Text(
                                         text = job.source.name,
-                                        fontSize = 11.sp,
+                                        fontFamily = Manrope,
+                                        fontSize = 12.sp,
                                         color = Slate400
                                     )
                                 }
@@ -218,8 +208,9 @@ fun JobDetailScreen(
                         // İlan Başlığı
                         Text(
                             text = job.title,
-                            fontSize = 19.sp,
-                            fontWeight = FontWeight.ExtraBold,
+                            fontFamily = BricolageGrotesque,
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
                             color = Slate900,
                             lineHeight = 26.sp
                         )

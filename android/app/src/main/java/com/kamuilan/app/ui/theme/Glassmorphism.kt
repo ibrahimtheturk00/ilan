@@ -1,5 +1,9 @@
 package com.kamuilan.app.ui.theme
 
+import android.graphics.Bitmap
+import android.graphics.BitmapShader
+import android.graphics.Shader
+import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -58,8 +62,30 @@ fun GlassBox(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AmbientGlassBackground (Clean & Calm 2026 Background)
-// Minimalist, modern off-white/light-neutral background matching web
+// Film Grain Noise Shader
+// Deterministic, hardware-accelerated subtle grain overlay (Linear / Apple aesthetic)
+// ─────────────────────────────────────────────────────────────────────────────
+private val noiseBitmap: Bitmap by lazy {
+    val size = 96
+    val bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+    val random = java.util.Random(1337)
+    val pixels = IntArray(size * size)
+    for (i in pixels.indices) {
+        val noise = random.nextInt(256)
+        val alpha = (noise * 0.045f).toInt().coerceIn(0, 255)
+        pixels[i] = (alpha shl 24) or (0x18 shl 16) or (0x18 shl 8) or 0x18
+    }
+    bitmap.setPixels(pixels, 0, size, 0, 0, size, size)
+    bitmap
+}
+
+private val grainShaderBrush by lazy {
+    ShaderBrush(BitmapShader(noiseBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// AmbientGlassBackground (Clean & Calm 2026 Background with Film Grain)
+// Minimalist, modern off-white background with subtle tactile grain
 // ─────────────────────────────────────────────────────────────────────────────
 @Composable
 fun AmbientGlassBackground(
@@ -70,6 +96,9 @@ fun AmbientGlassBackground(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFFF7F7F5))
+            .drawBehind {
+                drawRect(brush = grainShaderBrush)
+            }
     ) {
         content()
     }

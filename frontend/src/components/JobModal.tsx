@@ -5,6 +5,7 @@ import { JobPost } from "@/types";
 import { formatDate, getJobApplicationStatus, resolveApplicationUrl, POST_TYPE_LABELS, CATEGORY_LABELS, cleanJobTitle, cleanInstitution } from "@/lib/utils";
 import { getJobMetaDetails } from "@/lib/jobParser";
 import { detectInstitutionVisual } from "@/lib/institutionIcons";
+import { InstitutionLogo } from "@/components/InstitutionLogo";
 import { useFavorites } from "@/hooks/useFavorites";
 import {
   X,
@@ -144,9 +145,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
         <div className="p-6 overflow-y-auto space-y-5">
           {/* Kurum Görseli ve Başlık */}
           <div className="flex items-start gap-4">
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 border ${institutionVisual.bgColor} ${institutionVisual.iconColor} ${institutionVisual.borderColor} shadow-sm`}>
-              <InstIcon className="w-6 h-6" />
-            </div>
+            <InstitutionLogo institution={displayInstitution} size="lg" />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300">

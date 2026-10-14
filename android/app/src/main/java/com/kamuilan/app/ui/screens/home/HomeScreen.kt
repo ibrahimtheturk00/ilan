@@ -78,6 +78,8 @@ import com.kamuilan.app.ui.theme.Slate200
 import com.kamuilan.app.ui.theme.Slate400
 import com.kamuilan.app.ui.theme.Slate500
 import com.kamuilan.app.ui.theme.Slate700
+import com.kamuilan.app.ui.theme.BricolageGrotesque
+import com.kamuilan.app.ui.theme.Manrope
 import com.kamuilan.app.ui.theme.Slate900
 import com.kamuilan.app.ui.theme.SozlesmeliTeal
 import androidx.compose.animation.core.FastOutSlowInEasing
@@ -161,13 +163,15 @@ fun HomeScreen(
                     Column {
                         Text(
                             text = "Kamu İlan",
-                            fontSize = 19.sp,
+                            fontFamily = BricolageGrotesque,
+                            fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Slate900,
                             letterSpacing = (-0.3).sp
                         )
                         Text(
                             text = "Resmî Portallar • Anlık Veri Akışı",
+                            fontFamily = Manrope,
                             fontSize = 12.sp,
                             color = Slate500
                         )

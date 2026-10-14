@@ -60,6 +60,9 @@ import androidx.compose.ui.unit.sp
 import com.kamuilan.app.data.model.InstitutionLogoDetector
 import com.kamuilan.app.data.model.JobParser
 import com.kamuilan.app.data.model.JobPost
+import com.kamuilan.app.ui.theme.BricolageGrotesque
+import com.kamuilan.app.ui.theme.Manrope
+import com.kamuilan.app.ui.components.InstitutionLogoView
 import com.kamuilan.app.ui.theme.BrandPrimary
 import com.kamuilan.app.ui.theme.PressScaleBox
 import com.kamuilan.app.ui.theme.CancelledRed
@@ -237,26 +240,16 @@ fun JobCard(
                 // ── Kurum Logo/İkonu + Kurum Adı ──────────────────────────────────────
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(28.dp)
-                            .clip(RoundedCornerShape(6.dp))
-                            .background(instInfo.bgColor)
-                            .border(1.dp, instInfo.iconColor.copy(alpha = 0.25f), RoundedCornerShape(6.dp)),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = instInfo.icon,
-                            contentDescription = instInfo.categoryName,
-                            tint = instInfo.iconColor,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
+                    InstitutionLogoView(
+                        institution = displayInstitution,
+                        size = 36.dp
+                    )
 
                     Text(
                         text = displayInstitution,
+                        fontFamily = Manrope,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = Color(0xFF3F3F46),
@@ -265,11 +258,12 @@ fun JobCard(
                     )
                 }
 
-                // ── İlan Başlığı (Tekrar değilse göster, punto artırıldı: 17sp) ────────
+                // ── İlan Başlığı (Bricolage Grotesque, 17sp) ────────
                 if (!isTitleIdenticalToInst) {
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = displayTitle,
+                        fontFamily = BricolageGrotesque,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF09090B),

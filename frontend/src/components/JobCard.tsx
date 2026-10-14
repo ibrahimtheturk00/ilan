@@ -27,6 +27,7 @@ import {
 import { getJobMetaDetails } from "@/lib/jobParser";
 import { useFavorites } from "@/hooks/useFavorites";
 import { detectInstitutionVisual } from "@/lib/institutionIcons";
+import { InstitutionLogo } from "@/components/InstitutionLogo";
 
 interface JobCardProps {
   job: JobPost;
@@ -200,11 +201,9 @@ export function JobCard({ job, onSelect }: JobCardProps) {
           </div>
         </div>
 
-        {/* Kurum Bilgisi & İkon */}
-        <div className="flex items-center gap-2.5 mb-2">
-          <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 border ${instVisual.bgColor} ${instVisual.borderColor}`}>
-            <InstIcon className={`w-4 h-4 ${instVisual.iconColor}`} />
-          </div>
+        {/* Kurum Bilgisi & Gerçek Kurum Logosu (Birebir Eşit Ebatta) */}
+        <div className="flex items-center gap-2.5 mb-2.5">
+          <InstitutionLogo institution={displayInstitution} size="md" />
           <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">
             {displayInstitution}
           </span>
