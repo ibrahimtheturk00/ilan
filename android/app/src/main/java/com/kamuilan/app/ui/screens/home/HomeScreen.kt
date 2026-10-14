@@ -128,79 +128,7 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // ── Canlı Eşzamanlanma Telemetri Rozeti (2026 Web Paritesi) ────
-            val beaconTransition = rememberInfiniteTransition(label = "beacon_trans")
-            val beaconScale by beaconTransition.animateFloat(
-                initialValue = 0.9f,
-                targetValue = 1.4f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(1100, easing = FastOutSlowInEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "beacon_scale"
-            )
-            val beaconAlpha by beaconTransition.animateFloat(
-                initialValue = 0.8f,
-                targetValue = 0.2f,
-                animationSpec = infiniteRepeatable(
-                    animation = tween(1100, easing = FastOutSlowInEasing),
-                    repeatMode = RepeatMode.Reverse
-                ),
-                label = "beacon_alpha"
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Row(
-                    modifier = Modifier
-                        .background(Color(0xE6FFFFFF), RoundedCornerShape(20.dp))
-                        .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(20.dp))
-                        .padding(horizontal = 11.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Box(contentAlignment = Alignment.Center) {
-                        Box(
-                            modifier = Modifier
-                                .size(10.dp)
-                                .graphicsLayer {
-                                    scaleX = beaconScale
-                                    scaleY = beaconScale
-                                    alpha = beaconAlpha
-                                }
-                                .background(Color(0xFF34D399), RoundedCornerShape(5.dp))
-                        )
-                        Box(
-                            modifier = Modifier
-                                .size(6.dp)
-                                .background(Color(0xFF059669), RoundedCornerShape(3.dp))
-                        )
-                    }
-                    Text(
-                        text = "6 Resmî Kaynak Canlı Eşzamanlanıyor",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = Slate700
-                    )
-                    Text(
-                        text = "•",
-                        fontSize = 10.sp,
-                        color = Slate400
-                    )
-                    Text(
-                        text = "2026 Güncel",
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = BrandPrimary
-                    )
-                }
-            }
+            Spacer(modifier = Modifier.height(14.dp))
 
             // ── Üst Header ──────────────────────────────────────────────────
             Row(
@@ -209,40 +137,38 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    // Gradient logo kutusu
+                    // Logo kutusu (Modern, minimalist)
                     Box(
                         modifier = Modifier
-                            .size(44.dp)
+                            .size(42.dp)
                             .background(
-                                brush = Brush.linearGradient(
-                                    listOf(BrandPrimary, BrandDark, Color(0xFF7C3AED))
-                                ),
-                                shape = RoundedCornerShape(14.dp)
+                                color = BrandPrimary,
+                                shape = RoundedCornerShape(10.dp)
                             )
-                            .border(1.dp, Color(0x40FFFFFF), RoundedCornerShape(14.dp)),
+                            .border(1.dp, Color(0x33FFFFFF), RoundedCornerShape(10.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
                             imageVector = Icons.Default.Business,
                             contentDescription = "Logo",
                             tint = Color.White,
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(22.dp)
                         )
                     }
 
-                    Spacer(modifier = Modifier.width(11.dp))
+                    Spacer(modifier = Modifier.width(10.dp))
 
                     Column {
                         Text(
                             text = "Kamu İlan",
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 19.sp,
+                            fontWeight = FontWeight.Bold,
                             color = Slate900,
-                            letterSpacing = (-0.4).sp
+                            letterSpacing = (-0.3).sp
                         )
                         Text(
                             text = "Resmî Portallar • Anlık Veri Akışı",
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             color = Slate500
                         )
                     }
@@ -257,7 +183,7 @@ fun HomeScreen(
                         onClick = { showCategoryGridDialog = true },
                         modifier = Modifier
                             .size(38.dp)
-                            .background(BrandPrimary.copy(alpha = 0.1f), RoundedCornerShape(11.dp))
+                            .background(BrandPrimary.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.GridView,
@@ -271,7 +197,7 @@ fun HomeScreen(
                         onClick = { viewModel.loadJobs() },
                         modifier = Modifier
                             .size(38.dp)
-                            .background(Slate100, RoundedCornerShape(11.dp))
+                            .background(Slate100, RoundedCornerShape(10.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
@@ -283,7 +209,7 @@ fun HomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             // ── Arama Çubuğu ─────────────────────────────────────────────────
             OutlinedTextField(
@@ -296,7 +222,7 @@ fun HomeScreen(
                     Text(
                         "Unvan, kurum veya şehir ara (örn. Mühendis)...",
                         color = Slate400,
-                        fontSize = 13.sp
+                        fontSize = 14.sp
                     )
                 },
                 leadingIcon = {
@@ -320,7 +246,7 @@ fun HomeScreen(
                     }
                 },
                 singleLine = true,
-                shape = RoundedCornerShape(14.dp),
+                shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = BrandPrimary,
                     unfocusedBorderColor = Slate200,
@@ -329,7 +255,7 @@ fun HomeScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             // ── Hızlı Arama Etiketleri (Website ile Birebir Renk & Filtre Eşleşmesi) ──
             val quickSearchTags = listOf(
@@ -352,14 +278,14 @@ fun HomeScreen(
             ) {
                 Text(
                     text = "Hızlı:",
-                    fontSize = 11.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Slate400,
+                    color = Slate500,
                     modifier = Modifier.padding(end = 2.dp)
                 )
                 quickSearchTags.forEach { (tag, brandCol, bgCol) ->
                     val isSelected = uiState.searchQuery.equals(tag, ignoreCase = true)
-                    val shape = RoundedCornerShape(12.dp)
+                    val shape = RoundedCornerShape(8.dp)
 
                     Box(
                         modifier = Modifier
@@ -383,7 +309,7 @@ fun HomeScreen(
                     ) {
                         Text(
                             text = tag,
-                            fontSize = 11.sp,
+                            fontSize = 13.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
                             color = if (isSelected) Color.White else brandCol
                         )

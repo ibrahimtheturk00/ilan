@@ -123,23 +123,23 @@ export function JobCard({ job, onSelect }: JobCardProps) {
           : statusInfo.type === "urgent"
           ? "border-rose-300 dark:border-rose-900/50"
           : "border-zinc-200/90 dark:border-zinc-800/90 hover:border-zinc-300 dark:hover:border-zinc-700"
-      } rounded-lg p-4 card-hover-clean flex flex-col justify-between cursor-pointer transition-all`}
+      } rounded-lg p-4 sm:p-5 card-hover-clean flex flex-col justify-between h-full cursor-pointer transition-all`}
     >
       <div>
         {/* Üst Satır: Tek küçük kadro rozeti + İnce gri kaynak & meslek metni */}
-        <div className="flex items-center justify-between gap-2 mb-2.5">
+        <div className="flex items-center justify-between gap-2 mb-3">
           <div className="flex items-center gap-2 flex-wrap min-w-0">
             {typeInfo && (
-              <span className={`text-[11px] px-2 py-0.5 rounded-md font-medium shrink-0 ${typeInfo.color}`}>
+              <span className={`text-xs px-2.5 py-0.5 rounded-md font-medium shrink-0 ${typeInfo.color}`}>
                 {typeInfo.label}
               </span>
             )}
-            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate">
+            <span className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
               {job.sources?.name || "Resmî Gazete"} · {categoryInfo?.label || "Genel"}
             </span>
             {meta.isToday && (
-              <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 font-semibold border border-emerald-200/80 dark:border-emerald-800/60">
-                <Sparkles className="w-2.5 h-2.5 text-emerald-600" />
+              <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 font-semibold border border-emerald-200/80 dark:border-emerald-800/60">
+                <Sparkles className="w-3 h-3 text-emerald-600" />
                 <span>Bugün</span>
               </span>
             )}
@@ -151,16 +151,16 @@ export function JobCard({ job, onSelect }: JobCardProps) {
               <button
                 type="button"
                 onClick={handleShareClick}
-                className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                className="p-1.5 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 title="İlanı Paylaş"
               >
-                <Share2 className="w-3.5 h-3.5" />
+                <Share2 className="w-4 h-4" />
               </button>
 
               {showShareMenu && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-7 z-30 w-40 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg p-1 space-y-0.5 text-xs animate-fadeIn"
+                  className="absolute right-0 top-8 z-30 w-44 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg p-1.5 space-y-0.5 text-xs animate-fadeIn"
                 >
                   <button
                     onClick={handleWhatsAppShare}
@@ -179,7 +179,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
                     className="w-full flex items-center justify-between px-2.5 py-1.5 rounded hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
                   >
                     <span>Linki Kopyala</span>
-                    {copied && <Check className="w-3 h-3 text-emerald-500" />}
+                    {copied && <Check className="w-3.5 h-3.5 text-emerald-500" />}
                   </button>
                 </div>
               )}
@@ -188,11 +188,11 @@ export function JobCard({ job, onSelect }: JobCardProps) {
             <button
               type="button"
               onClick={handleFavoriteClick}
-              className="p-1 rounded-md text-zinc-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+              className="p-1.5 rounded-md text-zinc-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
               title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
             >
               <Heart
-                className={`w-3.5 h-3.5 transition-all ${
+                className={`w-4 h-4 transition-all ${
                   isFav ? "fill-rose-500 text-rose-500" : "text-zinc-400 hover:text-rose-500"
                 }`}
               />
@@ -201,84 +201,84 @@ export function JobCard({ job, onSelect }: JobCardProps) {
         </div>
 
         {/* Kurum Bilgisi & İkon */}
-        <div className="flex items-center gap-2 mb-1.5">
-          <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 border ${instVisual.bgColor} ${instVisual.borderColor}`}>
-            <InstIcon className={`w-3.5 h-3.5 ${instVisual.iconColor}`} />
+        <div className="flex items-center gap-2.5 mb-2">
+          <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 border ${instVisual.bgColor} ${instVisual.borderColor}`}>
+            <InstIcon className={`w-4 h-4 ${instVisual.iconColor}`} />
           </div>
-          <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 truncate">
+          <span className="text-sm font-semibold text-zinc-700 dark:text-zinc-300 truncate">
             {displayInstitution}
           </span>
         </div>
 
-        {/* İlan Başlığı (Tekrar etmiyorsa görünür) */}
+        {/* İlan Başlığı (Punto 2 birim artırıldı: text-sm -> text-base sm:text-lg) */}
         {!isTitleIdenticalToInst && (
-          <h3 className="font-heading text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 leading-snug tracking-tight">
+          <h3 className="font-heading text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 leading-snug tracking-tight">
             {displayTitle}
           </h3>
         )}
 
-        {/* Zenginleştirilmiş Meta (KPSS Şartsız, Eğitim, Yaş) - Sade ve Düzensizliği Engelleyen */}
+        {/* Zenginleştirilmiş Meta (KPSS Şartsız, Eğitim, Yaş) - Puntolar text-xs yapıldı */}
         {(meta.kpssLabel || meta.educationLabel || meta.maxAge) && (
-          <div className="flex flex-wrap items-center gap-1.5 mt-2">
+          <div className="flex flex-wrap items-center gap-1.5 mt-2.5">
             {meta.kpssLabel && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
-                <Award className="w-2.5 h-2.5 text-blue-600 dark:text-blue-400" />
+              <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                <Award className="w-3 h-3 text-blue-600 dark:text-blue-400" />
                 <span>{meta.kpssLabel}</span>
               </span>
             )}
             {meta.educationLabel && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
-                <GraduationCap className="w-2.5 h-2.5 text-purple-600 dark:text-purple-400" />
+              <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                <GraduationCap className="w-3 h-3 text-purple-600 dark:text-purple-400" />
                 <span>{meta.educationLabel}</span>
               </span>
             )}
             {meta.maxAge && (
-              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
-                <Clock className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400" />
+              <span className="inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                <Clock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
                 <span>Maks. {meta.maxAge} Yaş</span>
               </span>
             )}
           </div>
         )}
 
-        {/* Açıklama Satırı: YALNIZCA yeni/farklı bilgi varsa gösterilir, yoksa hiç yer kaplamaz */}
+        {/* Açıklama Satırı: Punto text-xs -> text-sm artırıldı */}
         {cleanedDescription && (
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 line-clamp-2 leading-relaxed">
+          <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-2.5 line-clamp-2 leading-relaxed">
             {cleanedDescription}
           </p>
         )}
       </div>
 
-      {/* Alt Bilgi Çubuğu */}
-      <div className="mt-3.5 pt-2.5 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
-        <div className="flex items-center gap-2 flex-wrap">
+      {/* Alt Bilgi Çubuğu: Puntolar ve buton boyutları artırıldı */}
+      <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center gap-2.5 flex-wrap">
           {job.city && (
-            <span className="flex items-center gap-1 text-zinc-600 dark:text-zinc-300 font-medium">
-              <MapPin className="w-3 h-3 text-zinc-400 dark:text-zinc-500" />
+            <span className="flex items-center gap-1 text-zinc-700 dark:text-zinc-300 font-medium text-sm">
+              <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
               <span>{job.city}</span>
             </span>
           )}
           {job.position_count && (
-            <span className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 font-semibold font-mono tabular-nums bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
-              <Users className="w-3 h-3 text-zinc-400" />
+            <span className="flex items-center gap-1 text-zinc-800 dark:text-zinc-200 font-semibold font-mono tabular-nums bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-sm">
+              <Users className="w-3.5 h-3.5 text-zinc-400" />
               <span>{job.position_count} Kişi</span>
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-1.5 shrink-0">
-          {/* Süre Durum Rozeti (352 gün kaldı nötr gri, son 3 gün kırmızı, 7 gün altı turuncu) */}
-          <span className={`text-[10px] px-2 py-0.5 rounded font-mono tabular-nums ${statusInfo.badgeClass}`}>
+        <div className="flex items-center gap-2 shrink-0">
+          {/* Süre Durum Rozeti */}
+          <span className={`text-xs px-2.5 py-1 rounded font-mono tabular-nums ${statusInfo.badgeClass}`}>
             {statusInfo.daysText}
           </span>
 
           <button
             type="button"
             onClick={handleClick}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-100 hover:bg-zinc-900 hover:text-white dark:bg-zinc-800 dark:hover:bg-zinc-100 dark:hover:text-zinc-900 text-zinc-700 dark:text-zinc-300 text-xs font-medium transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-zinc-100 hover:bg-zinc-900 hover:text-white dark:bg-zinc-800 dark:hover:bg-zinc-100 dark:hover:text-zinc-900 text-zinc-700 dark:text-zinc-300 text-xs sm:text-sm font-medium transition-colors"
           >
             <span>İncele</span>
-            <ArrowRight className="w-3 h-3" />
+            <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>

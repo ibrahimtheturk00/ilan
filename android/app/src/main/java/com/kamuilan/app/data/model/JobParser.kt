@@ -279,4 +279,41 @@ object JobParser {
 
         return originalUrl
     }
+
+    fun cleanJobDescription(description: String?, title: String?, institution: String?): String? {
+        if (description.isNullOrBlank()) return null
+        var text = description.trim()
+        if (text.isBlank()) return null
+
+        text = text
+            .replace(Regex("""(?i)^İŞKUR\s+i[sş]ci\s+Al[ıi]m\s+[İI]lan[ıi]:\s*"""), "")
+            .replace(Regex("""(?i)^Resmi\s+İŞKUR\s+[İI]lan[ıi]:?\s*"""), "")
+            .replace(Regex("""(?i)^Kamu\s+Kurumu\s+Personel\s+Al[ıi]m\s+[İI]lan[ıi]:?\s*"""), "")
+            .replace(Regex("""(?i)^Personel\s+Al[ıi]m\s+[İI]lan[ıi]:?\s*"""), "")
+            .trim()
+
+        val textLower = text.lowercase()
+        if (textLower.contains("resmi kaynak sayfasını ziyaret ediniz") ||
+            textLower.contains("ilan detayları için tıklayınız")) {
+            return null
+        }
+
+        val normText = textLower.replace(Regex("""[^a-z0-9ğüşıöç]"""), "")
+        val normTitle = (title ?: "").lowercase().replace(Regex("""[^a-z0-9ğüşıöç]"""), "")
+        val normInst = (institution ?: "").lowercase().replace(Regex("""[^a-z0-9ğüşıöç]"""), "")
+
+        if (normText == normTitle || normText == normInst) {
+            return null
+        }
+
+        if (normTitle.contains(normText) || normInst.contains(normText)) {
+            return null
+        }
+
+        if (text.length < 15 && (normText.contains("personel") || normText.contains("isci"))) {
+            return null
+        }
+
+        return text
+    }
 }
