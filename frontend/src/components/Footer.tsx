@@ -38,13 +38,13 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className="relative border-t border-zinc-200/80 dark:border-white/10 bg-white/40 dark:bg-[#0c101a]/70 backdrop-blur-2xl py-12 text-sm text-zinc-500 dark:text-zinc-400 transition-colors overflow-hidden">
+    <footer className="relative border-t border-zinc-200/60 dark:border-white/10 bg-transparent py-12 text-sm text-zinc-500 dark:text-zinc-400 transition-colors overflow-hidden">
       {/* 
         Marquee Card: Glassmorphism Kaynaklar Bandı
         Tıpkı verilen template'teki "Trusted by Industry Leaders" gibi maskelenmiş ve kesintisiz kayan kart
       */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-        <div className="relative overflow-hidden rounded-3xl border border-zinc-200/80 dark:border-white/10 bg-white/60 dark:bg-white/5 py-6 sm:py-7 backdrop-blur-xl shadow-xl shadow-zinc-950/2 dark:shadow-black/20">
+        <div className="relative overflow-hidden rounded-3xl border border-zinc-200/60 dark:border-white/10 bg-white/25 dark:bg-white/[0.03] py-6 sm:py-7 backdrop-blur-xs shadow-lg shadow-zinc-950/2 dark:shadow-black/20">
           <div className="flex items-center justify-between px-6 sm:px-8 mb-5">
             <div className="flex items-center gap-2">
               <span className="relative flex h-2 w-2">

@@ -24,6 +24,7 @@ interface HeroDockConsoleProps {
   favoriteCount: number;
   onResetFilters: () => void;
   onSelectToday: () => void;
+  onSelectPersonalized?: () => void;
 }
 
 const QUICK_SEARCH_TAGS = [
@@ -66,6 +67,7 @@ export function HeroDockConsole({
   favoriteCount,
   onResetFilters,
   onSelectToday,
+  onSelectPersonalized,
 }: HeroDockConsoleProps) {
   const { searchQuery, setSearchQuery, postType, setPostType, sortBy, setSortBy } = useFilters();
   const { isConfigured: isPersonalizedConfigured } = usePersonalizedCriteria();
@@ -176,7 +178,13 @@ export function HeroDockConsole({
 
           {/* Sana Özel */}
           <button
-            onClick={() => setActiveTab("personalized")}
+            onClick={() => {
+              if (onSelectPersonalized) {
+                onSelectPersonalized();
+              } else {
+                setActiveTab("personalized");
+              }
+            }}
             type="button"
             className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0 ${
               activeTab === "personalized"

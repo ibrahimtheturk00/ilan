@@ -12,6 +12,7 @@ import {
   RotateCcw,
   SlidersHorizontal,
 } from "lucide-react";
+import { InteractiveDotGridBackground } from "./InteractiveDotGridBackground";
 import { YOK_ATLAS_DEPARTMENTS } from "./DepartmentSearch";
 import { TURKEY_CITIES } from "./FilterSidebar";
 import { UserCareerCriteria } from "@/hooks/usePersonalizedCriteria";
@@ -137,12 +138,17 @@ export function PersonalizedCriteriaModal({
     selectedPostTypes.length;
 
   return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-6 bg-black/70 backdrop-blur-md animate-fadeIn">
-      {/* Backdrop click */}
-      <div className="fixed inset-0" onClick={onClose} />
+    <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn overflow-hidden">
+      {/* Arka plan ışık noktaları ve dalga efekti (Canvas 2D) */}
+      <div className="absolute inset-0 pointer-events-auto z-0">
+        <InteractiveDotGridBackground className="w-full h-full" />
+      </div>
 
-      {/* Modal Dialog Container */}
-      <div className="relative w-full max-w-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl max-h-[92vh] flex flex-col z-10 overflow-hidden transition-all">
+      {/* Modal Dialog Container - Sadece form kısmı */}
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-3xl bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl max-h-[92vh] flex flex-col z-20 overflow-hidden transition-all"
+      >
         {/* Header */}
         <div className="flex items-center justify-between px-5 sm:px-7 py-4 border-b border-zinc-100 dark:border-zinc-800 shrink-0">
           <div className="flex items-center gap-3">

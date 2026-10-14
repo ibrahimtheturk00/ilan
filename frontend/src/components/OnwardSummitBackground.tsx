@@ -141,10 +141,10 @@ export function OnwardSummitBackground() {
           const u = x / W;
           const v = y / H;
 
-          // Atmospheric distribution - sayfanın en altına kadar kesintisiz devam eder
-          const topFade = smoothstep(0, 0.10, v);
-          const edgeSoft = smoothstep(0, 0.04, u) * smoothstep(0, 0.04, 1 - u);
-          const weight = 0.22 * topFade * edgeSoft;
+          // Atmospheric distribution - sayfanın en altına kadar kesintisiz ve net devam eder
+          const topFade = smoothstep(0, 0.06, v);
+          const edgeSoft = smoothstep(0, 0.02, u) * smoothstep(0, 0.02, 1 - u);
+          const weight = 0.28 * topFade * edgeSoft;
 
           xs[k] = x;
           ys[k] = y;

@@ -98,64 +98,55 @@ export function PersonalizedView({ onSwitchToAll }: PersonalizedViewProps) {
     );
   }
 
+  // Otomatik olarak kriter formu popup'ını aç
+  React.useEffect(() => {
+    if (!isConfigured || !criteria) {
+      setIsModalOpen(true);
+    }
+  }, [isConfigured, criteria]);
+
   // ========================================================
-  // DURUM A: Sitede Kayıtlı Kriter Yok (Referans Tasarım Ekranı)
+  // DURUM A: Sitede Kayıtlı Kriter Yok (Sadece Form Popup'ı Açılır)
   // ========================================================
   if (!isConfigured || !criteria) {
     return (
-      <div className="w-full my-3 animate-fadeIn">
-        <InteractiveDotGridBackground className="min-h-[580px] sm:min-h-[660px] rounded-2xl sm:rounded-3xl border border-zinc-200/90 dark:border-white/10 shadow-2xl flex flex-col items-center justify-center p-6 sm:p-14 text-center">
-          <div className="max-w-3xl mx-auto flex flex-col items-center">
-            {/* Top Badge (Ref: "• Now in public beta") */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-900/90 dark:bg-zinc-800/90 border border-zinc-700/60 text-white text-xs font-semibold backdrop-blur-md shadow-sm mb-6 sm:mb-8 hover:scale-105 transition-transform cursor-default">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>• Şimdi Yayında • Kişiselleştirilmiş İlan Radarı</span>
-            </div>
-
-            {/* Main Headline (Ref: "Signals, not noise.") */}
-            <h1 className="font-heading text-4xl sm:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.1] mb-5">
-              Gürültüyü Değil, Sana Uygun İlanları Gör.
-            </h1>
-
-            {/* Subtitle (Ref: "Every ping is a real event...") */}
-            <p className="font-sans text-sm sm:text-lg text-zinc-600 dark:text-zinc-300 max-w-2xl leading-relaxed mb-4">
-              Binlerce karmaşık sayfa ve yüzlerce başvuru şartı arasında kaybolma.
-              Mezuniyetini, unvanını ve tercih ettiğin şehirleri belirle; sadece senin başvurabileceğin
-              resmi kadroları tek ekranda radarımıza alalım.
-            </p>
-
-            {/* Interactive hint */}
-            <p className="text-xs text-zinc-400 dark:text-zinc-500 max-w-md mx-auto mb-8 sm:mb-10">
-              💡 Sayfanın herhangi bir yerine tıklayarak radarı test edebilir ve ışık dalgası gönderebilirsin.
-            </p>
-
-            {/* Action Buttons (Ref: "Start listening →" & "Read the docs") */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full sm:w-auto">
+      <div className="w-full my-6 flex flex-col items-center justify-center p-8 text-center animate-fadeIn">
+        <div className="bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-8 max-w-md mx-auto shadow-sm space-y-4">
+          <SlidersHorizontal className="w-8 h-8 text-emerald-500 mx-auto" />
+          <h3 className="font-heading text-lg font-bold text-zinc-900 dark:text-white">
+            Kriter Belirlenmedi
+          </h3>
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            Sana özel kamu ilanlarını listelemek için kriter belirleyebilirsin.
+          </p>
+          <div className="pt-2 flex items-center justify-center gap-3">
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 font-bold text-xs shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all"
+            >
+              <span>Kriter Belirle</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            {onSwitchToAll && (
               <button
                 type="button"
-                onClick={() => setIsModalOpen(true)}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 font-bold text-sm shadow-xl hover:scale-105 active:scale-95 transition-all"
+                onClick={onSwitchToAll}
+                className="px-4 py-2.5 rounded-xl text-xs font-semibold text-zinc-600 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               >
-                <span>Kriterlerini Belirle</span>
-                <ArrowRight className="w-4 h-4" />
+                Tüm İlanlar
               </button>
-
-              <button
-                type="button"
-                onClick={setSampleCriteria}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-white/80 hover:bg-white dark:bg-zinc-800/80 dark:hover:bg-zinc-700/80 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-white/10 font-semibold text-sm transition-all hover:scale-105 active:scale-95 shadow-xs"
-              >
-                <Sparkles className="w-4 h-4 text-emerald-500" />
-                <span>Örnek Profili Dene</span>
-              </button>
-            </div>
+            )}
           </div>
-        </InteractiveDotGridBackground>
+        </div>
 
-        {/* Criteria Modal */}
+        {/* Form Modalı */}
         <PersonalizedCriteriaModal
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setIsModalOpen(false);
+            if (onSwitchToAll) onSwitchToAll();
+          }}
           initialCriteria={criteria}
           onSave={saveCriteria}
         />

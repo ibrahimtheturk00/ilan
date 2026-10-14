@@ -16,9 +16,12 @@ interface Dot {
   y: number;
   baseRadius: number;
   baseOpacity: number;
-  phase: number;
-  freq: number;
-  isBrightCluster: boolean;
+  isCluster: boolean;
+  // Kendiliğinden random yanma (spontaneous twinkling flare)
+  isFlaring: boolean;
+  flareStartTime: number;
+  flareDuration: number;
+  flareMaxBoost: number;
 }
 
 interface InteractiveDotGridBackgroundProps {
@@ -67,7 +70,7 @@ export function InteractiveDotGridBackground({
       attributeFilter: ["class"],
     });
 
-    // Generate regular grid with natural organic clusters
+    // Initialize dot grid with solid visibility across every cell
     const initGrid = () => {
       const rect = container.getBoundingClientRect();
       width = rect.width;
@@ -95,32 +98,26 @@ export function InteractiveDotGridBackground({
           const x = offsetX + c * gap;
           const y = offsetY + r * gap;
 
-          // Organic clusters using smooth 2D trigonometric harmonic waves
-          // (creates undulating bright curves like the reference image)
+          // Organic harmonic variation across the matrix
           const clusterHarmonic =
             Math.sin(c * 0.28) * Math.cos(r * 0.22) +
             Math.sin((c + r) * 0.16) * 0.6;
-          const isBright = clusterHarmonic > 0.42;
+          const isCluster = clusterHarmonic > 0.42;
 
-          let baseRadius: number;
-          let baseOpacity: number;
-
-          if (isBright) {
-            baseRadius = 1.8 + Math.sin(c * 7 + r * 11) * 0.4; // 1.4px - 2.2px
-            baseOpacity = 0.55 + Math.cos(c * 3 + r * 5) * 0.25; // 0.35 - 0.80
-          } else {
-            baseRadius = 0.95 + Math.sin(c * 5 + r * 3) * 0.2; // 0.8px - 1.15px
-            baseOpacity = 0.14 + Math.sin(c * 9 + r * 7) * 0.08; // 0.08 - 0.22
-          }
+          // All dots have solid, crisp baseline visibility (no vanishing dots)
+          const baseRadius = isCluster ? 1.8 : 1.35;
+          const baseOpacity = isCluster ? 0.55 : 0.32;
 
           newDots.push({
             x,
             y,
             baseRadius,
             baseOpacity,
-            phase: (c * 17 + r * 23) % 100,
-            freq: 0.8 + ((c * 7 + r * 13) % 7) * 0.12,
-            isBrightCluster: isBright,
+            isCluster,
+            isFlaring: false,
+            flareStartTime: 0,
+            flareDuration: 0,
+            flareMaxBoost: 0,
           });
         }
       }
@@ -147,7 +144,7 @@ export function InteractiveDotGridBackground({
       const y = clientY - rect.top;
 
       const maxRadius = Math.hypot(width, height) * 1.1;
-      const speed = 400; // px per second
+      const speed = 420; // px per second
 
       wavesRef.current.push({
         id: nextWaveIdRef.current++,
@@ -158,15 +155,13 @@ export function InteractiveDotGridBackground({
         speed,
       });
 
-      // Keep maximum 8 concurrent waves for optimal performance
       if (wavesRef.current.length > 8) {
         wavesRef.current.shift();
       }
     };
 
-    // Click/touch listener on the container
+    // Click/touch listener on container
     const handlePointerDown = (e: PointerEvent) => {
-      // Don't trigger if user explicitly clicked an interactive control (button, input, link)
       const target = e.target as HTMLElement | null;
       if (target && (target.closest("button") || target.closest("a") || target.closest("input"))) {
         return;
@@ -176,46 +171,35 @@ export function InteractiveDotGridBackground({
 
     container.addEventListener("pointerdown", handlePointerDown);
 
-    // Main animation loop
-    let lastTime = performance.now();
-
+    // Animation loop
     const render = (currentTime: number) => {
-      // Background colors
-      // Dark: deeply saturated dark graphite (#090a10)
-      // Light: refined off-white / porcelain (#f8f9fc)
       const bgColor = isDark ? "#08090d" : "#f8f9fc";
       ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, width, height);
 
-      const elapsedGlobalSec = currentTime * 0.001;
-
-      // Filter active waves
+      // Filter active click waves
       const activeWaves: {
         x: number;
         y: number;
         radius: number;
         maxRadius: number;
-        age: number;
         pulseAlpha: number;
       }[] = [];
 
-      const currentWaves = wavesRef.current;
       const survivingWaves: Wave[] = [];
-
-      for (let i = 0; i < currentWaves.length; i++) {
-        const w = currentWaves[i];
+      for (let i = 0; i < wavesRef.current.length; i++) {
+        const w = wavesRef.current[i];
         const ageSec = (currentTime - w.startTime) * 0.001;
         const radius = ageSec * w.speed;
 
         if (radius < w.maxRadius && ageSec < 3.0) {
           survivingWaves.push(w);
-          const pulseAlpha = Math.max(0, 1 - ageSec / 0.45); // initial flash at epicenter
+          const pulseAlpha = Math.max(0, 1 - ageSec / 0.45);
           activeWaves.push({
             x: w.x,
             y: w.y,
             radius,
             maxRadius: w.maxRadius,
-            age: ageSec,
             pulseAlpha,
           });
         }
@@ -235,10 +219,10 @@ export function InteractiveDotGridBackground({
             Math.min(90, aw.radius * 0.8 + 10)
           );
           if (isDark) {
-            flashGrad.addColorStop(0, `rgba(255, 255, 255, ${aw.pulseAlpha * 0.35})`);
+            flashGrad.addColorStop(0, `rgba(255, 255, 255, ${aw.pulseAlpha * 0.4})`);
             flashGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
           } else {
-            flashGrad.addColorStop(0, `rgba(15, 23, 42, ${aw.pulseAlpha * 0.22})`);
+            flashGrad.addColorStop(0, `rgba(15, 23, 42, ${aw.pulseAlpha * 0.25})`);
             flashGrad.addColorStop(1, "rgba(15, 23, 42, 0)");
           }
           ctx.fillStyle = flashGrad;
@@ -248,31 +232,52 @@ export function InteractiveDotGridBackground({
         }
       }
 
-      // Center coordinates for subtle vignette
-      const centerX = width / 2;
-      const centerY = height / 2;
+      // 1. Spontaneous random twinkling / flares management
+      if (!prefersReducedMotion && dots.length > 0) {
+        // Count currently flaring dots
+        let flaringCount = 0;
+        for (let i = 0; i < dots.length; i++) {
+          if (dots[i].isFlaring) flaringCount++;
+        }
 
-      // Batch drawing dots
+        // Target: 18 - 30 dots spontaneously flaring across the grid at any moment
+        const targetFlares = Math.min(30, Math.max(12, Math.floor(dots.length * 0.035)));
+        const neededFlares = targetFlares - flaringCount;
+
+        if (neededFlares > 0 && Math.random() < 0.65) {
+          const toAdd = Math.min(neededFlares, 3);
+          for (let k = 0; k < toAdd; k++) {
+            const randomIndex = Math.floor(Math.random() * dots.length);
+            const dot = dots[randomIndex];
+            if (!dot.isFlaring) {
+              dot.isFlaring = true;
+              dot.flareStartTime = currentTime;
+              dot.flareDuration = 1000 + Math.random() * 1800; // 1s - 2.8s
+              dot.flareMaxBoost = 0.55 + Math.random() * 0.45;
+            }
+          }
+        }
+      }
+
+      // 2. Draw all dots
       const waveBandWidth = 75; // px
 
       for (let i = 0; i < dots.length; i++) {
         const dot = dots[i];
 
-        // 1. Breathing light animation
-        let breathing = 0;
-        if (!prefersReducedMotion) {
-          breathing = Math.sin(elapsedGlobalSec * dot.freq + dot.phase) * 0.12;
+        // Flare calculation
+        let flareFactor = 0;
+        if (dot.isFlaring) {
+          const progress = (currentTime - dot.flareStartTime) / dot.flareDuration;
+          if (progress >= 1.0) {
+            dot.isFlaring = false;
+          } else {
+            // Smooth bell curve flare
+            flareFactor = Math.sin(progress * Math.PI) * dot.flareMaxBoost;
+          }
         }
 
-        // 2. Center reading vignette
-        const distFromCenter = Math.hypot(dot.x - centerX, (dot.y - centerY) * 1.25);
-        let vignette = 1;
-        if (distFromCenter < 280) {
-          // Soft fade in the center so headlines and CTA stand out with maximum clarity
-          vignette = 0.45 + 0.55 * (distFromCenter / 280);
-        }
-
-        // 3. Radial wave interaction boost
+        // Radial wave boost from clicks
         let waveIntensity = 0;
         for (let w = 0; w < activeWaves.length; w++) {
           const wave = activeWaves[w];
@@ -289,53 +294,67 @@ export function InteractiveDotGridBackground({
           }
         }
 
-        // Computed dynamic radius & opacity
-        let finalRadius = dot.baseRadius + (waveIntensity > 0 ? waveIntensity * 1.5 : breathing * 0.25);
-        let finalOpacity = (dot.baseOpacity + breathing) * vignette;
+        const totalBoost = Math.max(flareFactor, waveIntensity);
 
-        if (waveIntensity > 0) {
-          finalOpacity = Math.min(1.0, finalOpacity + waveIntensity * 0.82);
+        // Dynamic radius and opacity
+        const finalRadius = dot.baseRadius + totalBoost * 1.6;
+        let finalOpacity = Math.min(1.0, dot.baseOpacity + totalBoost * 0.75);
+
+        // If strongly flaring, draw soft surrounding halo
+        if (totalBoost > 0.4) {
+          const haloRadius = finalRadius * 3.5;
+          const haloGrad = ctx.createRadialGradient(
+            dot.x,
+            dot.y,
+            0,
+            dot.x,
+            dot.y,
+            haloRadius
+          );
+          if (isDark) {
+            haloGrad.addColorStop(0, `rgba(255, 255, 255, ${totalBoost * 0.35})`);
+            haloGrad.addColorStop(1, "rgba(255, 255, 255, 0)");
+          } else {
+            haloGrad.addColorStop(0, `rgba(15, 23, 42, ${totalBoost * 0.22})`);
+            haloGrad.addColorStop(1, "rgba(15, 23, 42, 0)");
+          }
+          ctx.fillStyle = haloGrad;
+          ctx.beginPath();
+          ctx.arc(dot.x, dot.y, haloRadius, 0, Math.PI * 2);
+          ctx.fill();
         }
 
-        // Color palette
+        // Main dot render
         if (isDark) {
-          if (waveIntensity > 0.1) {
-            // Illuminated by wave: bright pure white
+          if (totalBoost > 0.15) {
             ctx.fillStyle = `rgba(255, 255, 255, ${finalOpacity})`;
-          } else if (dot.isBrightCluster) {
-            // Bright cluster dots: crisp broken white
+          } else if (dot.isCluster) {
             ctx.fillStyle = `rgba(241, 245, 249, ${finalOpacity})`;
           } else {
-            // Normal background dots: muted cool slate
-            ctx.fillStyle = `rgba(148, 163, 184, ${finalOpacity})`;
+            ctx.fillStyle = `rgba(203, 213, 225, ${finalOpacity})`;
           }
         } else {
-          if (waveIntensity > 0.1) {
-            // Illuminated by wave in light mode: deep slate / charcoal
+          if (totalBoost > 0.15) {
             ctx.fillStyle = `rgba(15, 23, 42, ${finalOpacity})`;
-          } else if (dot.isBrightCluster) {
-            // Prominent dots in light mode: dark slate
+          } else if (dot.isCluster) {
             ctx.fillStyle = `rgba(51, 65, 85, ${finalOpacity})`;
           } else {
-            // Subtle dots in light mode: soft gray
-            ctx.fillStyle = `rgba(148, 163, 184, ${finalOpacity})`;
+            ctx.fillStyle = `rgba(100, 116, 139, ${finalOpacity})`;
           }
         }
 
         ctx.beginPath();
-        ctx.arc(dot.x, dot.y, Math.max(0.6, finalRadius), 0, Math.PI * 2);
+        ctx.arc(dot.x, dot.y, finalRadius, 0, Math.PI * 2);
         ctx.fill();
       }
 
       animationFrameId = requestAnimationFrame(render);
     };
 
-    // Pause animation when tab is inactive to preserve battery
     const handleVisibilityChange = () => {
       if (document.hidden) {
         cancelAnimationFrame(animationFrameId);
       } else {
-        lastTime = performance.now();
         animationFrameId = requestAnimationFrame(render);
       }
     };
@@ -362,7 +381,6 @@ export function InteractiveDotGridBackground({
         ref={canvasRef}
         className="absolute inset-0 block w-full h-full pointer-events-none"
       />
-      {/* Content wrapper with pointer events allowed */}
       <div className="relative z-10 w-full">{children}</div>
     </div>
   );

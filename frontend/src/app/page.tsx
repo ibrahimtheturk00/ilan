@@ -8,14 +8,34 @@ import { DepartmentSearch } from "@/components/DepartmentSearch";
 import { FavoritesView } from "@/components/FavoritesView";
 import { EmploymentReport } from "@/components/EmploymentReport";
 import { PersonalizedView } from "@/components/PersonalizedView";
+import { PersonalizedCriteriaModal } from "@/components/PersonalizedCriteriaModal";
+import { usePersonalizedCriteria, UserCareerCriteria } from "@/hooks/usePersonalizedCriteria";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useFilters } from "@/hooks/useFilters";
 
 export default function HomePage() {
   // Görünüm Sekmeleri: 'all' | 'today' | 'personalized' | 'department' | 'favorites' | 'report'
   const [activeTab, setActiveTab] = useState<"all" | "today" | "personalized" | "department" | "favorites" | "report">("all");
+  const { criteria, isConfigured: isPersonalizedConfigured, saveCriteria } = usePersonalizedCriteria();
+  const [isCriteriaModalOpen, setIsCriteriaModalOpen] = useState(false);
   const { count: favoriteCount } = useFavorites();
   const { setCategory, setCity, setOnlyUrgent, setOnlyToday, resetFilters } = useFilters();
+
+  const handleSelectPersonalized = () => {
+    if (!isPersonalizedConfigured) {
+      // Sitede kayıtlı kriter yoksa doğrudan ana ekranda modal form açılır
+      setIsCriteriaModalOpen(true);
+    } else {
+      // Kriter kayıtlıysa doğrudan sana özel sekmesine geçilir
+      setActiveTab("personalized");
+    }
+  };
+
+  const handleSaveCriteria = (newCriteria: UserCareerCriteria) => {
+    saveCriteria(newCriteria);
+    setIsCriteriaModalOpen(false);
+    setActiveTab("personalized");
+  };
 
   const handleReportFilterCategory = (cat: string) => {
     setCategory(cat);
@@ -63,6 +83,7 @@ export default function HomePage() {
           setOnlyToday(true);
           setActiveTab("today");
         }}
+        onSelectPersonalized={handleSelectPersonalized}
       />
 
       {/* 1. SEÇENEK: Sana Özel İlanlar Ekranı (Kişiselleştirilmiş İlan Radarı) */}
@@ -112,6 +133,14 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
+      {/* Sana Özel Kriter Seçim Modalı (Ana ekranda doğrudan popup olarak açılır) */}
+      <PersonalizedCriteriaModal
+        isOpen={isCriteriaModalOpen}
+        onClose={() => setIsCriteriaModalOpen(false)}
+        initialCriteria={criteria}
+        onSave={handleSaveCriteria}
+      />
     </main>
   );
 }
