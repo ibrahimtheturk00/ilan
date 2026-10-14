@@ -344,7 +344,7 @@ export function EmploymentReport({
           onClick={onGoToAllJobs}
           role="button"
           tabIndex={0}
-          className="group tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs cursor-pointer flex flex-col justify-between transition-all"
+          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-500/80 dark:hover:border-brand-500 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between transition-all"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
@@ -363,7 +363,7 @@ export function EmploymentReport({
         </div>
 
         {/* 2. KART: Toplam Kadro Kontenjanı */}
-        <div className="tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs flex flex-col justify-between transition-all">
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-sm flex flex-col justify-between transition-all">
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Toplam Kadro Kontenjanı</span>
@@ -382,7 +382,7 @@ export function EmploymentReport({
           onClick={onGoToUrgentJobs}
           role="button"
           tabIndex={0}
-          className="group tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs cursor-pointer flex flex-col justify-between transition-all"
+          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-rose-500/80 dark:hover:border-rose-500 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between transition-all"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
@@ -408,7 +408,7 @@ export function EmploymentReport({
           }}
           role="button"
           tabIndex={0}
-          className="group tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs cursor-pointer flex flex-col justify-between transition-all"
+          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-indigo-500/80 dark:hover:border-indigo-500 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between transition-all"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">

@@ -138,7 +138,7 @@ export function FilterSidebar() {
   };
 
   return (
-    <aside className="tech-corner-card w-full lg:w-64 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 space-y-5 transition-all sticky top-20 shadow-xs">
+    <aside className="w-full lg:w-64 bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-4 space-y-5 transition-all sticky top-20 shadow-sm">
       {/* Üst Başlık & Sıfırla */}
       <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
         <div className="flex items-center gap-2 text-zinc-800 dark:text-zinc-200 font-bold text-sm">

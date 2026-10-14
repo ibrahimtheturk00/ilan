@@ -172,8 +172,8 @@ export function PersonalizedView({ onSwitchToAll }: PersonalizedViewProps) {
 
   return (
     <div className="w-full space-y-6 my-2 animate-fadeIn">
-      {/* 1. Üst Kontrol Paneli (HUD Tech Corner Design) */}
-      <div className="tech-corner-card bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-5 sm:p-6 shadow-xs transition-all">
+      {/* 1. Üst Kontrol Paneli */}
+      <div className="bg-white/85 dark:bg-zinc-900/85 backdrop-blur-xl border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-5 sm:p-6 shadow-sm transition-all">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-zinc-100 dark:border-zinc-800">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
@@ -307,7 +307,7 @@ export function PersonalizedView({ onSwitchToAll }: PersonalizedViewProps) {
           ))}
         </div>
       ) : (
-        <div className="tech-corner-card bg-white/80 dark:bg-zinc-900/80 border border-zinc-200/60 dark:border-white/5 rounded-lg p-10 text-center max-w-xl mx-auto shadow-xs space-y-4">
+        <div className="bg-white/80 dark:bg-zinc-900/80 border border-zinc-200/80 dark:border-zinc-800 rounded-2xl p-10 text-center max-w-xl mx-auto shadow-sm space-y-4">
           <div className="w-14 h-14 rounded-2xl bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center mx-auto text-amber-500">
             <AlertCircle className="w-7 h-7" />
           </div>

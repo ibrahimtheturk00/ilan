@@ -141,8 +141,8 @@ export function PersonalizedCriteriaModal({
       {/* Backdrop click */}
       <div className="fixed inset-0" onClick={onClose} />
 
-      {/* Modal Dialog Container with HUD Tech Corner Design */}
-      <div className="relative w-full max-w-3xl tech-corner-card bg-white dark:bg-zinc-900 border border-zinc-200/80 dark:border-white/10 rounded-2xl shadow-2xl max-h-[92vh] flex flex-col z-10 overflow-hidden transition-all">
+      {/* Modal Dialog Container */}
+      <div className="relative w-full max-w-3xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl max-h-[92vh] flex flex-col z-10 overflow-hidden transition-all">
         {/* Header */}
         <div className="flex items-center justify-between px-5 sm:px-7 py-4 border-b border-zinc-100 dark:border-zinc-800 shrink-0">
           <div className="flex items-center gap-3">

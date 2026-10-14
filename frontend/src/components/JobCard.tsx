@@ -111,13 +111,13 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   return (
     <div
       onClick={handleClick}
-      className={`group tech-corner-card relative bg-white/80 dark:bg-[#121624]/85 backdrop-blur-xl border ${
+      className={`group relative bg-white/85 dark:bg-[#121624]/85 backdrop-blur-xl border ${
         statusInfo.isCancelled
           ? "border-red-300/80 dark:border-red-900/60"
           : statusInfo.type === "urgent"
           ? "border-rose-300/80 dark:border-rose-900/60"
-          : "border-zinc-200/60 dark:border-white/5"
-      } rounded-lg p-5 sm:p-6 card-hover-clean flex flex-col justify-between h-full cursor-pointer transition-all shadow-xs`}
+          : "border-zinc-200/80 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700"
+      } rounded-2xl p-5 sm:p-6 card-hover-clean flex flex-col justify-between h-full cursor-pointer transition-all shadow-sm`}
     >
       <div className="relative z-10">
         {/* Üst Satır: Tek küçük kadro rozeti + İnce kaynak & meslek metni */}
