@@ -20,6 +20,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -190,6 +191,7 @@ fun AppNavigation(
                                     Text(
                                         text = screen.title,
                                         fontSize = 12.sp,
+                                        fontWeight = if (isSelected) FontWeight.ExtraBold else FontWeight.Bold,
                                         maxLines = 1
                                     )
                                 },

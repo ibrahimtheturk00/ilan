@@ -192,10 +192,11 @@ fun HomeScreen(
                         Text(
                             text = "14 Resmî Portal • 1.000+ Kurum",
                             fontFamily = Manrope,
-                            fontSize = 11.5.sp,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.SemiBold,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
                 }
@@ -236,8 +237,9 @@ fun HomeScreen(
                 placeholder = {
                     Text(
                         "Unvan, kurum veya şehir ara (örn. Mühendis)...",
-                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
-                        fontSize = 14.sp
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Medium
                     )
                 },
                 leadingIcon = {

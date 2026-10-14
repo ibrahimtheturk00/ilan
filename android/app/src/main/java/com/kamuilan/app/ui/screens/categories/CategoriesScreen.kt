@@ -113,9 +113,10 @@ fun CategoriesScreen(
             Spacer(modifier = Modifier.height(3.dp))
             Text(
                 text = "Alanınıza dokunarak güncel ilanları ve canlı açık pozisyon sayılarını görün",
-                fontSize = 12.sp,
+                fontSize = 12.5.sp,
+                fontWeight = FontWeight.Medium,
                 color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
-                lineHeight = 17.sp
+                lineHeight = 18.sp
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -160,6 +161,7 @@ fun YokCategoryCard(
     )
 
     val cardShape = RoundedCornerShape(16.dp)
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
 
     Box(
         modifier = Modifier
@@ -224,29 +226,25 @@ fun YokCategoryCard(
                     )
                 }
 
-                // Canlı İlan Sayısı Rozeti
-                val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+                // Canlı İlan Sayısı Rozeti (Açık modda zengin ve koyu orman yeşili #064E3B, koyu modda #6EE7B7)
+                val badgeBg = if (count > 0) (if (isDark) Color(0x3310B981) else Color(0xFFD1FAE5))
+                              else androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                val badgeBorder = if (count > 0) (if (isDark) Color(0x6610B981) else Color(0xFF34D399))
+                                  else androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant
+                val badgeText = if (count > 0) (if (isDark) Color(0xFF6EE7B7) else Color(0xFF064E3B))
+                                else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .background(
-                            if (count > 0) (if (isDark) Color(0x3310B981) else ActiveEmeraldBg)
-                            else androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
-                        )
-                        .border(
-                            1.dp,
-                            if (count > 0) (if (isDark) Color(0x6610B981) else ActiveEmeraldBorder)
-                            else androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .padding(horizontal = 7.dp, vertical = 3.dp)
+                        .background(badgeBg)
+                        .border(1.dp, badgeBorder, RoundedCornerShape(12.dp))
+                        .padding(horizontal = 8.dp, vertical = 3.dp)
                 ) {
                     Text(
                         text = "$count İlan",
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = if (count > 0) (if (isDark) Color(0xFF6EE7B7) else ActiveEmerald)
-                               else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                        fontWeight = FontWeight.ExtraBold,
+                        color = badgeText
                     )
                 }
             }
@@ -266,22 +264,23 @@ fun YokCategoryCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // İlanları İncele
+            // İlanları İncele (Gece modunda beyaz, açık modda kategori rengi)
+            val linkColor = if (isDark) Color(0xFFF8F9FA) else category.color
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(3.dp)
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
                     text = "İlanları İncele",
                     fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = category.color
+                    fontWeight = FontWeight.Bold,
+                    color = linkColor
                 )
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = null,
-                    tint = category.color,
-                    modifier = Modifier.size(10.dp)
+                    tint = linkColor,
+                    modifier = Modifier.size(11.dp)
                 )
             }
         }

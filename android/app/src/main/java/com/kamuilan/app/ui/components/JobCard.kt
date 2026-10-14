@@ -185,7 +185,8 @@ fun JobCard(
                         Text(
                             text = "$sourceName · $catLabel",
                             fontSize = 12.sp,
-                            color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                            fontWeight = FontWeight.SemiBold,
+                            color = if (isDark) Color(0xFF94A3B8) else Color(0xFF475569),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -316,7 +317,8 @@ fun JobCard(
                     Text(
                         text = cleanedDesc,
                         fontSize = 14.sp,
-                        color = if (isDark) Color(0xFFA1A1AA) else Color(0xFF71717A),
+                        fontWeight = FontWeight.Medium,
+                        color = if (isDark) Color(0xFFD4D4D8) else Color(0xFF52525B),
                         lineHeight = 20.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
@@ -591,7 +593,7 @@ private fun WebMetaBadge(
         Text(
             text = text,
             fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.SemiBold,
             color = textCol
         )
     }

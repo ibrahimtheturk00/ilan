@@ -114,118 +114,134 @@ fun JobDetailScreen(
         }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "İlan Detayı",
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Geri",
-                            tint = MaterialTheme.colorScheme.onSurface
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        // Yumuşak ve kesiksiz üst gradyan (En tepeden başlar, TopAppBar ve başlık arkasından pürüzsüzce akar)
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(300.dp)
+                .background(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.09f),
+                            MaterialTheme.colorScheme.primary.copy(alpha = 0.03f),
+                            Color.Transparent
                         )
-                    }
-                },
-                actions = {
-                    if (job != null) {
-                        val isFavorite = favoriteIds.contains(job.id.toString())
-                        IconButton(onClick = { homeViewModel.toggleFavorite(job.id) }) {
+                    )
+                )
+        )
+
+        Scaffold(
+            containerColor = Color.Transparent,
+            topBar = {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "İlan Detayı",
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = onBackClick) {
                             Icon(
-                                imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                contentDescription = "Favoriye Ekle",
-                                tint = if (isFavorite) UrgentRose else MaterialTheme.colorScheme.onSurface
-                            )
-                        }
-                        IconButton(onClick = { shareJobDetails(context, job) }) {
-                            Icon(
-                                imageVector = Icons.Default.Share,
-                                contentDescription = "Paylaş",
+                                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                contentDescription = "Geri",
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            )
-        }
-    ) { innerPadding ->
-        if (job == null) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
-            ) {
-                if (isFetching || uiState.isLoading) {
-                    CircularProgressIndicator(
-                        color = BrandPrimary,
-                        modifier = Modifier.size(36.dp)
+                    },
+                    actions = {
+                        if (job != null) {
+                            val isFavorite = favoriteIds.contains(job.id.toString())
+                            IconButton(onClick = { homeViewModel.toggleFavorite(job.id) }) {
+                                Icon(
+                                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                                    contentDescription = "Favoriye Ekle",
+                                    tint = if (isFavorite) UrgentRose else MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                            IconButton(onClick = { shareJobDetails(context, job) }) {
+                                Icon(
+                                    imageVector = Icons.Default.Share,
+                                    contentDescription = "Paylaş",
+                                    tint = MaterialTheme.colorScheme.onSurface
+                                )
+                            }
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
                     )
-                } else {
-                    Text("İlan bilgisi bulunamadı.", color = Slate500, fontSize = 14.sp)
-                }
+                )
             }
-        } else {
-            val daysRemaining = JobParser.calculateDaysRemaining(job.deadlineAt)
-            val isCancelled = JobParser.isCancelled(job.title)
-            val isToday = JobParser.isToday(job.publishedAt)
-            val kpssType = JobParser.detectKpssType(job)
-            val education = JobParser.detectEducationLevel(job)
-            val maxAge = JobParser.detectMaxAge(job)
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .verticalScroll(rememberScrollState())
-            ) {
-                // ── Hero Header ──────────────────────────────────────────────
+        ) { innerPadding ->
+            if (job == null) {
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            brush = Brush.verticalGradient(
-                                colors = listOf(
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
-                                    Color.Transparent
-                                )
-                            )
-                        )
-                        .padding(horizontal = 16.dp, vertical = 16.dp)
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Column {
-                        // Kurum satırı
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            InstitutionLogoView(
-                                institution = job.institution,
-                                size = 42.dp
-                            )
-                            Spacer(modifier = Modifier.width(12.dp))
-                            Column {
-                                Text(
-                                    text = job.institution ?: "T.C. Kamu Kurumu",
-                                    fontFamily = Manrope,
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = MaterialTheme.colorScheme.onSurface
+                    if (isFetching || uiState.isLoading) {
+                        CircularProgressIndicator(
+                            color = BrandPrimary,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    } else {
+                        Text("İlan bilgisi bulunamadı.", color = Slate500, fontSize = 14.sp, fontWeight = FontWeight.Medium)
+                    }
+                }
+            } else {
+                val daysRemaining = JobParser.calculateDaysRemaining(job.deadlineAt)
+                val isCancelled = JobParser.isCancelled(job.title)
+                val isToday = JobParser.isToday(job.publishedAt)
+                val kpssType = JobParser.detectKpssType(job)
+                val education = JobParser.detectEducationLevel(job)
+                val maxAge = JobParser.detectMaxAge(job)
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding)
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    // ── Hero Header (Kesiksiz akıcı arka plan) ──────────────────────
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                    ) {
+                        Column {
+                            // Kurum satırı
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                InstitutionLogoView(
+                                    institution = job.institution,
+                                    size = 42.dp
                                 )
-                                if (job.source != null) {
+                                Spacer(modifier = Modifier.width(12.dp))
+                                Column {
                                     Text(
-                                        text = job.source.name,
+                                        text = job.institution ?: "T.C. Kamu Kurumu",
                                         fontFamily = Manrope,
-                                        fontSize = 12.sp,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        fontSize = 14.5.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
+                                    if (job.source != null) {
+                                        Text(
+                                            text = job.source.name,
+                                            fontFamily = Manrope,
+                                            fontSize = 12.sp,
+                                            fontWeight = FontWeight.Medium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -339,11 +355,11 @@ fun JobDetailScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
-                                Text("Resmî Kaynak", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Resmî Kaynak", fontSize = 12.sp, fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(
                                     text = job.source.name,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.SemiBold,
+                                    fontSize = 13.5.sp,
+                                    fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
@@ -372,8 +388,9 @@ fun JobDetailScreen(
                         Text(
                             text = job.description
                                 ?: "Bu ilan için ek açıklama bulunmamaktadır. Başvuru şartları, sınav takvimi ve kadro dağılımı için aşağıdaki bağlantıdan resmî ilana ulaşabilirsiniz.",
-                            fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
+                            fontSize = 13.5.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = 22.sp
                         )
                     }
@@ -460,13 +477,18 @@ private fun StatCard(
                     )
                 }
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = label, 
+                    fontSize = 12.sp, 
+                    fontWeight = FontWeight.SemiBold, 
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = value,
-                fontSize = 13.sp,
-                fontWeight = FontWeight.Bold,
+                fontSize = 13.5.sp,
+                fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.onSurface
             )
         }
