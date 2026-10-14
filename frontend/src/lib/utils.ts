@@ -137,6 +137,57 @@ export function cleanInstitution(institution: string | null | undefined, title: 
   return cleaned || "Resmi Kamu Kurumu";
 }
 
+/**
+ * Açıklama alanında tekrarlayan veya bilgi içermeyen metinleri temizler.
+ * Başlık veya kurum adının aynısını tekrar eden, veya "İŞKUR isci Alım İlanı: ..." gibi
+ * yeni bilgi içermeyen metinler varsa temizler ya da null döner.
+ */
+export function cleanJobDescription(
+  description: string | null | undefined,
+  title?: string | null,
+  institution?: string | null
+): string | null {
+  if (!description) return null;
+  let text = description.trim();
+  if (!text) return null;
+
+  // Başlangıçtaki kalıp etiketleri temizle
+  text = text
+    .replace(/^İŞKUR\s+i[sş]ci\s+Al[ıi]m\s+[İI]lan[ıi]:\s*/i, "")
+    .replace(/^Resmi\s+İŞKUR\s+[İI]lan[ıi]:?\s*/i, "")
+    .replace(/^Kamu\s+Kurumu\s+Personel\s+Al[ıi]m\s+[İI]lan[ıi]:?\s*/i, "")
+    .replace(/^Personel\s+Al[ıi]m\s+[İI]lan[ıi]:?\s*/i, "")
+    .trim();
+
+  // Genel boş laflar
+  if (
+    text.toLowerCase().includes("resmi kaynak sayfasını ziyaret ediniz") ||
+    text.toLowerCase().includes("ilan detayları için tıklayınız")
+  ) {
+    return null;
+  }
+
+  // Eğer temizlenen metin doğrudan başlık veya kurum adıyla aynı veya neredeyse aynıysa
+  const normText = text.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, "");
+  const normTitle = (title || "").toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, "");
+  const normInst = (institution || "").toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, "");
+
+  if (normText === normTitle || normText === normInst) {
+    return null;
+  }
+
+  // Eğer metin sadece kurum adını veya çok kısa bir tekrarı içeriyorsa
+  if (normTitle.includes(normText) || normInst.includes(normText)) {
+    return null;
+  }
+
+  if (text.length < 15 && (normText.includes("personel") || normText.includes("isci"))) {
+    return null;
+  }
+
+  return text;
+}
+
 export interface ApplicationStatusInfo {
   type: "cancelled" | "upcoming" | "active" | "urgent" | "expired" | "unknown";
   statusTitle: string;
@@ -237,10 +288,22 @@ export function getJobApplicationStatus(
   } else if (diffDays <= 3) {
     return {
       type: "urgent",
-      statusTitle: "Başvuru Aktif (Acil)",
-      daysText: diffDays === 0 ? "Bugün Son Gün!" : `Son ${diffDays} gün kaldı!`,
-      fullBadgeText: diffDays === 0 ? "Bugün Son Gün!" : `Son ${diffDays} gün!`,
-      badgeClass: "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800 font-semibold",
+      statusTitle: "Son 3 Gün",
+      daysText: diffDays === 0 ? "Bugün Son Gün" : `${diffDays} gün kaldı`,
+      fullBadgeText: diffDays === 0 ? "Bugün Son Gün" : `${diffDays} gün kaldı`,
+      badgeClass: "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800 font-medium",
+      isCancelled: false,
+      isUpcoming: false,
+      isActive: true,
+      isExpired: false,
+    };
+  } else if (diffDays <= 7) {
+    return {
+      type: "active",
+      statusTitle: "Aktif",
+      daysText: `${diffDays} gün kaldı`,
+      fullBadgeText: `${diffDays} gün kaldı`,
+      badgeClass: "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 font-medium",
       isCancelled: false,
       isUpcoming: false,
       isActive: true,
@@ -249,10 +312,10 @@ export function getJobApplicationStatus(
   } else {
     return {
       type: "active",
-      statusTitle: "Başvuru Aktif",
+      statusTitle: "Aktif",
       daysText: `${diffDays} gün kaldı`,
-      fullBadgeText: `Başvuru Aktif • ${diffDays} gün kaldı`,
-      badgeClass: "bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-950/30 dark:text-rose-400 dark:border-rose-800/50 font-medium",
+      fullBadgeText: `${diffDays} gün kaldı`,
+      badgeClass: "bg-zinc-100 text-zinc-600 border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 font-normal",
       isCancelled: false,
       isUpcoming: false,
       isActive: true,
@@ -477,23 +540,23 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
 export const POST_TYPE_LABELS: Record<string, { label: string; color: string }> = {
   memur: {
     label: "Memur",
-    color: "bg-sky-600 text-white dark:bg-sky-500 font-bold shadow-sm shadow-sky-500/20",
+    color: "bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800",
   },
   isci: {
     label: "İşçi",
-    color: "bg-amber-600 text-white dark:bg-amber-500 font-bold shadow-sm shadow-amber-500/20",
+    color: "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800",
   },
   akademik: {
     label: "Akademik",
-    color: "bg-purple-600 text-white dark:bg-purple-500 font-bold shadow-sm shadow-purple-500/20",
+    color: "bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800",
   },
   sozlesmeli: {
     label: "Sözleşmeli",
-    color: "bg-teal-600 text-white dark:bg-teal-500 font-bold shadow-sm shadow-teal-500/20",
+    color: "bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800",
   },
   diger: {
     label: "Genel",
-    color: "bg-slate-700 text-white dark:bg-slate-600 font-semibold shadow-sm",
+    color: "bg-zinc-100 text-zinc-700 border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700",
   },
 };
 

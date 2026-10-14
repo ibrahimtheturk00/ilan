@@ -100,22 +100,22 @@ export function JobList() {
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 items-start">
         {jobs.map((job) => (
           <JobCard key={job.id} job={job} onSelect={(j) => setSelectedJob(j)} />
         ))}
       </div>
 
-      {/* Sayfalama Kontrolleri (Fotoğraftaki gibi: 1 2 3 ... sonraki) */}
+      {/* Sayfalama Kontrolleri */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-1.5 pt-8">
+        <div className="flex items-center justify-center gap-1 pt-6 pb-2">
           {filters.page > 1 && (
             <button
               onClick={() => {
                 filters.setPage(filters.page - 1);
-                window.scrollTo({ top: 300, behavior: "smooth" });
+                window.scrollTo({ top: 200, behavior: "smooth" });
               }}
-              className="text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 px-3 py-2 transition-colors mr-1"
+              className="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 px-2.5 py-1.5 transition-colors mr-1"
             >
               önceki
             </button>
@@ -124,27 +124,26 @@ export function JobList() {
           {/* Sayfa Numaraları */}
           {Array.from({ length: totalPages }, (_, i) => i + 1)
             .filter((p) => {
-              // 1, son sayfa ve aktif sayfanın etrafındaki 5 sayfayı göster
-              return p === 1 || p === totalPages || Math.abs(p - filters.page) <= 5;
+              return p === 1 || p === totalPages || Math.abs(p - filters.page) <= 4;
             })
             .map((p, index, arr) => {
               const prev = arr[index - 1];
               const showEllipsis = prev && p - prev > 1;
 
               return (
-                <div key={p} className="flex items-center gap-1.5">
+                <div key={p} className="flex items-center gap-1">
                   {showEllipsis && (
-                    <span className="text-xs text-slate-400 px-1 select-none">...</span>
+                    <span className="text-xs text-zinc-400 px-1 select-none">...</span>
                   )}
                   <button
                     onClick={() => {
                       filters.setPage(p);
-                      window.scrollTo({ top: 300, behavior: "smooth" });
+                      window.scrollTo({ top: 200, behavior: "smooth" });
                     }}
-                    className={`w-9 h-9 rounded-full text-xs font-semibold flex items-center justify-center transition-all ${
+                    className={`w-8 h-8 rounded-md text-xs font-mono tabular-nums font-semibold flex items-center justify-center transition-colors ${
                       filters.page === p
-                        ? "bg-slate-100 dark:bg-slate-700 text-brand-600 dark:text-brand-400 font-bold shadow-sm ring-1 ring-slate-200 dark:ring-slate-600"
-                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800"
+                        ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                        : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200/70 dark:hover:bg-zinc-800"
                     }`}
                   >
                     {p}
@@ -157,9 +156,9 @@ export function JobList() {
             <button
               onClick={() => {
                 filters.setPage(filters.page + 1);
-                window.scrollTo({ top: 300, behavior: "smooth" });
+                window.scrollTo({ top: 200, behavior: "smooth" });
               }}
-              className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 px-3 py-2 transition-colors ml-1"
+              className="text-xs font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100 px-2.5 py-1.5 transition-colors ml-1"
             >
               sonraki
             </button>

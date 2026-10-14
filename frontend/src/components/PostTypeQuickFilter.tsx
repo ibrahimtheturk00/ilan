@@ -16,31 +16,31 @@ const POST_TYPES: PostTypeOption[] = [
   {
     key: "",
     label: "Tüm Kadrolar",
-    activeColor: "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900 shadow-sm border-transparent",
-    dotColor: "bg-slate-400 dark:bg-slate-600",
+    activeColor: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100",
+    dotColor: "bg-zinc-400 dark:bg-zinc-600",
   },
   {
     key: "memur",
     label: "Memur",
-    activeColor: "bg-sky-600 text-white dark:bg-sky-500 dark:text-white shadow-sm shadow-sky-500/20 border-transparent",
+    activeColor: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100",
     dotColor: "bg-sky-500",
   },
   {
     key: "sozlesmeli",
     label: "Sözleşmeli",
-    activeColor: "bg-teal-600 text-white dark:bg-teal-500 dark:text-white shadow-sm shadow-teal-500/20 border-transparent",
+    activeColor: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100",
     dotColor: "bg-teal-500",
   },
   {
     key: "isci",
     label: "İşçi",
-    activeColor: "bg-amber-600 text-white dark:bg-amber-500 dark:text-white shadow-sm shadow-amber-500/20 border-transparent",
+    activeColor: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100",
     dotColor: "bg-amber-500",
   },
   {
     key: "akademik",
     label: "Akademik",
-    activeColor: "bg-purple-600 text-white dark:bg-purple-500 dark:text-white shadow-sm shadow-purple-500/20 border-transparent",
+    activeColor: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100",
     dotColor: "bg-purple-500",
   },
 ];
@@ -73,9 +73,9 @@ export function PostTypeQuickFilter() {
   const currentSort = SORT_OPTIONS.find((s) => s.key === sortBy) || SORT_OPTIONS[0];
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
-      {/* Sol / Orta: Kadro Türü Butonları (Geniş aralıklarla) */}
-      <div className="flex items-center gap-2 overflow-x-auto py-1 px-0.5 no-scrollbar flex-1">
+    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-1">
+      {/* Sol / Orta: Kadro Türü Butonları */}
+      <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 no-scrollbar flex-1">
         {POST_TYPES.map((item) => {
           const isSelected = postType === item.key;
           return (
@@ -83,15 +83,15 @@ export function PostTypeQuickFilter() {
               key={item.key || "all"}
               type="button"
               onClick={() => setPostType(item.key)}
-              className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 hover:scale-105 active:scale-95 border shrink-0 ${
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border shrink-0 ${
                 isSelected
                   ? item.activeColor
-                  : "bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100/80 dark:hover:bg-slate-700/60"
+                  : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
               }`}
             >
               <span
-                className={`w-2 h-2 rounded-full transition-transform ${
-                  isSelected ? "bg-white dark:bg-slate-900 scale-125" : item.dotColor
+                className={`w-1.5 h-1.5 rounded-full ${
+                  isSelected ? "bg-white dark:bg-zinc-900" : item.dotColor
                 }`}
               />
               <span>{item.label}</span>
@@ -105,14 +105,14 @@ export function PostTypeQuickFilter() {
         <button
           type="button"
           onClick={() => setIsSortOpen(!isSortOpen)}
-          className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold border transition-all duration-200 hover:scale-105 active:scale-95 ${
+          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors ${
             isSortOpen
-              ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-md"
-              : "bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border-slate-200/80 dark:border-slate-700/80 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/60"
+              ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xs"
+              : "bg-white dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           }`}
           title="Sıralama Seçenekleri"
         >
-          <ArrowUpDown className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+          <ArrowUpDown className="w-3.5 h-3.5 text-zinc-500" />
           <span className="hidden md:inline">Sırala:</span>
           <span className="font-bold truncate max-w-[130px] sm:max-w-[160px]">{currentSort.label}</span>
           <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isSortOpen ? "rotate-180" : ""}`} />
@@ -120,8 +120,8 @@ export function PostTypeQuickFilter() {
 
         {/* Açılır Sıralama Menüsü */}
         {isSortOpen && (
-          <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-xl z-30 py-2 animate-fadeIn overflow-hidden">
-            <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700/60">
+          <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-xl z-30 py-1.5 animate-fadeIn overflow-hidden">
+            <div className="px-3 py-1 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-700/60">
               İlanları Sırala
             </div>
             <div className="p-1 space-y-0.5">
@@ -135,19 +135,19 @@ export function PostTypeQuickFilter() {
                       setSortBy(opt.key);
                       setIsSortOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-2 rounded-xl text-xs flex items-center justify-between transition-colors ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs flex items-center justify-between transition-colors ${
                       isActive
-                        ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 font-bold"
-                        : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700/60"
+                        ? "bg-zinc-100 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-bold"
+                        : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/60"
                     }`}
                   >
                     <div>
                       <div className="leading-tight">{opt.label}</div>
-                      <div className="text-[10px] text-slate-400 dark:text-slate-500 mt-0.5 font-normal">
+                      <div className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-normal">
                         {opt.desc}
                       </div>
                     </div>
-                    {isActive && <Check className="w-4 h-4 text-brand-600 dark:text-brand-400 shrink-0 ml-2" />}
+                    {isActive && <Check className="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100 shrink-0 ml-2" />}
                   </button>
                 );
               })}

@@ -6,7 +6,6 @@ import {
   Users,
   Calendar,
   ArrowRight,
-  Building,
   Heart,
   Share2,
   Clock,
@@ -16,10 +15,17 @@ import {
   Check,
 } from "lucide-react";
 import { JobPost } from "@/types";
-import { formatDate, getJobApplicationStatus, POST_TYPE_LABELS, CATEGORY_LABELS, cleanJobTitle, cleanInstitution } from "@/lib/utils";
+import {
+  formatDate,
+  getJobApplicationStatus,
+  POST_TYPE_LABELS,
+  CATEGORY_LABELS,
+  cleanJobTitle,
+  cleanInstitution,
+  cleanJobDescription,
+} from "@/lib/utils";
 import { getJobMetaDetails } from "@/lib/jobParser";
 import { useFavorites } from "@/hooks/useFavorites";
-
 import { detectInstitutionVisual } from "@/lib/institutionIcons";
 
 interface JobCardProps {
@@ -33,13 +39,28 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   const [showShareMenu, setShowShareMenu] = useState(false);
 
   const isFav = isFavorite(job.id);
-  const displayTitle = cleanJobTitle(job.title, job.city, job.original_url);
+  const rawTitle = cleanJobTitle(job.title, job.city, job.original_url);
   const displayInstitution = cleanInstitution(job.institution, job.title, job.city, job.original_url);
+
+  // Başlık ve Kurum adı birebir aynıysa (örn. Didim Belediyesi Personel Aş) tekrarı önle
+  const normTitle = rawTitle.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, "");
+  const normInst = displayInstitution.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, "");
+  const isTitleIdenticalToInst = normTitle === normInst;
+
+  const displayTitle = isTitleIdenticalToInst
+    ? rawTitle.toLowerCase().includes("personel") || rawTitle.toLowerCase().includes("alım")
+      ? rawTitle
+      : `${rawTitle} Personel Alımı`
+    : rawTitle;
+
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
   const statusInfo = getJobApplicationStatus(job.published_at, job.deadline_at, job.title);
   const meta = getJobMetaDetails(job);
   const instVisual = detectInstitutionVisual(displayInstitution);
+
+  // Açıklama metnini temizle; eğer kurum/başlık tekrarından ibaretse veya boşsa null döner
+  const cleanedDescription = cleanJobDescription(job.description, displayTitle, displayInstitution);
 
   const InstIcon = instVisual.icon;
 
@@ -77,7 +98,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
     e.stopPropagation();
     if (typeof window !== "undefined") {
       const shareUrl = `${window.location.origin}${window.location.pathname}#job-${job.id}`;
-      const text = `📢 ${job.title}\n🏛️ ${displayInstitution}\n🔗 ${shareUrl}`;
+      const text = `${job.title}\n${displayInstitution}\n${shareUrl}`;
       window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, "_blank");
       setShowShareMenu(false);
     }
@@ -93,223 +114,171 @@ export function JobCard({ job, onSelect }: JobCardProps) {
     }
   };
 
-  // Kadro türüne göre sol kenar vurgu rengi
-  const accentBorderColor = () => {
-    if (statusInfo.isCancelled) return "border-l-red-500";
-    if (statusInfo.type === "urgent") return "border-l-rose-500";
-    switch (job.post_type) {
-      case "memur": return "border-l-sky-500";
-      case "sozlesmeli": return "border-l-teal-500";
-      case "isci": return "border-l-amber-500";
-      case "akademik": return "border-l-purple-500";
-      default: return "border-l-slate-400";
-    }
-  };
-
   return (
     <div
       onClick={handleClick}
-      className={`group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-l-4 ${accentBorderColor()} ${
+      className={`group relative bg-white dark:bg-[#141824] border ${
         statusInfo.isCancelled
-          ? "border-red-200 dark:border-red-900/40 hover:border-red-400"
+          ? "border-red-300 dark:border-red-900/60"
           : statusInfo.type === "urgent"
-          ? "border-rose-200/90 dark:border-rose-900/50 hover:border-rose-400"
-          : "border-slate-200/90 dark:border-slate-800/90 hover:border-brand-300/80 dark:hover:border-brand-600/70"
-      } rounded-2xl p-5 card-hover-glow hover:shadow-2xl hover:shadow-brand-500/10 dark:hover:shadow-brand-500/15 hover:ring-1 hover:ring-brand-500/20 dark:hover:ring-brand-400/25 flex flex-col justify-between cursor-pointer`}
+          ? "border-rose-300 dark:border-rose-900/50"
+          : "border-zinc-200/90 dark:border-zinc-800/90 hover:border-zinc-300 dark:hover:border-zinc-700"
+      } rounded-lg p-4 card-hover-clean flex flex-col justify-between cursor-pointer transition-all`}
     >
       <div>
-        {/* Üst Rozetler ve Aksiyon Butonları */}
-        <div className="flex items-start justify-between gap-2 mb-3.5">
-          <div className="flex flex-wrap items-center gap-1.5 flex-1">
-            {/* Bugün Eklendi Rozeti */}
-            {meta.isToday && (
-              <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:scale-105 transition-transform shadow-xs">
-                <Sparkles className="w-3 h-3 text-emerald-500" />
-                <span>Bugün Eklendi</span>
-              </span>
-            )}
-
-            {/* Kadro Türü Rozeti */}
+        {/* Üst Satır: Tek küçük kadro rozeti + İnce gri kaynak & meslek metni */}
+        <div className="flex items-center justify-between gap-2 mb-2.5">
+          <div className="flex items-center gap-2 flex-wrap min-w-0">
             {typeInfo && (
-              <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${typeInfo.color} hover:scale-105 transition-transform shadow-xs`}>
+              <span className={`text-[11px] px-2 py-0.5 rounded-md font-medium shrink-0 ${typeInfo.color}`}>
                 {typeInfo.label}
               </span>
             )}
-
-            {categoryInfo && (
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full font-medium bg-slate-100/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 hover:scale-105 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 transition-all">
-                {categoryInfo.label}
-              </span>
-            )}
-
-            {/* Kaynak Rozeti */}
-            {job.sources?.name && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
-                {job.sources.name}
+            <span className="text-[11px] text-zinc-400 dark:text-zinc-500 truncate">
+              {job.sources?.name || "Resmî Gazete"} · {categoryInfo?.label || "Genel"}
+            </span>
+            {meta.isToday && (
+              <span className="inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 font-semibold border border-emerald-200/80 dark:border-emerald-800/60">
+                <Sparkles className="w-2.5 h-2.5 text-emerald-600" />
+                <span>Bugün</span>
               </span>
             )}
           </div>
 
           {/* Sağ Üst: Favori & Paylaş Butonları */}
-          <div className="flex items-center gap-1 shrink-0 -mt-1 -mr-1">
-            {/* Paylaş Menüsü */}
+          <div className="flex items-center gap-1 shrink-0 -mt-0.5 -mr-1">
             <div className="relative">
               <button
                 type="button"
                 onClick={handleShareClick}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-110 active:scale-95 transition-all"
+                className="p-1 rounded-md text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 title="İlanı Paylaş"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-3.5 h-3.5" />
               </button>
 
               {showShareMenu && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-8 z-30 w-44 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl p-1.5 space-y-1 animate-fadeIn text-xs"
+                  className="absolute right-0 top-7 z-30 w-40 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-lg p-1 space-y-0.5 text-xs animate-fadeIn"
                 >
                   <button
                     onClick={handleWhatsAppShare}
-                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-medium transition-colors"
+                    className="w-full text-left px-2.5 py-1.5 rounded hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 font-medium transition-colors"
                   >
-                    <span>WhatsApp</span>
+                    WhatsApp
                   </button>
                   <button
                     onClick={handleTelegramShare}
-                    className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-950/40 text-sky-700 dark:text-sky-400 font-medium transition-colors"
+                    className="w-full text-left px-2.5 py-1.5 rounded hover:bg-sky-50 dark:hover:bg-sky-950/40 text-sky-700 dark:text-sky-400 font-medium transition-colors"
                   >
-                    <span>Telegram</span>
+                    Telegram
                   </button>
                   <button
                     onClick={handleCopyLink}
-                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium transition-colors"
+                    className="w-full flex items-center justify-between px-2.5 py-1.5 rounded hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 font-medium transition-colors"
                   >
-                    <span>Bağlantıyı Kopyala</span>
-                    {copied && <Check className="w-3.5 h-3.5 text-emerald-500" />}
+                    <span>Linki Kopyala</span>
+                    {copied && <Check className="w-3 h-3 text-emerald-500" />}
                   </button>
                 </div>
               )}
             </div>
 
-            {/* Favori Kalp Butonu */}
             <button
               type="button"
               onClick={handleFavoriteClick}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:scale-115 active:scale-90 transition-all group/heart"
+              className="p-1 rounded-md text-zinc-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
               title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
             >
               <Heart
-                className={`w-4 h-4 transition-all ${
-                  isFav
-                    ? "fill-rose-500 text-rose-500 scale-110"
-                    : "text-slate-400 group-hover/heart:text-rose-500"
+                className={`w-3.5 h-3.5 transition-all ${
+                  isFav ? "fill-rose-500 text-rose-500" : "text-zinc-400 hover:text-rose-500"
                 }`}
               />
             </button>
           </div>
         </div>
 
-        {/* Kurum Bilgisi & İkon Bloğu */}
-        <div className="flex items-center gap-3 mb-2.5">
-          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${instVisual.bgColor} ${instVisual.borderColor} group-hover:scale-110 group-hover:rotate-2 transition-transform duration-300 shadow-xs`}>
-            <InstIcon className={`w-5 h-5 ${instVisual.iconColor}`} />
+        {/* Kurum Bilgisi & İkon */}
+        <div className="flex items-center gap-2 mb-1.5">
+          <div className={`w-6 h-6 rounded-md flex items-center justify-center shrink-0 border ${instVisual.bgColor} ${instVisual.borderColor}`}>
+            <InstIcon className={`w-3.5 h-3.5 ${instVisual.iconColor}`} />
           </div>
-          <div className="min-w-0 flex-1">
-            <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block truncate">
-              {instVisual.categoryLabel}
-            </span>
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors block truncate">
-              {displayInstitution}
-            </span>
-          </div>
+          <span className="text-xs font-semibold text-zinc-700 dark:text-zinc-300 truncate">
+            {displayInstitution}
+          </span>
         </div>
 
-        {/* İlan Başlığı */}
-        <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-slate-100 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-2 leading-snug tracking-tight mt-1">
-          {displayTitle}
-        </h3>
+        {/* İlan Başlığı (Tekrar etmiyorsa görünür) */}
+        {!isTitleIdenticalToInst && (
+          <h3 className="font-heading text-sm font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 leading-snug tracking-tight">
+            {displayTitle}
+          </h3>
+        )}
 
-        {/* Zenginleştirilmiş Meta Rozetleri: KPSS, Eğitim, Yaş Sınırı */}
-        <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-1">
-          {/* KPSS Rozeti */}
-          {meta.kpssLabel && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 hover:scale-105 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-all">
-              <Award className="w-3 h-3 text-blue-600 dark:text-blue-400" />
-              <span>{meta.kpssLabel}</span>
-            </span>
-          )}
+        {/* Zenginleştirilmiş Meta (KPSS Şartsız, Eğitim, Yaş) - Sade ve Düzensizliği Engelleyen */}
+        {(meta.kpssLabel || meta.educationLabel || meta.maxAge) && (
+          <div className="flex flex-wrap items-center gap-1.5 mt-2">
+            {meta.kpssLabel && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                <Award className="w-2.5 h-2.5 text-blue-600 dark:text-blue-400" />
+                <span>{meta.kpssLabel}</span>
+              </span>
+            )}
+            {meta.educationLabel && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                <GraduationCap className="w-2.5 h-2.5 text-purple-600 dark:text-purple-400" />
+                <span>{meta.educationLabel}</span>
+              </span>
+            )}
+            {meta.maxAge && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+                <Clock className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400" />
+                <span>Maks. {meta.maxAge} Yaş</span>
+              </span>
+            )}
+          </div>
+        )}
 
-          {/* Eğitim Düzeyi Rozeti */}
-          {meta.educationLabel && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60 hover:scale-105 hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-all">
-              <GraduationCap className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-              <span>{meta.educationLabel}</span>
-            </span>
-          )}
-
-          {/* Yaş Sınırı Rozeti */}
-          {meta.maxAge && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 hover:scale-105 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all">
-              <Clock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
-              <span>Maks. {meta.maxAge} Yaş</span>
-            </span>
-          )}
-        </div>
-
-        {/* Açıklama Özeti */}
-        {job.description && (
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2.5 line-clamp-2 leading-relaxed">
-            {job.description}
+        {/* Açıklama Satırı: YALNIZCA yeni/farklı bilgi varsa gösterilir, yoksa hiç yer kaplamaz */}
+        {cleanedDescription && (
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 line-clamp-2 leading-relaxed">
+            {cleanedDescription}
           </p>
         )}
       </div>
 
       {/* Alt Bilgi Çubuğu */}
-      <div className="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-        <div className="flex items-center gap-2.5 flex-wrap">
+      <div className="mt-3.5 pt-2.5 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="flex items-center gap-2 flex-wrap">
           {job.city && (
-            <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white transition-colors">
-              <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-              {job.city}
+            <span className="flex items-center gap-1 text-zinc-600 dark:text-zinc-300 font-medium">
+              <MapPin className="w-3 h-3 text-zinc-400 dark:text-zinc-500" />
+              <span>{job.city}</span>
             </span>
           )}
           {job.position_count && (
-            <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300 font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
-              <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-              {job.position_count} Kişi
-            </span>
-          )}
-          {!statusInfo.isCancelled && job.published_at && (
-            <span className="hidden sm:flex items-center gap-1 text-slate-400 dark:text-slate-500">
-              <Calendar className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
-              {formatDate(job.published_at)}
+            <span className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 font-semibold font-mono tabular-nums bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+              <Users className="w-3 h-3 text-zinc-400" />
+              <span>{job.position_count} Kişi</span>
             </span>
           )}
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Durum Rozeti (Acil Durumda Pulse Efekti) */}
-          {statusInfo.isCancelled ? (
-            <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase shadow-xs">
-              {statusInfo.statusTitle}
-            </span>
-          ) : (
-            <span
-              className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${statusInfo.badgeClass} ${
-                statusInfo.type === "urgent" ? "animate-pulse-glow" : ""
-              } shadow-xs hover:scale-105 transition-transform`}
-            >
-              {statusInfo.fullBadgeText}
-            </span>
-          )}
+        <div className="flex items-center gap-1.5 shrink-0">
+          {/* Süre Durum Rozeti (352 gün kaldı nötr gri, son 3 gün kırmızı, 7 gün altı turuncu) */}
+          <span className={`text-[10px] px-2 py-0.5 rounded font-mono tabular-nums ${statusInfo.badgeClass}`}>
+            {statusInfo.daysText}
+          </span>
 
           <button
             type="button"
             onClick={handleClick}
-            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-brand-600 dark:text-brand-400 group-hover:bg-brand-600 group-hover:text-white dark:group-hover:bg-brand-500 dark:group-hover:text-white text-xs font-semibold shadow-xs group-hover:shadow-md group-hover:shadow-brand-500/25 transition-all duration-200 ml-1"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-zinc-100 hover:bg-zinc-900 hover:text-white dark:bg-zinc-800 dark:hover:bg-zinc-100 dark:hover:text-zinc-900 text-zinc-700 dark:text-zinc-300 text-xs font-medium transition-colors"
           >
             <span>İncele</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-3 h-3" />
           </button>
         </div>
       </div>

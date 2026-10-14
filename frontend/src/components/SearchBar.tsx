@@ -58,32 +58,32 @@ export function SearchBar() {
   return (
     <div className="space-y-2.5 w-full">
       <div className="relative w-full group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-brand-600 dark:group-focus-within:text-brand-400 group-focus-within:scale-110 transition-all duration-200">
-          <Search className="w-5 h-5" />
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+          <Search className="w-4 h-4" />
         </div>
         <input
           ref={inputRef}
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Unvan, kurum veya şehir ara (örn. Mühendis, Sağlık, İTÜ, Ankara)..."
-          className="w-full pl-12 pr-24 py-3.5 text-sm bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/90 rounded-2xl shadow-sm hover:border-slate-300 dark:hover:border-slate-700 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-brand-500/15 focus:border-brand-500 dark:focus:border-brand-400 focus:shadow-lg focus:shadow-brand-500/10 transition-all text-slate-800 dark:text-slate-100"
+          placeholder="Unvan, kurum veya şehir ara (örn. Mühendis, Büro, Sağlık, İTÜ, Ankara)..."
+          className="w-full pl-10 pr-20 py-2.5 sm:py-3 text-xs sm:text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600 focus:border-zinc-400 transition-all text-zinc-900 dark:text-zinc-100 shadow-xs"
         />
 
-        <div className="absolute inset-y-0 right-0 pr-3.5 flex items-center gap-1.5">
+        <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
           {searchQuery ? (
             <button
               onClick={() => {
                 setSearchQuery("");
                 inputRef.current?.focus();
               }}
-              className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-110 active:scale-95 transition-all"
+              className="p-1 rounded text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
               title="Aramayı Temizle"
             >
               <X className="w-4 h-4" />
             </button>
           ) : (
-            <div className="hidden sm:flex items-center gap-0.5 px-2 py-0.5 rounded-md bg-slate-100/90 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 text-[10px] font-mono text-slate-500 dark:text-slate-400 select-none pointer-events-none">
+            <div className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-[10px] font-mono text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">
               <span>Ctrl</span>
               <span>K</span>
             </div>
@@ -93,8 +93,7 @@ export function SearchBar() {
 
       {/* Hızlı Arama Etiketleri */}
       <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-0.5">
-        <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 shrink-0 flex items-center gap-1 pl-1">
-          <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+        <span className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 shrink-0 pl-0.5">
           Hızlı:
         </span>
         {QUICK_SEARCH_TAGS.map((tag) => {
@@ -104,12 +103,10 @@ export function SearchBar() {
               key={tag}
               type="button"
               onClick={() => setSearchQuery(isSelected ? "" : tag)}
-              className={`shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-all duration-200 hover:scale-105 active:scale-95 border ${
+              className={`shrink-0 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors border ${
                 isSelected
-                  ? "bg-brand-600 text-white border-brand-600 shadow-sm shadow-brand-600/30 font-semibold"
-                  : `bg-white/80 dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border-slate-200/80 dark:border-slate-700/80 ${getTagHoverStyle(
-                      tag
-                    )}`
+                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-semibold"
+                  : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
               }`}
             >
               {tag}

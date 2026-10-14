@@ -81,14 +81,14 @@ export function JobModal({ job, onClose }: JobModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 dark:bg-black/80 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 dark:bg-black/80 backdrop-blur-sm animate-fadeIn">
       {/* Arka plan tıklama */}
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Modal Kartı */}
-      <div className="relative w-full max-w-2xl bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl rounded-3xl shadow-2xl border border-slate-200/80 dark:border-slate-800 max-h-[90vh] flex flex-col z-10 overflow-hidden transition-colors">
+      <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-zinc-200 dark:border-zinc-800 max-h-[90vh] flex flex-col z-10 overflow-hidden transition-colors">
         {/* Modal Üst Başlık */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800/80">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800">
           <div className="flex flex-wrap items-center gap-1.5 flex-1 pr-3">
             {typeInfo && (
               <span className={`text-[11px] px-2.5 py-0.5 rounded-lg ${typeInfo.color}`}>

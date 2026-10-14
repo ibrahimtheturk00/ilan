@@ -137,17 +137,17 @@ export function FilterSidebar() {
   };
 
   return (
-    <aside className="w-full lg:w-64 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 rounded-3xl p-5 shadow-sm space-y-6 transition-all sticky top-24">
+    <aside className="w-full lg:w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 space-y-5 transition-all sticky top-20">
       {/* Üst Başlık & Sıfırla */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60">
-        <div className="flex items-center gap-2 text-slate-800 dark:text-slate-200 font-bold text-sm">
-          <Filter className="w-4 h-4 text-brand-600 dark:text-brand-400" />
+      <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
+        <div className="flex items-center gap-2 text-zinc-800 dark:text-zinc-200 font-bold text-xs">
+          <Filter className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />
           <span>Filtreler</span>
         </div>
         {hasActiveFilters && (
           <button
             onClick={resetFilters}
-            className="flex items-center gap-1 text-xs text-rose-600 dark:text-rose-400 hover:text-rose-700 dark:hover:text-rose-300 font-medium transition-colors"
+            className="flex items-center gap-1 text-[11px] text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 font-medium transition-colors"
           >
             <RotateCcw className="w-3 h-3" />
             <span>Temizle</span>
@@ -155,40 +155,40 @@ export function FilterSidebar() {
         )}
       </div>
 
-      {/* Hızlı Filtre Butonları (Bugün Eklenenler & Son 3 Gün Acil) */}
-      <div className="space-y-2">
+      {/* Hızlı Filtre Butonları (Bugün Eklenenler & Son 3 Gün) */}
+      <div className="space-y-1.5">
         {/* Bugün Eklenenler */}
         <button
           type="button"
           onClick={() => setOnlyToday(!onlyToday)}
-          className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+          className={`w-full flex items-center justify-between p-2.5 rounded-md border text-xs font-semibold transition-colors ${
             onlyToday
-              ? "bg-emerald-600 text-white border-emerald-700 shadow-md shadow-emerald-600/25"
-              : "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:shadow-xs"
+              ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100"
+              : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           }`}
         >
           <div className="flex items-center gap-2">
-            <Sparkles className={`w-4 h-4 ${onlyToday ? "text-white" : "text-emerald-600 dark:text-emerald-400"}`} />
-            <span>Bugün Eklenen İlanlar</span>
+            <Sparkles className={`w-3.5 h-3.5 ${onlyToday ? "text-white dark:text-zinc-900" : "text-emerald-600 dark:text-emerald-400"}`} />
+            <span>Bugün Eklenenler</span>
           </div>
-          {onlyToday && <Check className="w-4 h-4 text-white" />}
+          {onlyToday && <Check className="w-3.5 h-3.5 text-white dark:text-zinc-900" />}
         </button>
 
-        {/* Son 3 Gün Acil Başvuru Alarmı */}
+        {/* Son 3 Gün Filtresi (Emoji ve Ünlemsiz) */}
         <button
           type="button"
           onClick={() => setOnlyUrgent(!onlyUrgent)}
-          className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
+          className={`w-full flex items-center justify-between p-2.5 rounded-md border text-xs font-semibold transition-colors ${
             onlyUrgent
-              ? "bg-rose-500 text-white border-rose-600 shadow-md shadow-rose-500/25"
-              : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/50 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:shadow-xs"
+              ? "bg-rose-600 text-white border-rose-700"
+              : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           }`}
         >
           <div className="flex items-center gap-2">
-            <Clock className={`w-4 h-4 ${onlyUrgent ? "text-white" : "text-rose-600 dark:text-rose-400"}`} />
-            <span>⏰ Son 3 Gün! (Acil)</span>
+            <Clock className={`w-3.5 h-3.5 ${onlyUrgent ? "text-white" : "text-rose-600 dark:text-rose-400"}`} />
+            <span>Son 3 Gün</span>
           </div>
-          {onlyUrgent && <Check className="w-4 h-4 text-white" />}
+          {onlyUrgent && <Check className="w-3.5 h-3.5 text-white" />}
         </button>
       </div>
 

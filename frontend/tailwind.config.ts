@@ -9,6 +9,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-manrope)", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        heading: ["var(--font-space-grotesk)", "ui-sans-serif", "system-ui", "sans-serif"],
+        mono: ["var(--font-jetbrains-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+      },
       colors: {
         brand: {
           50: "#f0f7ff",
@@ -16,13 +21,18 @@ const config: Config = {
           200: "#b9dffd",
           300: "#7cc5fb",
           400: "#36a7f7",
-          500: "#0c8ce9",
-          600: "#006ec7",
-          700: "#0158a1",
-          800: "#054a85",
-          900: "#0a3f6f",
-          950: "#07284a",
+          500: "#0284c7",
+          600: "#0369a1",
+          700: "#075985",
+          800: "#0c4a6e",
+          900: "#082f49",
+          950: "#041b2d",
         },
+      },
+      borderRadius: {
+        lg: "10px",
+        md: "8px",
+        sm: "6px",
       },
     },
   },
