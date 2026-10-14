@@ -118,29 +118,32 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   return (
     <div
       onClick={handleClick}
-      className={`group relative bg-white dark:bg-[#141824] border ${
+      className={`group relative bg-white/75 dark:bg-[#121624]/75 backdrop-blur-xl border ${
         statusInfo.isCancelled
-          ? "border-red-300 dark:border-red-900/60"
+          ? "border-red-300/80 dark:border-red-900/60 shadow-red-500/5"
           : statusInfo.type === "urgent"
-          ? "border-rose-300 dark:border-rose-900/50"
-          : "border-zinc-200/90 dark:border-zinc-800/90 hover:border-zinc-300 dark:hover:border-zinc-700"
-      } rounded-lg p-4 sm:p-5 card-hover-clean flex flex-col justify-between h-full cursor-pointer transition-all`}
+          ? "border-rose-300/80 dark:border-rose-900/60 shadow-rose-500/5"
+          : "border-zinc-200/80 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/20"
+      } rounded-2xl p-5 sm:p-6 card-hover-clean flex flex-col justify-between h-full cursor-pointer transition-all overflow-hidden shadow-lg shadow-zinc-950/2 dark:shadow-black/25`}
     >
-      <div>
-        {/* Üst Satır: Tek küçük kadro rozeti + İnce gri kaynak & meslek metni */}
-        <div className="flex items-center justify-between gap-2 mb-3">
+      {/* Subtle Ambient Radial Glow on Hover */}
+      <div className="absolute top-0 right-0 -mr-16 -mt-16 h-48 w-48 rounded-full bg-blue-500/5 dark:bg-white/5 blur-3xl pointer-events-none group-hover:bg-blue-500/10 dark:group-hover:bg-white/10 transition-colors" />
+
+      <div className="relative z-10">
+        {/* Üst Satır: Tek küçük kadro rozeti + İnce kaynak & meslek metni */}
+        <div className="flex items-center justify-between gap-2 mb-3.5">
           <div className="flex items-center gap-2 flex-wrap min-w-0">
             {typeInfo && (
-              <span className={`text-xs px-2.5 py-0.5 rounded-md font-medium shrink-0 ${typeInfo.color}`}>
+              <span className={`text-xs px-2.5 py-1 rounded-full font-semibold shrink-0 border ${typeInfo.color}`}>
                 {typeInfo.label}
               </span>
             )}
-            <span className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
+            <span className="text-xs text-zinc-500 dark:text-zinc-400 truncate font-medium">
               {job.sources?.name || "Resmî Gazete"} · {categoryInfo?.label || "Genel"}
             </span>
             {meta.isToday && (
-              <span className="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300 font-semibold border border-emerald-200/80 dark:border-emerald-800/60">
-                <Sparkles className="w-3 h-3 text-emerald-600" />
+              <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 font-semibold border border-emerald-500/20">
+                <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                 <span>Bugün</span>
               </span>
             )}
@@ -248,18 +251,18 @@ export function JobCard({ job, onSelect }: JobCardProps) {
         )}
       </div>
 
-      {/* Alt Bilgi Çubuğu: Puntolar ve buton boyutları artırıldı */}
-      <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
+      {/* Alt Bilgi Çubuğu: İnce cam çizgisi ve yuvarlatılmış hap (pill) buton */}
+      <div className="relative z-10 mt-5 pt-3.5 border-t border-zinc-200/60 dark:border-white/10 flex items-center justify-between text-sm text-zinc-500 dark:text-zinc-400">
         <div className="flex items-center gap-2.5 flex-wrap">
           {job.city && (
-            <span className="flex items-center gap-1 text-zinc-700 dark:text-zinc-300 font-medium text-sm">
-              <MapPin className="w-3.5 h-3.5 text-zinc-400 dark:text-zinc-500" />
+            <span className="flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 font-medium text-sm">
+              <MapPin className="w-3.5 h-3.5 text-blue-500 dark:text-blue-400" />
               <span>{job.city}</span>
             </span>
           )}
           {job.position_count && (
-            <span className="flex items-center gap-1 text-zinc-800 dark:text-zinc-200 font-semibold font-mono tabular-nums bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 rounded text-sm">
-              <Users className="w-3.5 h-3.5 text-zinc-400" />
+            <span className="flex items-center gap-1.5 text-zinc-800 dark:text-zinc-200 font-semibold font-mono tabular-nums bg-zinc-100/80 dark:bg-white/5 border border-zinc-200/50 dark:border-white/10 px-2.5 py-0.5 rounded-full text-xs">
+              <Users className="w-3.5 h-3.5 text-zinc-500 dark:text-zinc-400" />
               <span>{job.position_count} Kişi</span>
             </span>
           )}
@@ -267,17 +270,17 @@ export function JobCard({ job, onSelect }: JobCardProps) {
 
         <div className="flex items-center gap-2 shrink-0">
           {/* Süre Durum Rozeti */}
-          <span className={`text-xs px-2.5 py-1 rounded font-mono tabular-nums ${statusInfo.badgeClass}`}>
+          <span className={`text-xs px-2.5 py-1 rounded-full font-mono tabular-nums font-medium ${statusInfo.badgeClass}`}>
             {statusInfo.daysText}
           </span>
 
           <button
             type="button"
             onClick={handleClick}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md bg-zinc-100 hover:bg-zinc-900 hover:text-white dark:bg-zinc-800 dark:hover:bg-zinc-100 dark:hover:text-zinc-900 text-zinc-700 dark:text-zinc-300 text-xs sm:text-sm font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 text-xs sm:text-sm font-semibold transition-all hover:scale-[1.03] active:scale-[0.97] shadow-sm"
           >
             <span>İncele</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
           </button>
         </div>
       </div>
