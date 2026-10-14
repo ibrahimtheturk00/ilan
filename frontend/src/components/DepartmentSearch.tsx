@@ -168,9 +168,9 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
   return (
     <div className="space-y-8 animate-fadeIn">
       {/* Üst Bilgi ve Kategori Butonları Kartı */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
+      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm transition-colors">
         <div className="max-w-3xl mx-auto text-center space-y-2 mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-semibold hover:scale-105 transition-transform cursor-default">
             <GraduationCap className="w-4 h-4 text-brand-600 dark:text-brand-400" />
             <span>YÖK Atlas & Üniversite Bölüm Eşleştirmesi</span>
           </div>
@@ -194,34 +194,34 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
                 key={dept.id}
                 type="button"
                 onClick={() => setSelectedDept(dept)}
-                className={`p-3.5 rounded-2xl text-left border transition-all flex items-center justify-between gap-3 ${
+                className={`group/dept p-3.5 rounded-2xl text-left border transition-all duration-200 flex items-center justify-between gap-3 hover:scale-[1.02] active:scale-[0.98] ${
                   isSelected
-                    ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-md scale-[1.02]"
-                    : "bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+                    ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 border-slate-900 dark:border-white shadow-lg shadow-slate-900/20 dark:shadow-white/20"
+                    : "bg-white/90 dark:bg-slate-800/80 border-slate-200/90 dark:border-slate-700/80 text-slate-700 dark:text-slate-200 hover:border-brand-400 dark:hover:border-brand-500 hover:bg-brand-50/30 dark:hover:bg-slate-700/60 hover:shadow-md hover:shadow-brand-500/10"
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <div
-                    className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                    className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 group-hover/dept:scale-110 group-hover/dept:rotate-3 transition-transform duration-200 ${
                       isSelected
                         ? "bg-white/20 dark:bg-slate-900/10 text-white dark:text-slate-900"
-                        : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300"
+                        : "bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 group-hover/dept:bg-brand-100 dark:group-hover/dept:bg-brand-950/60 group-hover/dept:text-brand-600 dark:group-hover/dept:text-brand-400"
                     }`}
                   >
                     <BookOpen className="w-3.5 h-3.5" />
                   </div>
-                  <span className="text-xs sm:text-sm font-semibold truncate leading-tight">
+                  <span className="text-xs sm:text-sm font-semibold truncate leading-tight group-hover/dept:text-brand-600 dark:group-hover/dept:text-brand-400 transition-colors">
                     {dept.name}
                   </span>
                 </div>
 
                 {/* Yeşil Sayaç Rozeti */}
                 <span
-                  className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 shadow-sm ${
+                  className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 shadow-xs group-hover/dept:scale-105 transition-all ${
                     isSelected
-                      ? "bg-emerald-500 text-white"
+                      ? "bg-emerald-500 text-white shadow-emerald-500/30"
                       : count > 0
-                      ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"
+                      ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 group-hover/dept:bg-emerald-500 group-hover/dept:text-white group-hover/dept:border-emerald-500"
                       : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"
                   }`}
                   title={`${count} aktif ilan`}

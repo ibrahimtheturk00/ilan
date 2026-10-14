@@ -161,10 +161,10 @@ export function FilterSidebar() {
         <button
           type="button"
           onClick={() => setOnlyToday(!onlyToday)}
-          className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all ${
+          className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
             onlyToday
-              ? "bg-emerald-600 text-white border-emerald-700 shadow-md shadow-emerald-600/20"
-              : "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50 hover:bg-emerald-100/80"
+              ? "bg-emerald-600 text-white border-emerald-700 shadow-md shadow-emerald-600/25"
+              : "bg-emerald-50/70 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900/50 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 hover:shadow-xs"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -178,10 +178,10 @@ export function FilterSidebar() {
         <button
           type="button"
           onClick={() => setOnlyUrgent(!onlyUrgent)}
-          className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all ${
+          className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] ${
             onlyUrgent
-              ? "bg-rose-500 text-white border-rose-600 shadow-md shadow-rose-500/20"
-              : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/50 hover:bg-rose-100/80"
+              ? "bg-rose-500 text-white border-rose-600 shadow-md shadow-rose-500/25"
+              : "bg-rose-50/70 dark:bg-rose-950/30 text-rose-700 dark:text-rose-400 border-rose-200 dark:border-rose-900/50 hover:bg-rose-100 dark:hover:bg-rose-900/50 hover:shadow-xs"
           }`}
         >
           <div className="flex items-center gap-2">

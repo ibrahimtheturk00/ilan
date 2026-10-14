@@ -46,7 +46,7 @@ export default function HomePage() {
       {/* 2026 Modern Hero Başlık & Canlı Durum Rozeti */}
       <div className="relative text-center max-w-3xl mx-auto mb-10 pt-2">
         {/* Canlı Sistem Senkronizasyon Rozeti */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 shadow-sm text-xs font-semibold mb-4 text-slate-700 dark:text-slate-300">
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200/80 dark:border-slate-800 shadow-xs text-xs font-semibold mb-4 text-slate-700 dark:text-slate-300 hover:scale-105 hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-md transition-all duration-200 cursor-default">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
@@ -58,7 +58,7 @@ export default function HomePage() {
 
         <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
           Kamu Personeli ve <br className="hidden sm:inline" />
-          <span className="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent animate-ambient-gradient inline-block">
             Memur Alımları Portalı
           </span>
         </h1>
@@ -77,10 +77,10 @@ export default function HomePage() {
             setActiveTab("all");
           }}
           type="button"
-          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 ${
             activeTab === "all"
-              ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm"
-              : "bg-white dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+              ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md shadow-slate-900/20 dark:shadow-white/20"
+              : "bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-400 dark:hover:border-brand-600 hover:text-brand-600 dark:hover:text-brand-400 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md hover:shadow-brand-500/10"
           }`}
         >
           <LayoutList className="w-4 h-4" />
@@ -95,10 +95,10 @@ export default function HomePage() {
             setActiveTab("today");
           }}
           type="button"
-          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 ${
             activeTab === "today"
-              ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
-              : "bg-white dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-emerald-300 dark:hover:border-emerald-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+              ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/25"
+              : "bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-400 dark:hover:border-emerald-600 hover:text-emerald-700 dark:hover:text-emerald-300 hover:bg-emerald-50/50 dark:hover:bg-emerald-950/30 hover:shadow-md hover:shadow-emerald-500/10"
           }`}
         >
           <Sparkles className={`w-4 h-4 ${activeTab === "today" ? "text-white" : "text-emerald-500"}`} />
@@ -109,10 +109,10 @@ export default function HomePage() {
         <button
           onClick={() => setActiveTab("department")}
           type="button"
-          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 ${
             activeTab === "department"
-              ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm"
-              : "bg-white dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+              ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md shadow-slate-900/20 dark:shadow-white/20"
+              : "bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 hover:border-amber-400 dark:hover:border-amber-600 hover:text-amber-700 dark:hover:text-amber-300 hover:bg-amber-50/50 dark:hover:bg-amber-950/30 hover:shadow-md hover:shadow-amber-500/10"
           }`}
         >
           <GraduationCap className="w-4 h-4 text-amber-500" />
@@ -123,10 +123,10 @@ export default function HomePage() {
         <button
           onClick={() => setActiveTab("favorites")}
           type="button"
-          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 ${
             activeTab === "favorites"
-              ? "bg-rose-600 text-white shadow-sm shadow-rose-600/20"
-              : "bg-white dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-700 hover:bg-slate-50 dark:hover:bg-slate-800"
+              ? "bg-rose-600 text-white shadow-md shadow-rose-600/25"
+              : "bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 hover:border-rose-400 dark:hover:border-rose-600 hover:text-rose-700 dark:hover:text-rose-300 hover:bg-rose-50/50 dark:hover:bg-rose-950/30 hover:shadow-md hover:shadow-rose-500/10"
           }`}
         >
           <Heart className={`w-4 h-4 ${activeTab === "favorites" ? "fill-white text-white" : "text-rose-500"}`} />
@@ -148,13 +148,13 @@ export default function HomePage() {
         <button
           onClick={() => setActiveTab("report")}
           type="button"
-          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${
+          className={`inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 hover:scale-105 active:scale-95 ${
             activeTab === "report"
-              ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm"
-              : "bg-white dark:bg-slate-800/80 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800"
+              ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md shadow-slate-900/20 dark:shadow-white/20"
+              : "bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-600 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700/80 hover:border-purple-400 dark:hover:border-purple-600 hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-50/50 dark:hover:bg-purple-950/30 hover:shadow-md hover:shadow-purple-500/10"
           }`}
         >
-          <BarChart3 className="w-4 h-4 text-emerald-500" />
+          <BarChart3 className="w-4 h-4 text-purple-500" />
           <span>İstihdam Raporu</span>
         </button>
       </div>

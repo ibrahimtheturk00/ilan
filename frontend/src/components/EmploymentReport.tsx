@@ -344,26 +344,26 @@ export function EmploymentReport({
           onClick={onGoToAllJobs}
           role="button"
           tabIndex={0}
-          className="group bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-brand-500 dark:hover:border-brand-500 rounded-2xl p-4 sm:p-5 shadow-sm space-y-1 transition-all duration-150 hover:shadow-md cursor-pointer flex flex-col justify-between"
+          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-500/80 dark:hover:border-brand-500 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-brand-500/10 hover:ring-1 hover:ring-brand-500/20 cursor-pointer flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Aktif İlan Sayısı</span>
-              <Briefcase className="w-4 h-4 text-brand-600 group-hover:scale-110 transition-transform" />
+              <Briefcase className="w-4 h-4 text-brand-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-200" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 group-hover:text-brand-600 transition-colors">
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
               {stats.totalActiveJobs.toLocaleString("tr-TR")}
             </div>
-            <span className="text-[11px] text-slate-500 block">Resmi portallardan güncel</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Resmi portallardan güncel</span>
           </div>
-          <span className="text-[11px] text-brand-600 dark:text-brand-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-0.5 transition-transform">
+          <span className="text-[11px] text-brand-600 dark:text-brand-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-1 transition-transform">
             <span>İlanları Gör</span>
             <ArrowRight className="w-3 h-3" />
           </span>
         </div>
 
-        {/* 2. KART: Toplam Kadro Kontenjanı (Tıklanamaz - Sabit İstatistik) */}
-        <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-sm space-y-1 flex flex-col justify-between">
+        {/* 2. KART: Toplam Kadro Kontenjanı */}
+        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-emerald-500/10 hover:border-emerald-500/60 hover:ring-1 hover:ring-emerald-500/20 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Toplam Kadro Kontenjanı</span>
@@ -372,35 +372,35 @@ export function EmploymentReport({
             <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
               {stats.totalPositions.toLocaleString("tr-TR")}
             </div>
-            <span className="text-[11px] text-slate-500 block">İstihdam edilecek kişi sayısı</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 block">İstihdam edilecek kişi sayısı</span>
           </div>
-          <span className="text-[10px] text-slate-400 block pt-2">Toplam kontenjan</span>
+          <span className="text-[10px] text-slate-400 dark:text-slate-500 block pt-2">Toplam kontenjan</span>
         </div>
 
-        {/* 3. KART: Acil Başvurular (Tıklanabilir -> Acil Filtresiyle İlanlara Geçer) */}
+        {/* 3. KART: Acil Başvurular */}
         <div
           onClick={onGoToUrgentJobs}
           role="button"
           tabIndex={0}
-          className="group bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-rose-500 dark:hover:border-rose-500 rounded-2xl p-4 sm:p-5 shadow-sm space-y-1 transition-all duration-150 hover:shadow-md cursor-pointer flex flex-col justify-between"
+          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-rose-500/80 dark:hover:border-rose-500 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-rose-500/10 hover:ring-1 hover:ring-rose-500/20 cursor-pointer flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Acil Başvurular</span>
-              <Clock className="w-4 h-4 text-rose-500 group-hover:scale-110 transition-transform" />
+              <Clock className="w-4 h-4 text-rose-500 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-200" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 mt-1 group-hover:text-rose-700 transition-colors">
+            <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 mt-1 group-hover:text-rose-700 dark:group-hover:text-rose-300 transition-colors">
               {stats.urgentJobsCount}
             </div>
-            <span className="text-[11px] text-slate-500 block">Son 3 gün içinde bitenler</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Son 3 gün içinde bitenler</span>
           </div>
-          <span className="text-[11px] text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-0.5 transition-transform">
+          <span className="text-[11px] text-rose-600 dark:text-rose-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-1 transition-transform">
             <span>Acil İlanları Listele</span>
             <ArrowRight className="w-3 h-3" />
           </span>
         </div>
 
-        {/* 4. KART: İlan Veren Kurumlar (Tıklanabilir -> Kurum Başlıklı İlanlar Ekranını Açar) */}
+        {/* 4. KART: İlan Veren Kurumlar */}
         <div
           onClick={() => {
             setViewMode("institutions");
@@ -408,19 +408,19 @@ export function EmploymentReport({
           }}
           role="button"
           tabIndex={0}
-          className="group bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 hover:border-indigo-500 dark:hover:border-indigo-500 rounded-2xl p-4 sm:p-5 shadow-sm space-y-1 transition-all duration-150 hover:shadow-md cursor-pointer flex flex-col justify-between"
+          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-indigo-500/80 dark:hover:border-indigo-500 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-indigo-500/10 hover:ring-1 hover:ring-indigo-500/20 cursor-pointer flex flex-col justify-between"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">İlan Veren Kurumlar</span>
-              <Building2 className="w-4 h-4 text-indigo-600 group-hover:scale-110 transition-transform" />
+              <Building2 className="w-4 h-4 text-indigo-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-200" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1 group-hover:text-indigo-700 transition-colors">
+            <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors">
               {stats.totalInstitutions}+
             </div>
-            <span className="text-[11px] text-slate-500 block">Bakanlık, üniversite, belediye</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Bakanlık, üniversite, belediye</span>
           </div>
-          <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-0.5 transition-transform">
+          <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-1 transition-transform">
             <span>Kurumları İncele</span>
             <ArrowRight className="w-3 h-3" />
           </span>

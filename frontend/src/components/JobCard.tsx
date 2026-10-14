@@ -109,13 +109,13 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   return (
     <div
       onClick={handleClick}
-      className={`group relative bg-white dark:bg-slate-900/90 border border-l-4 ${accentBorderColor()} ${
+      className={`group relative bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-l-4 ${accentBorderColor()} ${
         statusInfo.isCancelled
-          ? "border-red-200 dark:border-red-900/40 hover:border-red-300"
+          ? "border-red-200 dark:border-red-900/40 hover:border-red-400"
           : statusInfo.type === "urgent"
-          ? "border-rose-200/90 dark:border-rose-900/50 hover:border-rose-300"
-          : "border-slate-200/90 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700"
-      } rounded-2xl p-5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-slate-200/50 dark:hover:shadow-black/40 flex flex-col justify-between cursor-pointer`}
+          ? "border-rose-200/90 dark:border-rose-900/50 hover:border-rose-400"
+          : "border-slate-200/90 dark:border-slate-800/90 hover:border-brand-300/80 dark:hover:border-brand-600/70"
+      } rounded-2xl p-5 card-hover-glow hover:shadow-2xl hover:shadow-brand-500/10 dark:hover:shadow-brand-500/15 hover:ring-1 hover:ring-brand-500/20 dark:hover:ring-brand-400/25 flex flex-col justify-between cursor-pointer`}
     >
       <div>
         {/* Üst Rozetler ve Aksiyon Butonları */}
@@ -123,7 +123,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
           <div className="flex flex-wrap items-center gap-1.5 flex-1">
             {/* Bugün Eklendi Rozeti */}
             {meta.isToday && (
-              <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+              <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 hover:scale-105 transition-transform shadow-xs">
                 <Sparkles className="w-3 h-3 text-emerald-500" />
                 <span>Bugün Eklendi</span>
               </span>
@@ -131,20 +131,20 @@ export function JobCard({ job, onSelect }: JobCardProps) {
 
             {/* Kadro Türü Rozeti */}
             {typeInfo && (
-              <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${typeInfo.color}`}>
+              <span className={`text-[11px] px-2.5 py-0.5 rounded-full font-semibold ${typeInfo.color} hover:scale-105 transition-transform shadow-xs`}>
                 {typeInfo.label}
               </span>
             )}
 
             {categoryInfo && (
-              <span className="text-[11px] px-2.5 py-0.5 rounded-full font-medium bg-slate-100 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60">
+              <span className="text-[11px] px-2.5 py-0.5 rounded-full font-medium bg-slate-100/90 dark:bg-slate-800/90 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 hover:scale-105 hover:bg-slate-200/80 dark:hover:bg-slate-700/80 transition-all">
                 {categoryInfo.label}
               </span>
             )}
 
             {/* Kaynak Rozeti */}
             {job.sources?.name && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
+              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
                 {job.sources.name}
               </span>
             )}
@@ -157,7 +157,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
               <button
                 type="button"
                 onClick={handleShareClick}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-110 active:scale-95 transition-all"
                 title="İlanı Paylaş"
               >
                 <Share2 className="w-4 h-4" />
@@ -166,7 +166,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
               {showShareMenu && (
                 <div
                   onClick={(e) => e.stopPropagation()}
-                  className="absolute right-0 top-8 z-30 w-44 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl p-1.5 space-y-1 animate-fadeIn text-xs"
+                  className="absolute right-0 top-8 z-30 w-44 bg-white/95 dark:bg-slate-800/95 backdrop-blur-md border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl p-1.5 space-y-1 animate-fadeIn text-xs"
                 >
                   <button
                     onClick={handleWhatsAppShare}
@@ -195,7 +195,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
             <button
               type="button"
               onClick={handleFavoriteClick}
-              className="p-1.5 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors group/heart"
+              className="p-1.5 rounded-xl text-slate-400 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 hover:scale-115 active:scale-90 transition-all group/heart"
               title={isFav ? "Favorilerden Çıkar" : "Favorilere Ekle"}
             >
               <Heart
@@ -211,14 +211,14 @@ export function JobCard({ job, onSelect }: JobCardProps) {
 
         {/* Kurum Bilgisi & İkon Bloğu */}
         <div className="flex items-center gap-3 mb-2.5">
-          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${instVisual.bgColor} ${instVisual.borderColor}`}>
+          <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${instVisual.bgColor} ${instVisual.borderColor} group-hover:scale-110 group-hover:rotate-2 transition-transform duration-300 shadow-xs`}>
             <InstIcon className={`w-5 h-5 ${instVisual.iconColor}`} />
           </div>
           <div className="min-w-0 flex-1">
             <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider block truncate">
               {instVisual.categoryLabel}
             </span>
-            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 block truncate">
+            <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-slate-900 dark:group-hover:text-white transition-colors block truncate">
               {displayInstitution}
             </span>
           </div>
@@ -233,7 +233,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
         <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-1">
           {/* KPSS Rozeti */}
           {meta.kpssLabel && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 dark:bg-blue-950/50 dark:text-blue-300 border border-blue-200/80 dark:border-blue-800/60 hover:scale-105 hover:bg-blue-100 dark:hover:bg-blue-900/60 transition-all">
               <Award className="w-3 h-3 text-blue-600 dark:text-blue-400" />
               <span>{meta.kpssLabel}</span>
             </span>
@@ -241,7 +241,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
 
           {/* Eğitim Düzeyi Rozeti */}
           {meta.educationLabel && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700 dark:bg-purple-950/50 dark:text-purple-300 border border-purple-200/80 dark:border-purple-800/60 hover:scale-105 hover:bg-purple-100 dark:hover:bg-purple-900/60 transition-all">
               <GraduationCap className="w-3 h-3 text-purple-600 dark:text-purple-400" />
               <span>{meta.educationLabel}</span>
             </span>
@@ -249,7 +249,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
 
           {/* Yaş Sınırı Rozeti */}
           {meta.maxAge && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 dark:bg-amber-950/50 dark:text-amber-300 border border-amber-200/80 dark:border-amber-800/60 hover:scale-105 hover:bg-amber-100 dark:hover:bg-amber-900/60 transition-all">
               <Clock className="w-3 h-3 text-amber-600 dark:text-amber-400" />
               <span>Maks. {meta.maxAge} Yaş</span>
             </span>
@@ -268,13 +268,13 @@ export function JobCard({ job, onSelect }: JobCardProps) {
       <div className="mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
         <div className="flex items-center gap-2.5 flex-wrap">
           {job.city && (
-            <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300 font-medium">
+            <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300 font-medium hover:text-slate-900 dark:hover:text-white transition-colors">
               <MapPin className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
               {job.city}
             </span>
           )}
           {job.position_count && (
-            <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300 font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+            <span className="flex items-center gap-1 text-slate-600 dark:text-slate-300 font-semibold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
               <Users className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
               {job.position_count} Kişi
             </span>
@@ -290,14 +290,14 @@ export function JobCard({ job, onSelect }: JobCardProps) {
         <div className="flex items-center gap-2 shrink-0">
           {/* Durum Rozeti (Acil Durumda Pulse Efekti) */}
           {statusInfo.isCancelled ? (
-            <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase">
+            <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-red-600 text-white tracking-wide uppercase shadow-xs">
               {statusInfo.statusTitle}
             </span>
           ) : (
             <span
               className={`text-[10px] px-2.5 py-0.5 rounded-full font-semibold ${statusInfo.badgeClass} ${
                 statusInfo.type === "urgent" ? "animate-pulse-glow" : ""
-              }`}
+              } shadow-xs hover:scale-105 transition-transform`}
             >
               {statusInfo.fullBadgeText}
             </span>
@@ -306,10 +306,10 @@ export function JobCard({ job, onSelect }: JobCardProps) {
           <button
             type="button"
             onClick={handleClick}
-            className="inline-flex items-center gap-0.5 text-xs font-semibold text-brand-600 dark:text-brand-400 group-hover:translate-x-0.5 transition-all ml-1"
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-100 dark:bg-slate-800 text-brand-600 dark:text-brand-400 group-hover:bg-brand-600 group-hover:text-white dark:group-hover:bg-brand-500 dark:group-hover:text-white text-xs font-semibold shadow-xs group-hover:shadow-md group-hover:shadow-brand-500/25 transition-all duration-200 ml-1"
           >
             <span>İncele</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
       </div>
