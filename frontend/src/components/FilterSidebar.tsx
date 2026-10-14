@@ -17,7 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const CITIES = [
+export const CITIES = [
   "Adana", "Adıyaman", "Afyonkarahisar", "Ağrı", "Amasya", "Ankara", "Antalya", "Artvin",
   "Aydın", "Balıkesir", "Bilecik", "Bingöl", "Bitlis", "Bolu", "Burdur", "Bursa",
   "Çanakkale", "Çankırı", "Çorum", "Denizli", "Diyarbakır", "Edirne", "Elazığ", "Erzincan",
@@ -29,6 +29,7 @@ const CITIES = [
   "Van", "Yozgat", "Zonguldak", "Aksaray", "Bayburt", "Karaman", "Kırıkkale", "Batman",
   "Şırnak", "Bartın", "Ardahan", "Iğdır", "Yalova", "Karabük", "Kilis", "Osmaniye", "Düzce"
 ];
+export const TURKEY_CITIES = CITIES;
 
 const KPSS_OPTIONS = [
   { key: "", label: "Tümü" },

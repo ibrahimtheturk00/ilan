@@ -7,12 +7,13 @@ import { JobList } from "@/components/JobList";
 import { DepartmentSearch } from "@/components/DepartmentSearch";
 import { FavoritesView } from "@/components/FavoritesView";
 import { EmploymentReport } from "@/components/EmploymentReport";
+import { PersonalizedView } from "@/components/PersonalizedView";
 import { useFavorites } from "@/hooks/useFavorites";
 import { useFilters } from "@/hooks/useFilters";
 
 export default function HomePage() {
-  // Görünüm Sekmeleri: 'all' | 'today' | 'department' | 'favorites' | 'report'
-  const [activeTab, setActiveTab] = useState<"all" | "today" | "department" | "favorites" | "report">("all");
+  // Görünüm Sekmeleri: 'all' | 'today' | 'personalized' | 'department' | 'favorites' | 'report'
+  const [activeTab, setActiveTab] = useState<"all" | "today" | "personalized" | "department" | "favorites" | "report">("all");
   const { count: favoriteCount } = useFavorites();
   const { setCategory, setCity, setOnlyUrgent, setOnlyToday, resetFilters } = useFilters();
 
@@ -64,7 +65,14 @@ export default function HomePage() {
         }}
       />
 
-      {/* 1. SEÇENEK: Bölümüne Göre Ara Ekranı */}
+      {/* 1. SEÇENEK: Sana Özel İlanlar Ekranı (Kişiselleştirilmiş İlan Radarı) */}
+      {activeTab === "personalized" && (
+        <div className="mt-2">
+          <PersonalizedView onSwitchToAll={() => setActiveTab("all")} />
+        </div>
+      )}
+
+      {/* 2. SEÇENEK: Bölümüne Göre Ara Ekranı */}
       {activeTab === "department" && (
         <div className="mt-2">
           <DepartmentSearch onSwitchToAll={() => setActiveTab("all")} />

@@ -413,6 +413,25 @@ export async function fetchAllJobSummaries(): Promise<{ id: number; title: strin
   }));
 }
 
+export async function fetchAllActiveJobPosts(): Promise<JobPost[]> {
+  if (supabase) {
+    try {
+      const { data, error } = await supabase
+        .from("job_posts")
+        .select("*, sources(name, slug)")
+        .eq("is_active", true)
+        .order("deadline_at", { ascending: true, nullsFirst: false })
+        .limit(1000);
+      if (!error && data) {
+        return data as JobPost[];
+      }
+    } catch (err) {
+      console.warn("Tüm aktif ilanlar çekilemedi:", err);
+    }
+  }
+  return MOCK_JOBS;
+}
+
 export async function fetchCityJobCounts(): Promise<Record<string, number>> {
   const counts: Record<string, number> = {};
   if (supabase) {

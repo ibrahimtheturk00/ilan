@@ -12,13 +12,15 @@ import {
   ArrowUpDown,
   Check,
   ChevronDown,
+  Target,
 } from "lucide-react";
 import { useFilters } from "@/hooks/useFilters";
+import { usePersonalizedCriteria } from "@/hooks/usePersonalizedCriteria";
 import { SortOption } from "@/types";
 
 interface HeroDockConsoleProps {
-  activeTab: "all" | "today" | "department" | "favorites" | "report";
-  setActiveTab: (tab: "all" | "today" | "department" | "favorites" | "report") => void;
+  activeTab: "all" | "today" | "personalized" | "department" | "favorites" | "report";
+  setActiveTab: (tab: "all" | "today" | "personalized" | "department" | "favorites" | "report") => void;
   favoriteCount: number;
   onResetFilters: () => void;
   onSelectToday: () => void;
@@ -66,6 +68,7 @@ export function HeroDockConsole({
   onSelectToday,
 }: HeroDockConsoleProps) {
   const { searchQuery, setSearchQuery, postType, setPostType, sortBy, setSortBy } = useFilters();
+  const { isConfigured: isPersonalizedConfigured } = usePersonalizedCriteria();
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [isSortOpen, setIsSortOpen] = useState(false);
 
@@ -169,6 +172,32 @@ export function HeroDockConsole({
             <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">
               Yeni
             </span>
+          </button>
+
+          {/* Sana Özel */}
+          <button
+            onClick={() => setActiveTab("personalized")}
+            type="button"
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0 ${
+              activeTab === "personalized"
+                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm"
+                : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800/80"
+            }`}
+          >
+            <Target
+              className={`w-4 h-4 transition-colors ${
+                activeTab === "personalized"
+                  ? "text-emerald-400 dark:text-emerald-600"
+                  : "text-emerald-500"
+              }`}
+            />
+            <span>Sana Özel</span>
+            {isPersonalizedConfigured && (
+              <span
+                className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-0.5"
+                title="Kişiselleştirilmiş profil aktif"
+              />
+            )}
           </button>
 
           {/* Bölümüne Göre Ara */}
