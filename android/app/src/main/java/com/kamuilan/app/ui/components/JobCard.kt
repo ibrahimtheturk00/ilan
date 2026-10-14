@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -117,10 +118,11 @@ fun JobCard(
 
     val cleanedDesc = JobParser.cleanJobDescription(job.description, displayTitle, displayInstitution)
 
+    val isDark = isSystemInDarkTheme()
     val cardBorderColor = when {
-        isCancelled -> Color(0xFFFCA5A5)
-        isUrgent -> Color(0xFFFDA4AF)
-        else -> Color(0xFFE4E4E7)
+        isCancelled -> if (isDark) Color(0xFFEF4444).copy(alpha = 0.5f) else Color(0xFFFCA5A5)
+        isUrgent -> if (isDark) Color(0xFFF43F5E).copy(alpha = 0.5f) else Color(0xFFFDA4AF)
+        else -> if (isDark) Color(0xFF27272A) else Color(0xFFE4E4E7)
     }
 
     val cardShape = RoundedCornerShape(10.dp)
@@ -142,7 +144,7 @@ fun JobCard(
             shape = cardShape,
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 0.dp,
-            shadowElevation = 0.5.dp
+            shadowElevation = if (isDark) 0.dp else 0.5.dp
         ) {
             Column(
                 modifier = Modifier
@@ -252,7 +254,7 @@ fun JobCard(
                         fontFamily = Manrope,
                         fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = Color(0xFF3F3F46),
+                        color = if (isDark) Color(0xFFD4D4D8) else Color(0xFF3F3F46),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -266,7 +268,7 @@ fun JobCard(
                         fontFamily = BricolageGrotesque,
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF09090B),
+                        color = if (isDark) Color(0xFFFAFAFA) else Color(0xFF09090B),
                         lineHeight = 23.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
@@ -315,7 +317,7 @@ fun JobCard(
                     Text(
                         text = cleanedDesc,
                         fontSize = 14.sp,
-                        color = Color(0xFF71717A),
+                        color = if (isDark) Color(0xFFA1A1AA) else Color(0xFF71717A),
                         lineHeight = 20.sp,
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
@@ -323,7 +325,7 @@ fun JobCard(
                 }
 
                 Spacer(modifier = Modifier.height(14.dp))
-                HorizontalDivider(color = Color(0xFFF4F4F5), thickness = 1.dp)
+                HorizontalDivider(color = if (isDark) Color(0xFF27272A) else Color(0xFFF4F4F5), thickness = 1.dp)
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // ── Alt Bilgi Çubuğu (Şehir, Başvuru Durumu, İncele ->) ────────────────
@@ -529,25 +531,34 @@ fun JobCard(
 
 // ── Web Tarzı Rozetler ──────────────────────────────────────────────────────────
 
+private data class QuadBadge(val label: String, val bg: Color, val text: Color, val border: Color)
+
 @Composable
 private fun PostTypeSolidBadge(postType: String?) {
-    val (label, bg, textColor) = when (postType?.lowercase()) {
-        "isci", "işçi" -> Triple("İşçi", Color(0xFFFEF3C7), Color(0xFFB45309))
-        "memur" -> Triple("Memur", Color(0xFFE0F2FE), Color(0xFF0369A1))
-        "sozlesmeli", "sözleşmeli" -> Triple("Sözleşmeli", Color(0xFFCCFBF1), Color(0xFF0F766E))
-        "akademik" -> Triple("Akademik", Color(0xFFF3E8FF), Color(0xFF7E22CE))
-        else -> Triple("Genel", Color(0xFFF4F4F5), Color(0xFF3F3F46))
+    val isDark = isSystemInDarkTheme()
+    val badge = when (postType?.lowercase()) {
+        "memur" -> if (isDark) QuadBadge("Memur", com.kamuilan.app.ui.theme.MemurDarkBg, com.kamuilan.app.ui.theme.MemurDarkText, com.kamuilan.app.ui.theme.MemurDarkBorder)
+                   else QuadBadge("Memur", com.kamuilan.app.ui.theme.MemurLightBg, com.kamuilan.app.ui.theme.MemurLightText, com.kamuilan.app.ui.theme.MemurLightBorder)
+        "sozlesmeli", "sözleşmeli" -> if (isDark) QuadBadge("Sözleşmeli", com.kamuilan.app.ui.theme.SozlesmeliDarkBg, com.kamuilan.app.ui.theme.SozlesmeliDarkText, com.kamuilan.app.ui.theme.SozlesmeliDarkBorder)
+                   else QuadBadge("Sözleşmeli", com.kamuilan.app.ui.theme.SozlesmeliLightBg, com.kamuilan.app.ui.theme.SozlesmeliLightText, com.kamuilan.app.ui.theme.SozlesmeliLightBorder)
+        "isci", "işçi" -> if (isDark) QuadBadge("İşçi", com.kamuilan.app.ui.theme.IsciDarkBg, com.kamuilan.app.ui.theme.IsciDarkText, com.kamuilan.app.ui.theme.IsciDarkBorder)
+                   else QuadBadge("İşçi", com.kamuilan.app.ui.theme.IsciLightBg, com.kamuilan.app.ui.theme.IsciLightText, com.kamuilan.app.ui.theme.IsciLightBorder)
+        "akademik" -> if (isDark) QuadBadge("Akademik", com.kamuilan.app.ui.theme.AkademikDarkBg, com.kamuilan.app.ui.theme.AkademikDarkText, com.kamuilan.app.ui.theme.AkademikDarkBorder)
+                   else QuadBadge("Akademik", com.kamuilan.app.ui.theme.AkademikLightBg, com.kamuilan.app.ui.theme.AkademikLightText, com.kamuilan.app.ui.theme.AkademikLightBorder)
+        else -> if (isDark) QuadBadge("Genel", com.kamuilan.app.ui.theme.GenelDarkBg, com.kamuilan.app.ui.theme.GenelDarkText, com.kamuilan.app.ui.theme.GenelDarkBorder)
+                   else QuadBadge("Genel", com.kamuilan.app.ui.theme.GenelLightBg, com.kamuilan.app.ui.theme.GenelLightText, com.kamuilan.app.ui.theme.GenelLightBorder)
     }
     Box(
         modifier = Modifier
-            .background(bg, RoundedCornerShape(6.dp))
+            .border(1.dp, badge.border, RoundedCornerShape(6.dp))
+            .background(badge.bg, RoundedCornerShape(6.dp))
             .padding(horizontal = 8.dp, vertical = 2.dp)
     ) {
         Text(
-            text = label,
+            text = badge.label,
             fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold,
-            color = textColor
+            color = badge.text
         )
     }
 }
@@ -558,12 +569,17 @@ private fun WebMetaBadge(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     iconColor: Color
 ) {
+    val isDark = isSystemInDarkTheme()
+    val bg = if (isDark) Color(0xFF27272A) else Color(0xFFF4F4F5)
+    val border = if (isDark) Color(0x33FFFFFF) else Color(0xFFE4E4E7)
+    val textCol = if (isDark) Color(0xFFE4E4E7) else Color(0xFF3F3F46)
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         modifier = Modifier
-            .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(6.dp))
-            .background(Color(0xFFF4F4F5), RoundedCornerShape(6.dp))
+            .border(1.dp, border, RoundedCornerShape(6.dp))
+            .background(bg, RoundedCornerShape(6.dp))
             .padding(horizontal = 8.dp, vertical = 3.dp)
     ) {
         Icon(
@@ -576,7 +592,7 @@ private fun WebMetaBadge(
             text = text,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium,
-            color = Color(0xFF3F3F46)
+            color = textCol
         )
     }
 }

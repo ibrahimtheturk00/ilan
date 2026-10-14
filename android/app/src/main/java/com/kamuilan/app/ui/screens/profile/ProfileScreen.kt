@@ -82,14 +82,14 @@ fun ProfileScreen(
                 text = "Profilim & Ayarlar",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Slate900,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                 letterSpacing = (-0.5).sp
             )
             Spacer(modifier = Modifier.height(3.dp))
             Text(
                 text = "Kariyer kriterlerinizi ve uygulama tercihlerinizi yönetin",
                 fontSize = 13.sp,
-                color = Slate500
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -136,21 +136,21 @@ fun ProfileScreen(
                         value = if (userProfile.department.isNotBlank()) com.kamuilan.app.data.model.YokDepartments.getDisplayName(userProfile.department) else "Tüm Alanlar",
                         icon = Icons.Default.School
                     )
-                    HorizontalDivider(color = Slate100, modifier = Modifier.padding(vertical = 10.dp))
+                    HorizontalDivider(color = androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f), modifier = Modifier.padding(vertical = 10.dp))
 
                     PreferenceItemRow(
                         label = "Eğitim Düzeyi",
                         value = if (userProfile.educationLevel.isNotBlank()) userProfile.educationLevel else "Tümü",
                         icon = Icons.Default.School
                     )
-                    HorizontalDivider(color = Slate100, modifier = Modifier.padding(vertical = 10.dp))
+                    HorizontalDivider(color = androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f), modifier = Modifier.padding(vertical = 10.dp))
 
                     PreferenceItemRow(
                         label = "KPSS Puan Türü",
                         value = if (userProfile.kpssType.isNotBlank()) userProfile.kpssType else "Tümü",
                         icon = Icons.Default.AutoAwesome
                     )
-                    HorizontalDivider(color = Slate100, modifier = Modifier.padding(vertical = 10.dp))
+                    HorizontalDivider(color = androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f), modifier = Modifier.padding(vertical = 10.dp))
 
                     PreferenceItemRow(
                         label = "Hedef Şehir",
@@ -167,7 +167,10 @@ fun ProfileScreen(
                             .clip(RoundedCornerShape(12.dp))
                             .background(
                                 brush = Brush.horizontalGradient(
-                                    listOf(BrandPrimary, Color(0xFF4F46E5))
+                                    listOf(
+                                        androidx.compose.material3.MaterialTheme.colorScheme.primary,
+                                        androidx.compose.material3.MaterialTheme.colorScheme.secondary
+                                    )
                                 )
                             )
                             .clickable { onEditPreferences() }
@@ -215,12 +218,12 @@ fun ProfileScreen(
                                 text = "Yeni İlan Bildirimleri",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Slate900
+                                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "Profilinize uygun kadrolar yayımlandığında bildirim alın",
                                 fontSize = 12.sp,
-                                color = Slate500
+                                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         Switch(
@@ -228,12 +231,12 @@ fun ProfileScreen(
                             onCheckedChange = { viewModel.toggleNotifications(it) },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
-                                checkedTrackColor = BrandPrimary
+                                checkedTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.primary
                             )
                         )
                     }
 
-                    HorizontalDivider(color = Slate100, modifier = Modifier.padding(vertical = 10.dp))
+                    HorizontalDivider(color = androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f), modifier = Modifier.padding(vertical = 10.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -245,12 +248,12 @@ fun ProfileScreen(
                                 text = "Son Başvuru Hatırlatıcıları",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Slate900
+                                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "Favorilediğiniz ilanların süresi dolmadan önce uyarılın",
                                 fontSize = 12.sp,
-                                color = Slate500
+                                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                         Switch(
@@ -258,7 +261,7 @@ fun ProfileScreen(
                             onCheckedChange = { viewModel.toggleUrgentJobAlerts(it) },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
-                                checkedTrackColor = BrandPrimary
+                                checkedTrackColor = androidx.compose.material3.MaterialTheme.colorScheme.primary
                             )
                         )
                     }
@@ -286,7 +289,7 @@ fun ProfileScreen(
                         Text(
                             text = "Giriş veya kayıt gerekmez. Tüm verileriniz yalnızca cihazınızda güvenle tutulur.",
                             fontSize = 12.sp,
-                            color = Slate700,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                             lineHeight = 17.sp
                         )
                     }
@@ -297,8 +300,8 @@ fun ProfileScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(10.dp))
-                            .background(Color(0xFFFEF2F2))
-                            .border(1.dp, Color(0xFFFECACA), RoundedCornerShape(10.dp))
+                            .background(UrgentRose.copy(alpha = 0.12f))
+                            .border(1.dp, UrgentRose.copy(alpha = 0.3f), RoundedCornerShape(10.dp))
                             .clickable { viewModel.resetPreferences() }
                             .padding(vertical = 10.dp),
                         contentAlignment = Alignment.Center
@@ -331,23 +334,23 @@ fun ProfileScreen(
                 title = "Hakkında",
                 subtitle = "Kamu İlan Mobil Uygulaması",
                 icon = Icons.Default.Info,
-                iconColor = Slate500
+                iconColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Sürüm", fontSize = 13.sp, color = Slate500)
-                        Text(text = "v1.0.0 (Resmî Sürüm)", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = Slate900)
+                        Text(text = "Sürüm", fontSize = 13.sp, color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(text = "v1.0.0 (Resmî Sürüm)", fontSize = 13.sp, fontWeight = FontWeight.Bold, color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Veri Kaynakları", fontSize = 13.sp, color = Slate500)
-                        Text(text = "T.C. Resmî Gazete, SBB, İŞKUR...", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = Slate700)
+                        Text(text = "Veri Kaynakları", fontSize = 13.sp, color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant)
+                        Text(text = "T.C. Resmî Gazete, SBB, İŞKUR...", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f))
                     }
                 }
             }
@@ -375,21 +378,21 @@ private fun PreferenceItemRow(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Slate400,
+                tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.size(16.dp)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = label,
                 fontSize = 13.sp,
-                color = Slate500
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         Text(
             text = value,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
-            color = Slate900
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
         )
     }
 }
@@ -406,10 +409,10 @@ private fun SettingsCard(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(2.dp, cardShape, spotColor = Slate900.copy(alpha = 0.05f))
+            .shadow(2.dp, cardShape, spotColor = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.05f))
             .clip(cardShape)
-            .background(Color.White)
-            .border(1.dp, Slate200, cardShape)
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface.copy(alpha = 0.85f))
+            .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f), cardShape)
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
@@ -421,7 +424,7 @@ private fun SettingsCard(
                     modifier = Modifier
                         .size(34.dp)
                         .clip(RoundedCornerShape(10.dp))
-                        .background(iconColor.copy(alpha = 0.1f)),
+                        .background(iconColor.copy(alpha = 0.12f)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -437,18 +440,18 @@ private fun SettingsCard(
                         text = title,
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Slate900
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                     )
                     Text(
                         text = subtitle,
                         fontSize = 12.sp,
-                        color = Slate500
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
 
             Spacer(modifier = Modifier.height(14.dp))
-            HorizontalDivider(color = Slate100, thickness = 1.dp)
+            HorizontalDivider(color = androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f), thickness = 1.dp)
             Spacer(modifier = Modifier.height(14.dp))
 
             content()

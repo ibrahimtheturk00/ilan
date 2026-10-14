@@ -81,14 +81,14 @@ fun CategoriesScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .clip(RoundedCornerShape(20.dp))
-                    .background(Color.White.copy(alpha = 0.85f))
-                    .border(1.dp, Slate200, RoundedCornerShape(20.dp))
+                    .background(androidx.compose.material3.MaterialTheme.colorScheme.surface.copy(alpha = 0.85f))
+                    .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f), RoundedCornerShape(20.dp))
                     .padding(horizontal = 10.dp, vertical = 5.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.School,
                     contentDescription = null,
-                    tint = BrandPrimary,
+                    tint = androidx.compose.material3.MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.width(6.dp))
@@ -96,7 +96,7 @@ fun CategoriesScreen(
                     text = "YÖK Atlas & Mezuniyet Alanları",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = BrandPrimary
+                    color = androidx.compose.material3.MaterialTheme.colorScheme.primary
                 )
             }
 
@@ -107,14 +107,14 @@ fun CategoriesScreen(
                 text = "Mezuniyet Alanınızı Seçin",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.ExtraBold,
-                color = Slate900,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                 letterSpacing = (-0.4).sp
             )
             Spacer(modifier = Modifier.height(3.dp))
             Text(
                 text = "Alanınıza dokunarak güncel ilanları ve canlı açık pozisyon sayılarını görün",
                 fontSize = 12.sp,
-                color = Slate500,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 17.sp
             )
 
@@ -171,8 +171,8 @@ fun YokCategoryCard(
                 spotColor = category.color.copy(alpha = 0.2f)
             )
             .clip(cardShape)
-            .background(Color.White)
-            .border(1.dp, Slate200.copy(alpha = 0.8f), cardShape)
+            .background(androidx.compose.material3.MaterialTheme.colorScheme.surface.copy(alpha = 0.85f))
+            .border(1.dp, androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.6f), cardShape)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,
@@ -187,8 +187,8 @@ fun YokCategoryCard(
                 .background(
                     brush = Brush.verticalGradient(
                         colors = listOf(
-                            category.bgColor,
-                            Color.White
+                            category.bgColor.copy(alpha = 0.35f),
+                            Color.Transparent
                         )
                     )
                 )
@@ -229,11 +229,11 @@ fun YokCategoryCard(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
                         .background(
-                            if (count > 0) ActiveEmeraldBg else Color(0xFFF1F5F9)
+                            if (count > 0) ActiveEmeraldBg else androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
                         )
                         .border(
                             1.dp,
-                            if (count > 0) ActiveEmeraldBorder else Color(0xFFE2E8F0),
+                            if (count > 0) ActiveEmeraldBorder else androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant,
                             RoundedCornerShape(12.dp)
                         )
                         .padding(horizontal = 7.dp, vertical = 3.dp)
@@ -242,7 +242,7 @@ fun YokCategoryCard(
                         text = "$count İlan",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (count > 0) ActiveEmerald else Slate400
+                        color = if (count > 0) ActiveEmerald else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }
@@ -254,7 +254,7 @@ fun YokCategoryCard(
                 text = category.name,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
-                color = Slate900,
+                color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
                 lineHeight = 16.sp,
                 minLines = 2,
                 maxLines = 2

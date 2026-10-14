@@ -54,13 +54,13 @@ fun FavoritesScreen(
             text = "Favorilerim (${favoriteJobs.size})",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = Slate900
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(2.dp))
         Text(
             text = "Başvurmayı planladığınız veya takip ettiğiniz kayıtlı kamu ilanları",
             fontSize = 13.sp,
-            color = Slate500
+            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -77,7 +77,7 @@ fun FavoritesScreen(
                     Icon(
                         imageVector = Icons.Outlined.FavoriteBorder,
                         contentDescription = null,
-                        tint = Slate400,
+                        tint = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f),
                         modifier = Modifier.size(56.dp)
                     )
                     Spacer(modifier = Modifier.height(14.dp))
@@ -85,19 +85,19 @@ fun FavoritesScreen(
                         text = "Henüz favori ilan eklemediniz",
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Slate900
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(6.dp))
                     Text(
                         text = "İlan kartlarındaki kalp simgesine dokunarak ilanları listenize ekleyebilirsiniz.",
                         fontSize = 13.sp,
-                        color = Slate500
+                        color = androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Spacer(modifier = Modifier.height(18.dp))
                     Button(
                         onClick = onExploreClick,
                         shape = RoundedCornerShape(12.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
+                        colors = ButtonDefaults.buttonColors(containerColor = androidx.compose.material3.MaterialTheme.colorScheme.primary)
                     ) {
                         Text("İlanları Keşfet")
                     }

@@ -102,7 +102,7 @@ fun JobDetailScreen(
                         "İlan Detayı",
                         fontSize = 17.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Slate900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                 },
                 navigationIcon = {
@@ -110,7 +110,7 @@ fun JobDetailScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Geri",
-                            tint = Slate700
+                            tint = MaterialTheme.colorScheme.onSurface
                         )
                     }
                 },
@@ -121,14 +121,14 @@ fun JobDetailScreen(
                             Icon(
                                 imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                                 contentDescription = "Favoriye Ekle",
-                                tint = if (isFavorite) UrgentRose else Slate700
+                                tint = if (isFavorite) UrgentRose else MaterialTheme.colorScheme.onSurface
                             )
                         }
                         IconButton(onClick = { shareJobDetails(context, job) }) {
                             Icon(
                                 imageVector = Icons.Default.Share,
                                 contentDescription = "Paylaş",
-                                tint = Slate700
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }
@@ -190,14 +190,14 @@ fun JobDetailScreen(
                                     fontFamily = Manrope,
                                     fontSize = 14.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = Slate700
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                                 if (job.source != null) {
                                     Text(
                                         text = job.source.name,
                                         fontFamily = Manrope,
                                         fontSize = 12.sp,
-                                        color = Slate400
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
                                 }
                             }
@@ -211,7 +211,7 @@ fun JobDetailScreen(
                             fontFamily = BricolageGrotesque,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Slate900,
+                            color = MaterialTheme.colorScheme.onSurface,
                             lineHeight = 26.sp
                         )
 
@@ -239,7 +239,7 @@ fun JobDetailScreen(
                     }
                 }
 
-                HorizontalDivider(color = Slate200, thickness = 1.dp)
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), thickness = 1.dp)
 
                 // ── Stat Kartları (3'lü grid) ────────────────────────────────
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
@@ -251,7 +251,7 @@ fun JobDetailScreen(
                             label = "Yayın Tarihi",
                             value = job.publishedAt?.take(10) ?: "—",
                             icon = Icons.Default.CalendarToday,
-                            iconColor = BrandPrimary,
+                            iconColor = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.weight(1f)
                         )
                         StatCard(
@@ -283,7 +283,7 @@ fun JobDetailScreen(
                                     label = "Kontenjan",
                                     value = "${job.positionCount} Kişi",
                                     icon = Icons.Default.People,
-                                    iconColor = Color(0xFF9333EA),
+                                    iconColor = MaterialTheme.colorScheme.secondary,
                                     modifier = Modifier.weight(1f)
                                 )
                             }
@@ -299,25 +299,25 @@ fun JobDetailScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Slate100, RoundedCornerShape(12.dp))
-                                .border(1.dp, Slate200, RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f), RoundedCornerShape(12.dp))
+                                .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
                                 .padding(12.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Public,
                                 contentDescription = null,
-                                tint = Slate400,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
-                                Text("Resmî Kaynak", fontSize = 11.sp, color = Slate500)
+                                Text("Resmî Kaynak", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(
                                     text = job.source.name,
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = Slate900
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
                         }
@@ -330,7 +330,7 @@ fun JobDetailScreen(
                         text = "İlan Detayları ve Başvuru Şartları",
                         fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Slate900
+                        color = MaterialTheme.colorScheme.onSurface
                     )
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -338,15 +338,15 @@ fun JobDetailScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(Color.White, RoundedCornerShape(14.dp))
-                            .border(1.dp, Slate200, RoundedCornerShape(14.dp))
+                            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.85f), RoundedCornerShape(14.dp))
+                            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
                             .padding(14.dp)
                     ) {
                         Text(
                             text = job.description
                                 ?: "Bu ilan için ek açıklama bulunmamaktadır. Başvuru şartları, sınav takvimi ve kadro dağılımı için aşağıdaki bağlantıdan resmî ilana ulaşabilirsiniz.",
                             fontSize = 13.sp,
-                            color = Slate700,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.85f),
                             lineHeight = 22.sp
                         )
                     }
@@ -361,7 +361,10 @@ fun JobDetailScreen(
                             .clip(RoundedCornerShape(14.dp))
                             .background(
                                 brush = Brush.horizontalGradient(
-                                    listOf(BrandDark, BrandPrimary, Color(0xFF4F46E5))
+                                    listOf(
+                                        MaterialTheme.colorScheme.primary,
+                                        MaterialTheme.colorScheme.secondary
+                                    )
                                 )
                             )
                             .clickable {
@@ -410,8 +413,8 @@ private fun StatCard(
 ) {
     Box(
         modifier = modifier
-            .background(Color.White, RoundedCornerShape(12.dp))
-            .border(1.dp, Slate200, RoundedCornerShape(12.dp))
+            .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.85f), RoundedCornerShape(12.dp))
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), RoundedCornerShape(12.dp))
             .padding(12.dp)
     ) {
         Column {
@@ -419,7 +422,7 @@ private fun StatCard(
                 Box(
                     modifier = Modifier
                         .size(28.dp)
-                        .background(iconColor.copy(alpha = 0.1f), RoundedCornerShape(8.dp)),
+                        .background(iconColor.copy(alpha = 0.12f), RoundedCornerShape(8.dp)),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -430,14 +433,14 @@ private fun StatCard(
                     )
                 }
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(label, fontSize = 11.sp, color = Slate500)
+                Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = value,
                 fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
-                color = Slate900
+                color = MaterialTheme.colorScheme.onSurface
             )
         }
     }

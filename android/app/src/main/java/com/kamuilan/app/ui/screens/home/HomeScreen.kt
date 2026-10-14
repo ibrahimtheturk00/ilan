@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
@@ -144,7 +145,7 @@ fun HomeScreen(
                         modifier = Modifier
                             .size(42.dp)
                             .background(
-                                color = BrandPrimary,
+                                color = MaterialTheme.colorScheme.primary,
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .border(1.dp, Color(0x33FFFFFF), RoundedCornerShape(10.dp)),
@@ -166,14 +167,14 @@ fun HomeScreen(
                             fontFamily = BricolageGrotesque,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Slate900,
+                            color = MaterialTheme.colorScheme.onSurface,
                             letterSpacing = (-0.3).sp
                         )
                         Text(
                             text = "Resmî Portallar • Anlık Veri Akışı",
                             fontFamily = Manrope,
                             fontSize = 12.sp,
-                            color = Slate500
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
                         )
                     }
                 }
@@ -187,12 +188,12 @@ fun HomeScreen(
                         onClick = { showCategoryGridDialog = true },
                         modifier = Modifier
                             .size(38.dp)
-                            .background(BrandPrimary.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), RoundedCornerShape(10.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.GridView,
                             contentDescription = "Kategoriler Izgara",
-                            tint = BrandPrimary,
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(19.dp)
                         )
                     }
@@ -201,12 +202,12 @@ fun HomeScreen(
                         onClick = { viewModel.loadJobs() },
                         modifier = Modifier
                             .size(38.dp)
-                            .background(Slate100, RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
                     ) {
                         Icon(
                             imageVector = Icons.Default.Refresh,
                             contentDescription = "Yenile",
-                            tint = Slate700,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(18.dp)
                         )
                     }
@@ -382,12 +383,18 @@ fun HomeScreen(
             }
 
             // ── Hızlı Filtre Pill'leri: Bugün Eklenenler & Kadro Türleri ────────
+            val isDark = isSystemInDarkTheme()
+            val memurColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF059669)
+            val sozlesmeliColor = if (isDark) Color(0xFF818CF8) else Color(0xFF2563EB)
+            val isciColor = if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706)
+            val akademikColor = if (isDark) Color(0xFFA855F7) else Color(0xFF9333EA)
+
             val postTypePills = listOf(
-                Triple("all", "Tümü", Slate900),
-                Triple("memur", "Memur", MemurSky),
-                Triple("sozlesmeli", "Sözleşmeli", SozlesmeliTeal),
-                Triple("isci", "İşçi", IsciAmber),
-                Triple("akademik", "Akademik", AkademikPurple)
+                Triple("all", "Tümü", MaterialTheme.colorScheme.onSurface),
+                Triple("memur", "Memur", memurColor),
+                Triple("sozlesmeli", "Sözleşmeli", sozlesmeliColor),
+                Triple("isci", "İşçi", isciColor),
+                Triple("akademik", "Akademik", akademikColor)
             )
 
             Row(
@@ -413,10 +420,10 @@ fun HomeScreen(
                             } else {
                                 Modifier
                                     .background(
-                                        color = ActiveEmeraldBg,
+                                        color = if (isDark) Color(0x26059669) else ActiveEmeraldBg,
                                         shape = todayShape
                                     )
-                                    .border(width = 1.dp, color = ActiveEmeraldBorder, shape = todayShape)
+                                    .border(width = 1.dp, color = if (isDark) Color(0x4D059669) else ActiveEmeraldBorder, shape = todayShape)
                             }
                         )
                         .padding(horizontal = 13.dp, vertical = 8.dp),
@@ -429,14 +436,14 @@ fun HomeScreen(
                         Icon(
                             imageVector = Icons.Default.AutoAwesome,
                             contentDescription = null,
-                            tint = if (isTodaySelected) Color.White else ActiveEmerald,
+                            tint = if (isTodaySelected) Color.White else if (isDark) Color(0xFF34D399) else ActiveEmerald,
                             modifier = Modifier.size(13.dp)
                         )
                         Text(
                             text = "Bugün Eklenenler",
                             fontSize = 12.sp,
                             fontWeight = if (isTodaySelected) FontWeight.Bold else FontWeight.SemiBold,
-                            color = if (isTodaySelected) Color.White else ActiveEmerald
+                            color = if (isTodaySelected) Color.White else if (isDark) Color(0xFF34D399) else ActiveEmerald
                         )
                     }
                 }
@@ -463,10 +470,10 @@ fun HomeScreen(
                                 } else {
                                     Modifier
                                         .background(
-                                            color = if (isPressed) Slate100 else MaterialTheme.colorScheme.surface,
+                                            color = if (isPressed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
                                             shape = shape
                                         )
-                                        .border(width = 1.dp, color = Slate200, shape = shape)
+                                        .border(width = 1.dp, color = MaterialTheme.colorScheme.outline, shape = shape)
                                 }
                             )
                             .padding(horizontal = 14.dp, vertical = 8.dp),
@@ -476,7 +483,7 @@ fun HomeScreen(
                             text = typeLabel,
                             fontSize = 12.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) Color.White else Slate700
+                            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface
                         )
                     }
                 }

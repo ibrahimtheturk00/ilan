@@ -138,7 +138,7 @@ fun AppNavigation(
                         )
                 ) {
                     NavigationBar(
-                        containerColor = Color(0xF4FFFFFF),
+                        containerColor = MaterialTheme.colorScheme.surface,
                         tonalElevation = 0.dp,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -146,7 +146,7 @@ fun AppNavigation(
                             .clip(RoundedCornerShape(26.dp))
                             .border(
                                 width = 1.dp,
-                                color = Color(0xFFE2E8F0),
+                                color = MaterialTheme.colorScheme.outline,
                                 shape = RoundedCornerShape(26.dp)
                             )
                     ) {
@@ -168,7 +168,7 @@ fun AppNavigation(
                                                     modifier = Modifier
                                                         .size(36.dp)
                                                         .clip(RoundedCornerShape(10.dp))
-                                                        .background(BrandPrimary.copy(alpha = 0.1f))
+                                                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f))
                                                 )
                                             }
                                             Icon(
@@ -204,11 +204,11 @@ fun AppNavigation(
                                     }
                                 },
                                 colors = NavigationBarItemDefaults.colors(
-                                    selectedIconColor = BrandPrimary,
-                                    selectedTextColor = BrandPrimary,
+                                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                                    selectedTextColor = MaterialTheme.colorScheme.primary,
                                     indicatorColor = Color.Transparent,
-                                    unselectedIconColor = Slate400,
-                                    unselectedTextColor = Slate400
+                                    unselectedIconColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                                    unselectedTextColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
                                 )
                             )
                         }

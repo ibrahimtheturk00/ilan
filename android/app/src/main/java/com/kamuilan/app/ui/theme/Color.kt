@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.ui.theme
+package com.kamuilan.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
@@ -43,26 +43,115 @@ val MuhendisGradEnd    = Color(0xFFE0E7FF)
 val HukukGradStart     = Color(0xFFFAF5FF)
 val HukukGradEnd       = Color(0xFFF3E8FF)
 
-// ─── Kadro Türü Rozet Renkleri ────────────────────────────────────────────────
-val MemurSky           = Color(0xFF0284C7)
-val MemurSkyBg         = Color(0xFFF0F9FF)
-val MemurSkyBorder     = Color(0xFFBAE6FD)
+// ─── Nötr Renkler (Zinc & Slate - Web 1:1) ───────────────────────────────────
+val Zinc950 = Color(0xFF09090B)
+val Zinc900 = Color(0xFF18181B)
+val Zinc800 = Color(0xFF27272A)
+val Zinc700 = Color(0xFF3F3F46)
+val Zinc600 = Color(0xFF52525B)
+val Zinc500 = Color(0xFF71717A)
+val Zinc400 = Color(0xFFA1A1AA)
+val Zinc300 = Color(0xFFD4D4D8)
+val Zinc200 = Color(0xFFE4E4E7)
+val Zinc100 = Color(0xFFF4F4F5)
+val Zinc50  = Color(0xFFFAFAFA)
 
-val SozlesmeliTeal     = Color(0xFF0D9488)
-val SozlesmeliTealBg   = Color(0xFFF0FDFA)
-val SozlesmeliTealBorder = Color(0xFF99F6E4)
+val Slate900 = Color(0xFF0F172A)
+val Slate800 = Color(0xFF1E293B)
+val Slate700 = Color(0xFF334155)
+val Slate600 = Color(0xFF475569)
+val Slate500 = Color(0xFF64748B)
+val Slate400 = Color(0xFF94A3B8)
+val Slate300 = Color(0xFFCBD5E1)
+val Slate200 = Color(0xFFE2E8F0)
+val Slate100 = Color(0xFFF1F5F9)
+val Slate50  = Color(0xFFF8FAFC)
 
-val IsciAmber          = Color(0xFFD97706)
-val IsciAmberBg        = Color(0xFFFFFBEB)
-val IsciAmberBorder    = Color(0xFFFDE68A)
+val BackgroundLight = Color(0xFFFAFAFA)
+val SurfaceLight    = Color(0xFFFFFFFF)
 
-val AkademikPurple     = Color(0xFF9333EA)
-val AkademikPurpleBg   = Color(0xFFFAF5FF)
+// ─── Web Tema Dinamik Renkleri ────────────────────────────────────────────────
+// Açık tema: Zümrüt Yeşili birincil, Kraliyet Mavi ikincil
+val LightThemePrimary   = Color(0xFF059669) // Emerald-600
+val LightThemeSecondary = Color(0xFF2563EB) // Blue-600
+val LightThemeBg        = Color(0xFFFAFAFA)
+val LightThemeSurface   = Color(0xFFFFFFFF)
+val LightThemeBorder    = Color(0xFFE4E4E7)
+
+// Koyu tema: Elektrik Gök Mavisi birincil, İndigo/Mor ikincil
+val DarkThemePrimary    = Color(0xFF38BDF8) // Sky-400
+val DarkThemeSecondary  = Color(0xFF818CF8) // Indigo-400
+val DarkThemeBg         = Color(0xFF09090B) // Zinc-950
+val DarkThemeSurface    = Color(0xFF18181B) // Zinc-900
+val DarkThemeBorder     = Color(0xFF27272A) // Zinc-800
+
+// ─── Kadro Türü Rozet Renkleri (Web 1:1 Light & Dark İkili Palet) ──────────────
+// 1. Memur (Açıkta Yeşil, Koyu'da Elektrik Mavi)
+val MemurLightBg        = Color(0xFFECFDF5)
+val MemurLightText      = Color(0xFF064E3B)
+val MemurLightBorder    = Color(0xFFA7F3D0)
+
+val MemurDarkBg         = Color(0x2638BDF8)
+val MemurDarkText       = Color(0xFF7DD3FC)
+val MemurDarkBorder     = Color(0x4D38BDF8)
+
+// Geriye dönük uyumluluk
+val MemurSky           = Color(0xFF059669)
+val MemurSkyBg         = Color(0xFFECFDF5)
+val MemurSkyBorder     = Color(0xFFA7F3D0)
+
+// 2. Sözleşmeli (Açıkta Kobalt Mavi, Koyu'da Derin İndigo - Memur ile kesin ayrım)
+val SozlesmeliLightBg   = Color(0xFFEFF6FF)
+val SozlesmeliLightText = Color(0xFF1E3A8A)
+val SozlesmeliLightBorder = Color(0xFFBFDBFE)
+
+val SozlesmeliDarkBg    = Color(0x33818CF8)
+val SozlesmeliDarkText  = Color(0xFFA5B4FC)
+val SozlesmeliDarkBorder = Color(0x59818CF8)
+
+// Geriye dönük uyumluluk
+val SozlesmeliTeal       = Color(0xFF2563EB)
+val SozlesmeliTealBg     = Color(0xFFEFF6FF)
+val SozlesmeliTealBorder = Color(0xFFBFDBFE)
+
+// 3. İşçi
+val IsciLightBg         = Color(0xFFFFFBEB)
+val IsciLightText       = Color(0xFF78350F)
+val IsciLightBorder     = Color(0xFFFDE68A)
+
+val IsciDarkBg          = Color(0x26F59E0B)
+val IsciDarkText        = Color(0xFFFCD34D)
+val IsciDarkBorder      = Color(0x4DF59E0B)
+
+val IsciAmber           = Color(0xFFD97706)
+val IsciAmberBg         = Color(0xFFFFFBEB)
+val IsciAmberBorder     = Color(0xFFFDE68A)
+
+// 4. Akademik
+val AkademikLightBg     = Color(0xFFFAF5FF)
+val AkademikLightText   = Color(0xFF581C87)
+val AkademikLightBorder = Color(0xFFE9D5FF)
+
+val AkademikDarkBg      = Color(0x26A855F7)
+val AkademikDarkText    = Color(0xFFD8B4FE)
+val AkademikDarkBorder  = Color(0x4DA855F7)
+
+val AkademikPurple       = Color(0xFF9333EA)
+val AkademikPurpleBg     = Color(0xFFFAF5FF)
 val AkademikPurpleBorder = Color(0xFFE9D5FF)
 
-val GenelSlate         = Color(0xFF475569)
-val GenelSlateBg       = Color(0xFFF8FAFC)
-val GenelSlateBorder   = Color(0xFFE2E8F0)
+// 5. Genel
+val GenelLightBg        = Color(0xFFF4F4F5)
+val GenelLightText      = Color(0xFF18181B)
+val GenelLightBorder    = Color(0xFFE4E4E7)
+
+val GenelDarkBg         = Color(0xFF27272A)
+val GenelDarkText       = Color(0xFFE4E4E7)
+val GenelDarkBorder     = Color(0x26FFFFFF)
+
+val GenelSlate           = Color(0xFF475569)
+val GenelSlateBg         = Color(0xFFF8FAFC)
+val GenelSlateBorder     = Color(0xFFE2E8F0)
 
 // ─── Durum Rozetleri ──────────────────────────────────────────────────────────
 val UrgentRose         = Color(0xFFE11D48)
@@ -91,18 +180,3 @@ val AgeAmberBorder     = Color(0xFFFEF3C7)
 val SourceIndigo       = Color(0xFF4338CA)
 val SourceIndigoBg     = Color(0xFFEEF2FF)
 val SourceIndigoBorder = Color(0xFFC7D2FE)
-
-// ─── Nötr Renkler (Slate) ─────────────────────────────────────────────────────
-val Slate900 = Color(0xFF0F172A)
-val Slate800 = Color(0xFF1E293B)
-val Slate700 = Color(0xFF334155)
-val Slate600 = Color(0xFF475569)
-val Slate500 = Color(0xFF64748B)
-val Slate400 = Color(0xFF94A3B8)
-val Slate300 = Color(0xFFCBD5E1)
-val Slate200 = Color(0xFFE2E8F0)
-val Slate100 = Color(0xFFF1F5F9)
-val Slate50  = Color(0xFFF8FAFC)
-
-val BackgroundLight = Color(0xFFF8FAFC)
-val SurfaceLight    = Color(0xFFFFFFFF)

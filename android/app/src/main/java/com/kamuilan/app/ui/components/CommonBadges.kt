@@ -114,12 +114,18 @@ fun TodayAddedBadge(modifier: Modifier = Modifier) {
 
 @Composable
 fun PostTypeBadge(postType: String?, modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     val (label, bg, text, border) = when (postType?.lowercase()) {
-        "memur" -> Quad("Memur", MemurSkyBg, MemurSky, MemurSkyBorder)
-        "sozlesmeli" -> Quad("Sözleşmeli", SozlesmeliTealBg, SozlesmeliTeal, SozlesmeliTealBorder)
-        "isci" -> Quad("İşçi", IsciAmberBg, IsciAmber, IsciAmberBorder)
-        "akademik" -> Quad("Akademik", AkademikPurpleBg, AkademikPurple, AkademikPurpleBorder)
-        else -> Quad("Genel", GenelSlateBg, GenelSlate, GenelSlateBorder)
+        "memur" -> if (isDark) Quad("Memur", com.kamuilan.app.ui.theme.MemurDarkBg, com.kamuilan.app.ui.theme.MemurDarkText, com.kamuilan.app.ui.theme.MemurDarkBorder)
+                   else Quad("Memur", com.kamuilan.app.ui.theme.MemurLightBg, com.kamuilan.app.ui.theme.MemurLightText, com.kamuilan.app.ui.theme.MemurLightBorder)
+        "sozlesmeli", "sözleşmeli" -> if (isDark) Quad("Sözleşmeli", com.kamuilan.app.ui.theme.SozlesmeliDarkBg, com.kamuilan.app.ui.theme.SozlesmeliDarkText, com.kamuilan.app.ui.theme.SozlesmeliDarkBorder)
+                   else Quad("Sözleşmeli", com.kamuilan.app.ui.theme.SozlesmeliLightBg, com.kamuilan.app.ui.theme.SozlesmeliLightText, com.kamuilan.app.ui.theme.SozlesmeliLightBorder)
+        "isci", "işçi" -> if (isDark) Quad("İşçi", com.kamuilan.app.ui.theme.IsciDarkBg, com.kamuilan.app.ui.theme.IsciDarkText, com.kamuilan.app.ui.theme.IsciDarkBorder)
+                   else Quad("İşçi", com.kamuilan.app.ui.theme.IsciLightBg, com.kamuilan.app.ui.theme.IsciLightText, com.kamuilan.app.ui.theme.IsciLightBorder)
+        "akademik" -> if (isDark) Quad("Akademik", com.kamuilan.app.ui.theme.AkademikDarkBg, com.kamuilan.app.ui.theme.AkademikDarkText, com.kamuilan.app.ui.theme.AkademikDarkBorder)
+                   else Quad("Akademik", com.kamuilan.app.ui.theme.AkademikLightBg, com.kamuilan.app.ui.theme.AkademikLightText, com.kamuilan.app.ui.theme.AkademikLightBorder)
+        else -> if (isDark) Quad("Genel", com.kamuilan.app.ui.theme.GenelDarkBg, com.kamuilan.app.ui.theme.GenelDarkText, com.kamuilan.app.ui.theme.GenelDarkBorder)
+                   else Quad("Genel", com.kamuilan.app.ui.theme.GenelLightBg, com.kamuilan.app.ui.theme.GenelLightText, com.kamuilan.app.ui.theme.GenelLightBorder)
     }
 
     AppIconBadge(

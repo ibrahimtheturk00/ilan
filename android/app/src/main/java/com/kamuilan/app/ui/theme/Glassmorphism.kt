@@ -84,24 +84,18 @@ private val grainShaderBrush by lazy {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AmbientGlassBackground (Clean & Calm 2026 Background with Film Grain)
-// Minimalist, modern off-white background with subtle tactile grain
+// AmbientGlassBackground (Onward Summit Chevron Background Web 1:1)
+// Web sitesindeki ikonik chevron/ok deseni sayfanın en altına kadar uzanır.
 // ─────────────────────────────────────────────────────────────────────────────
 @Composable
 fun AmbientGlassBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFF7F7F5))
-            .drawBehind {
-                drawRect(brush = grainShaderBrush)
-            }
-    ) {
-        content()
-    }
+    com.kamuilan.app.ui.components.OnwardBackground(
+        modifier = modifier,
+        content = content
+    )
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

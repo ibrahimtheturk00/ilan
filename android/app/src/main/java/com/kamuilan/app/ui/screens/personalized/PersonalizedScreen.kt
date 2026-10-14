@@ -54,7 +54,7 @@ import com.kamuilan.app.ui.screens.home.HomeViewModel
 import com.kamuilan.app.ui.theme.ActiveEmerald
 import com.kamuilan.app.ui.theme.ActiveEmeraldBg
 import com.kamuilan.app.ui.theme.ActiveEmeraldBorder
-import com.kamuilan.app.ui.theme.AmbientGlassBackground
+import com.kamuilan.app.ui.components.DotGridBackground
 import com.kamuilan.app.ui.theme.BrandPrimary
 import com.kamuilan.app.ui.theme.BrandSubtle
 import com.kamuilan.app.ui.theme.Slate100
@@ -119,7 +119,7 @@ fun PersonalizedScreen(
         }
     }
 
-    AmbientGlassBackground(modifier = modifier) {
+    DotGridBackground(modifier = modifier) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -137,7 +137,7 @@ fun PersonalizedScreen(
                             text = "Bana Özel İlanlar",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
-                            color = Slate900
+                            color = MaterialTheme.colorScheme.onSurface
                         )
                         Spacer(modifier = Modifier.width(6.dp))
                         Icon(
@@ -187,8 +187,8 @@ fun PersonalizedScreen(
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)),
-                    border = CardDefaults.outlinedCardBorder().copy(width = 1.dp, brush = androidx.compose.ui.graphics.SolidColor(Slate200))
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                    border = CardDefaults.outlinedCardBorder().copy(width = 1.dp, brush = androidx.compose.ui.graphics.SolidColor(MaterialTheme.colorScheme.outline))
                 ) {
                     Row(
                         modifier = Modifier
@@ -201,7 +201,7 @@ fun PersonalizedScreen(
                             Icon(
                                 imageVector = Icons.Default.CheckCircle,
                                 contentDescription = null,
-                                tint = ActiveEmerald,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(18.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
@@ -212,7 +212,7 @@ fun PersonalizedScreen(
                                 text = "$deptDisplay • $eduDisplay • $kpssDisplay (+KPSS Şartsız)",
                                 fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Slate700,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 maxLines = 1
                             )
                         }
@@ -221,7 +221,7 @@ fun PersonalizedScreen(
                             text = "${matchedJobs.size} İlan",
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold,
-                            color = BrandPrimary,
+                            color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.padding(start = 6.dp)
                         )
                     }
@@ -233,7 +233,7 @@ fun PersonalizedScreen(
             when {
                 uiState.isLoading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        CircularProgressIndicator(color = BrandPrimary)
+                        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
                     }
                 }
 
@@ -247,7 +247,7 @@ fun PersonalizedScreen(
                             Icon(
                                 imageVector = Icons.Default.PersonPin,
                                 contentDescription = null,
-                                tint = BrandPrimary,
+                                tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(56.dp)
                             )
                             Spacer(modifier = Modifier.height(14.dp))
@@ -255,20 +255,20 @@ fun PersonalizedScreen(
                                 text = "Kriterlerinizi Belirleyin",
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Slate900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = "Hangi bölümden mezun olduğunuzu ve KPSS puan türünüzü seçerek size özel filtrelenmiş ilanları görün.",
                                 fontSize = 13.sp,
-                                color = Slate500,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f),
                                 lineHeight = 19.sp
                             )
                             Spacer(modifier = Modifier.height(18.dp))
                             Button(
                                 onClick = onEditPreferences,
                                 shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                             ) {
                                 Text("Kurulumu Başlat")
                             }
@@ -286,19 +286,19 @@ fun PersonalizedScreen(
                                 text = "Şu anda seçtiğiniz kriterlerle tam eşleşen ilan bulunamadı",
                                 fontSize = 15.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Slate900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = "Kriterlerinizi biraz daha genişleterek daha fazla kamu ilanına ulaşabilirsiniz.",
                                 fontSize = 12.sp,
-                                color = Slate500
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
                             )
                             Spacer(modifier = Modifier.height(14.dp))
                             Button(
                                 onClick = onEditPreferences,
                                 shape = RoundedCornerShape(10.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = BrandPrimary)
+                                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                             ) {
                                 Text("Kriterleri Genişlet")
                             }
