@@ -86,6 +86,13 @@ export function PersonalizedView({ onSwitchToAll }: PersonalizedViewProps) {
     });
   }, [allJobs, criteria, isConfigured]);
 
+  // Otomatik olarak kriter formu popup'ını aç (kriter henüz belirlenmemişse)
+  React.useEffect(() => {
+    if (isLoaded && (!isConfigured || !criteria)) {
+      setIsModalOpen(true);
+    }
+  }, [isLoaded, isConfigured, criteria]);
+
   // Loading state
   if (!isLoaded) {
     return (
@@ -97,13 +104,6 @@ export function PersonalizedView({ onSwitchToAll }: PersonalizedViewProps) {
       </div>
     );
   }
-
-  // Otomatik olarak kriter formu popup'ını aç
-  React.useEffect(() => {
-    if (!isConfigured || !criteria) {
-      setIsModalOpen(true);
-    }
-  }, [isConfigured, criteria]);
 
   // ========================================================
   // DURUM A: Sitede Kayıtlı Kriter Yok (Sadece Form Popup'ı Açılır)
