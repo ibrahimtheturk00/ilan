@@ -66,9 +66,15 @@ class IskurScraper(BaseScraper):
                                         if file_url and "/" in file_url:
                                             try:
                                                 import urllib.parse
+                                                import re
                                                 pdf_name = urllib.parse.unquote(file_url.split("/")[-1]).replace(".pdf", "").replace("-", " ").replace("_", " ").strip().title()
                                                 if len(pdf_name) > 3 and not pdf_name.isdigit() and "doc0" not in pdf_name.lower() and "scan" not in pdf_name.lower():
-                                                    title = f"{pdf_name} Personel Alım İlanı"
+                                                    # 8 haneli veya takvim tarihlerini ayıkla (örn. 17102026 veya 16 Ekim 2026)
+                                                    clean_name = re.sub(r'\b\d{8}\b', '', pdf_name)
+                                                    clean_name = re.sub(r'\b\d{1,2}\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+\d{4}\b', '', clean_name, flags=re.IGNORECASE)
+                                                    clean_name = re.sub(r'\s+Personel\s*$', '', clean_name, flags=re.IGNORECASE).strip()
+                                                    clean_name = re.sub(r'\s+', ' ', clean_name).strip()
+                                                    title = f"{clean_name} Personel Alım İlanı" if clean_name else f"{city_val.capitalize()} Kamu Personel Alım İlanı"
                                                 else:
                                                     title = f"{city_val.capitalize()} Kamu Personel Alım İlanı"
                                             except Exception:
@@ -76,9 +82,14 @@ class IskurScraper(BaseScraper):
                                         else:
                                             title = f"{city_val.capitalize()} Kamu Personel Alım İlanı"
 
+                                    import re
+                                    inst_candidate = title.split("Alım")[0].split("Sınav")[0].strip()
+                                    inst_candidate = re.sub(r'\b\d{8}\b', '', inst_candidate)
+                                    inst_candidate = re.sub(r'\s+Personel\s*$', '', inst_candidate, flags=re.IGNORECASE).strip()
+
                                     posts.append({
                                         "title": title,
-                                        "institution": title.split("Alım")[0].split("Sınav")[0].strip() or f"{city_val.capitalize()} Kamu Kurumu",
+                                        "institution": inst_candidate or f"{city_val.capitalize()} Kamu Kurumu",
                                         "city": city_val.capitalize() if city_val else None,
                                         "post_type": default_type,
                                         "deadline_at": deadline,

@@ -96,13 +96,22 @@ def parse_turkish_date_range(range_str: Optional[str]) -> Tuple[Optional[str], O
         return single, single
 
 def extract_position_count(text: str) -> Optional[int]:
-    """Metin içinden 'X adet', 'X kişi', 'X personel' gibi kadro sayılarını bulur."""
+    """Metin içinden 'X adet', 'X kişi', 'X personel' gibi kadro sayılarını bulur. Tarih ve yılları (örn. 2026, 17102026) eler."""
     if not text:
         return None
-    match = re.search(r'(\d+)\s*(adet|kişi|personel|memur|işçi|öğretim\s+üyesi|uzman|subay|mühendis|avukat|müdür)', text, re.IGNORECASE)
-    if match:
+    # 1 ile 4 basamaklı sayıları ara (5 basamak ve üzeri tarih veya kod olabilir)
+    matches = re.finditer(r'\b(\d{1,4})\s*(adet|kişi|personel|memur|işçi|öğretim\s+üyesi|uzman|subay|mühendis|avukat|müdür)', text, re.IGNORECASE)
+    for match in matches:
         try:
-            return int(match.group(1))
+            val = int(match.group(1))
+            # Takvim yılı kontrolü (2020..2035) örn. "2026 Personel Alımı"
+            if 2020 <= val <= 2035:
+                continue
+            # Gerçekçi olmayan sayılar (Tek ilanda 5000'den fazla kontenjan olamaz)
+            if val > 5000 or val <= 0:
+                continue
+            return val
         except ValueError:
-            pass
+            continue
     return None
+

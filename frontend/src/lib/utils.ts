@@ -26,7 +26,8 @@ export function formatDate(dateStr: string | null | undefined): string {
  */
 export function cleanJobTitle(title: string | null | undefined, city?: string | null, originalUrl?: string | null): string {
   if (!title) return "Resmi Kamu İlanı";
-  const lower = title.toLowerCase();
+  let cleaned = title.trim();
+  const lower = cleaned.toLowerCase();
   const isFaulty =
     lower.includes("gün kaldı") ||
     lower.includes("gn kald") ||
@@ -34,39 +35,60 @@ export function cleanJobTitle(title: string | null | undefined, city?: string | 
     lower.startsWith("(son") ||
     lower.startsWith("(bugün");
 
-  if (!isFaulty) return title;
+  if (isFaulty) {
+    // URL'den dosya adını çıkarıp güzelleştir
+    if (originalUrl && originalUrl.includes("/")) {
+      try {
+        const fileName = decodeURIComponent(originalUrl.split("/").pop() || "")
+          .replace(/\.pdf$/i, "")
+          .replace(/[-_]+/g, " ")
+          .trim();
 
-  // URL'den dosya adını çıkarıp güzelleştir
-  if (originalUrl && originalUrl.includes("/")) {
-    try {
-      const fileName = decodeURIComponent(originalUrl.split("/").pop() || "")
-        .replace(/\.pdf$/i, "")
-        .replace(/[-_]+/g, " ")
-        .trim();
+        if (fileName && fileName.length > 3 && !/^\d+$/.test(fileName)) {
+          // İlk harfleri büyüt
+          const formatted = fileName
+            .split(" ")
+            .map((w) => w.charAt(0).toLocaleUpperCase("tr-TR") + w.slice(1).toLocaleLowerCase("tr-TR"))
+            .join(" ");
 
-      if (fileName && fileName.length > 3 && !/^\d+$/.test(fileName)) {
-        // İlk harfleri büyüt
-        const formatted = fileName
-          .split(" ")
-          .map((w) => w.charAt(0).toLocaleUpperCase("tr-TR") + w.slice(1).toLocaleLowerCase("tr-TR"))
-          .join(" ");
-
-        if (!formatted.toLowerCase().includes("doc0") && !formatted.toLowerCase().includes("scan")) {
-          return `${formatted} Personel Alım İlanı`;
+          if (!formatted.toLowerCase().includes("doc0") && !formatted.toLowerCase().includes("scan")) {
+            cleaned = `${formatted} Personel Alım İlanı`;
+          }
         }
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
+    } else {
+      const prefix = city ? `${city} ` : "";
+      cleaned = `${prefix}Kamu Kurumu Personel Alım İlanı`;
     }
   }
 
-  const prefix = city ? `${city} ` : "";
-  return `${prefix}Kamu Kurumu Personel Alım İlanı`;
+  // Başlıktaki yapışık tarihleri (örn. 17102026) ve mükerrer "Personel Personel" ifadelerini temizle
+  cleaned = cleaned
+    .replace(/\b\d{8}\b/g, "")
+    .replace(/\b\d{1,2}\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+\d{4}\b/gi, "")
+    .replace(/personel\s+personel/gi, "Personel")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return cleaned || "Resmi Kamu İlanı";
+}
+
+export function sanitizePositionCount(count: number | null | undefined): number {
+  if (!count || typeof count !== "number" || isNaN(count) || count <= 0) return 1;
+  // Takvim yılları (2020..2035) örn. "2026 Personel" gibi hatalı yakalanan yılları 1 say
+  if (count >= 2020 && count <= 2035) return 1;
+  // 5000'den büyük sayılar (örn. 17102026 gibi DDMMYYYY tarihleri) hatalı kontenjandır
+  if (count > 5000) return 1;
+  return Math.round(count);
 }
 
 export function cleanInstitution(institution: string | null | undefined, title: string | null | undefined, city?: string | null, originalUrl?: string | null): string {
   if (!institution) return "Resmi Kamu Kurumu";
-  const lower = institution.toLowerCase();
+  let cleaned = institution.trim();
+
+  const lower = cleaned.toLowerCase();
   const isFaulty =
     lower.includes("gün kaldı") ||
     lower.includes("gn kald") ||
@@ -74,33 +96,45 @@ export function cleanInstitution(institution: string | null | undefined, title: 
     lower.startsWith("(son") ||
     lower.startsWith("(bugün");
 
-  if (!isFaulty) return institution;
+  if (isFaulty) {
+    // Başlıktan veya URL'den kurum türet
+    if (originalUrl && originalUrl.includes("/")) {
+      try {
+        const fileName = decodeURIComponent(originalUrl.split("/").pop() || "")
+          .replace(/\.pdf$/i, "")
+          .replace(/[-_]+/g, " ")
+          .trim();
 
-  // Başlıktan veya URL'den kurum türet
-  if (originalUrl && originalUrl.includes("/")) {
-    try {
-      const fileName = decodeURIComponent(originalUrl.split("/").pop() || "")
-        .replace(/\.pdf$/i, "")
-        .replace(/[-_]+/g, " ")
-        .trim();
+        if (fileName && fileName.length > 3 && !/^\d+$/.test(fileName)) {
+          const formatted = fileName
+            .split(" ")
+            .map((w) => w.charAt(0).toLocaleUpperCase("tr-TR") + w.slice(1).toLocaleLowerCase("tr-TR"))
+            .join(" ");
 
-      if (fileName && fileName.length > 3 && !/^\d+$/.test(fileName)) {
-        const formatted = fileName
-          .split(" ")
-          .map((w) => w.charAt(0).toLocaleUpperCase("tr-TR") + w.slice(1).toLocaleLowerCase("tr-TR"))
-          .join(" ");
-
-        if (!formatted.toLowerCase().includes("doc0") && !formatted.toLowerCase().includes("scan")) {
-          return formatted;
+          if (!formatted.toLowerCase().includes("doc0") && !formatted.toLowerCase().includes("scan")) {
+            cleaned = formatted;
+          }
         }
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
+    } else {
+      const prefix = city ? `${city} ` : "";
+      return `${prefix}Belediyesi / Kamu Kurumu`;
     }
   }
 
-  const prefix = city ? `${city} ` : "";
-  return `${prefix}Belediyesi / Kamu Kurumu`;
+  // Tarih ve gereksiz ek temizliği (örn. "Gazibel Ltd Şti 17102026 Personel" -> "Gazibel Ltd Şti")
+  cleaned = cleaned
+    .replace(/\b\d{8}\b/g, "")
+    .replace(/\b\d{1,2}\s+(Ocak|Şubat|Mart|Nisan|Mayıs|Haziran|Temmuz|Ağustos|Eylül|Ekim|Kasım|Aralık)\s+\d{4}\b/gi, "")
+    .replace(/\s+Personel\s*$/i, "")
+    .replace(/\s+Alım\s*$/i, "")
+    .replace(/\s+İlanı\s*$/i, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return cleaned || "Resmi Kamu Kurumu";
 }
 
 export interface ApplicationStatusInfo {

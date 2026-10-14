@@ -5,6 +5,7 @@ import { fetchEmploymentStats, EmploymentReportData } from "@/lib/supabase";
 import { JobCard } from "./JobCard";
 import { JobModal } from "./JobModal";
 import { JobPost } from "@/types";
+import { cleanInstitution } from "@/lib/utils";
 import {
   TrendingUp,
   Users,
@@ -56,7 +57,7 @@ export function EmploymentReport({
 
     const map: Record<string, JobPost[]> = {};
     for (const job of stats.allJobs) {
-      const inst = (job.institution || "Diğer Resmi Kurumlar").trim();
+      const inst = cleanInstitution(job.institution, job.title, job.city, job.original_url).trim();
       if (!map[inst]) map[inst] = [];
       map[inst].push(job);
     }

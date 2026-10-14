@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { JobPost, Source, ScrapeLog, FilterState } from "@/types";
 import { detectKpssType, detectEducationLevel, fuzzyTurkishMatch, isJobPublishedToday } from "@/lib/jobParser";
-import { getJobApplicationStatus } from "@/lib/utils";
+import { getJobApplicationStatus, sanitizePositionCount, cleanInstitution } from "@/lib/utils";
 export { trackUniqueVisitor, getCachedVisitorCount as fetchUniqueVisitorCount } from "@/lib/visitor";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
@@ -486,7 +486,7 @@ export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
   const cityMap: Record<string, number> = {};
 
   for (const j of jobs) {
-    const pCount = j.position_count || 1;
+    const pCount = sanitizePositionCount(j.position_count);
     totalPositions += pCount;
 
     const st = getJobApplicationStatus(j.published_at, j.deadline_at, j.title);
@@ -494,7 +494,7 @@ export async function fetchEmploymentStats(): Promise<EmploymentReportData> {
       urgentJobsCount++;
     }
 
-    const inst = (j.institution || "Diğer Kamu Kurumu").trim();
+    const inst = cleanInstitution(j.institution, j.title, j.city, j.original_url).trim();
     if (!instMap[inst]) instMap[inst] = { count: 0, positions: 0 };
     instMap[inst].count++;
     instMap[inst].positions += pCount;
