@@ -1,0 +1,566 @@
+{
+  "sbbEntries": [
+    {
+      "key": "duzce universitesi",
+      "file": "594.png"
+    },
+    {
+      "key": "adana alparslan turkes bilim ve teknoloji universitesi",
+      "file": "608.png"
+    },
+    {
+      "key": "saglik bilimleri universitesi",
+      "file": "588.png"
+    },
+    {
+      "key": "ondokuz mayis universitesi",
+      "file": "505.png"
+    },
+    {
+      "key": "balikesir universitesi",
+      "file": "555.png"
+    },
+    {
+      "key": "turk standartlari enstitusu",
+      "file": "813.png"
+    },
+    {
+      "key": "necmettin erbakan universitesi",
+      "file": "383.png"
+    },
+    {
+      "key": "mevlana kalkinma ajansi",
+      "file": "A1042.png"
+    },
+    {
+      "key": "orta karadeniz kalkinma ajansi",
+      "file": "A1055.png"
+    },
+    {
+      "key": "istanbul teknik universitesi",
+      "file": "485.png"
+    },
+    {
+      "key": "sirnak universitesi",
+      "file": "376.png"
+    },
+    {
+      "key": "vakiflar genel mudurlugu",
+      "file": "615.png"
+    },
+    {
+      "key": "tasarruf mevduati sigorta fonu baskanligi",
+      "file": "10135.png"
+    },
+    {
+      "key": "istanbul kalkinma ajansi",
+      "file": "A1034.png"
+    },
+    {
+      "key": "ortahisar belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "sariidris belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "kesan belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "jandarma genel komutanligi",
+      "file": "804.png"
+    },
+    {
+      "key": "bandirma onyedi eylul universitesi",
+      "file": "389.png"
+    },
+    {
+      "key": "savunma sanayii baskanligi",
+      "file": "232.png"
+    },
+    {
+      "key": "giresun universitesi",
+      "file": "601.png"
+    },
+    {
+      "key": "yozgat bozok universitesi",
+      "file": "603.png"
+    },
+    {
+      "key": "istanbul medeniyet universitesi",
+      "file": "381.png"
+    },
+    {
+      "key": "marmara universitesi",
+      "file": "495.png"
+    },
+    {
+      "key": "bankacilik duzenleme ve denetleme kurumu baskanligi",
+      "file": "10090.png"
+    },
+    {
+      "key": "turk patent ve marka kurumu",
+      "file": "300.png"
+    },
+    {
+      "key": "ataturk universitesi",
+      "file": "420.png"
+    },
+    {
+      "key": "bogazici universitesi",
+      "file": "425.png"
+    },
+    {
+      "key": "sakarya uygulamali bilimler universitesi",
+      "file": "399.png"
+    },
+    {
+      "key": "dicle universitesi",
+      "file": "440.png"
+    },
+    {
+      "key": "siirt universitesi",
+      "file": "562.png"
+    },
+    {
+      "key": "akdeniz universitesi",
+      "file": "405.png"
+    },
+    {
+      "key": "artvin coruh universitesi",
+      "file": "571.png"
+    },
+    {
+      "key": "rize belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "malazgirt belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "yargitay baskanligi",
+      "file": "165.png"
+    },
+    {
+      "key": "kirsehir ahi evran universitesi",
+      "file": "592.png"
+    },
+    {
+      "key": "milli savunma bakanligi",
+      "file": "808.png"
+    },
+    {
+      "key": "ankara universitesi",
+      "file": "415.png"
+    },
+    {
+      "key": "adalet bakanligi",
+      "file": "15.png"
+    },
+    {
+      "key": "batman universitesi",
+      "file": "554.png"
+    },
+    {
+      "key": "ankara haci bayram veli universitesi",
+      "file": "398.png"
+    },
+    {
+      "key": "samsun universitesi",
+      "file": "400.png"
+    },
+    {
+      "key": "aydin adnan menderes universitesi",
+      "file": "545.png"
+    },
+    {
+      "key": "canakkale onsekiz mart universitesi",
+      "file": "541.png"
+    },
+    {
+      "key": "cankiri karatekin universitesi",
+      "file": "569.png"
+    },
+    {
+      "key": "adiyaman universitesi",
+      "file": "604.png"
+    },
+    {
+      "key": "suleyman demirel universitesi",
+      "file": "543.png"
+    },
+    {
+      "key": "usak universitesi",
+      "file": "596.png"
+    },
+    {
+      "key": "yildiz teknik universitesi",
+      "file": "530.png"
+    },
+    {
+      "key": "van yuzuncu yil universitesi",
+      "file": "535.png"
+    },
+    {
+      "key": "turk alman universitesi",
+      "file": "607.png"
+    },
+    {
+      "key": "isparta uygulamali bilimler universitesi",
+      "file": "408.png"
+    },
+    {
+      "key": "posof belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "sile belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "tapu ve kadastro genel mudurlugu",
+      "file": "250.png"
+    },
+    {
+      "key": "celtik belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "eskisehir teknik universitesi",
+      "file": "407.png"
+    },
+    {
+      "key": "atalan belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "eleskirt belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "dogu marmara kalkinma ajansi",
+      "file": "A1041.png"
+    },
+    {
+      "key": "iletisim baskanligi",
+      "file": "213.png"
+    },
+    {
+      "key": "sermaye piyasasi kurulu baskanligi",
+      "file": "10065.png"
+    },
+    {
+      "key": "cukurkuyu nigde belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "ozellestirme idaresi baskanligi",
+      "file": "289.png"
+    },
+    {
+      "key": "elmakaya belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "bati akdeniz kalkinma ajansi",
+      "file": "A1032.png"
+    },
+    {
+      "key": "mucur belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "didim belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "gerede belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "pursaklar belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "aralik belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "taskesti belediye baskanligi",
+      "file": "BEL2.png"
+    },
+    {
+      "key": "gelir idaresi baskanligi",
+      "file": "240.png"
+    }
+  ],
+  "extraRules": [
+    {
+      "keys": [
+        "adalet",
+        "yargitay",
+        "danistay",
+        "cezaevi",
+        "icra",
+        "hakim",
+        "savci"
+      ],
+      "file": "15.png"
+    },
+    {
+      "keys": [
+        "milli savunma",
+        "msb",
+        "kara kuvvetleri",
+        "deniz kuvvetleri",
+        "hava kuvvetleri"
+      ],
+      "file": "808.png"
+    },
+    {
+      "keys": [
+        "jandarma",
+        "sahil guvenlik"
+      ],
+      "file": "804.png"
+    },
+    {
+      "keys": [
+        "icisleri",
+        "nufus",
+        "goc idaresi"
+      ],
+      "file": "icisleri.png"
+    },
+    {
+      "keys": [
+        "saglik bakanligi",
+        "halk sagligi",
+        "kamu hastaneleri",
+        "saglik il mudurlugu"
+      ],
+      "file": "saglik.png"
+    },
+    {
+      "keys": [
+        "milli egitim",
+        "meb"
+      ],
+      "file": "meb.png"
+    },
+    {
+      "keys": [
+        "cevre sehircilik",
+        "cevre ve sehircilik",
+        "iklim degisikligi"
+      ],
+      "file": "csb.png"
+    },
+    {
+      "keys": [
+        "hazine ve maliye",
+        "gelir idaresi",
+        "vergi dairesi"
+      ],
+      "file": "240.png"
+    },
+    {
+      "keys": [
+        "turkiye is kurumu",
+        "iskur"
+      ],
+      "file": "iskur.png"
+    },
+    {
+      "keys": [
+        "sosyal guvenlik kurumu",
+        "sgk"
+      ],
+      "file": "sgk.png"
+    },
+    {
+      "keys": [
+        "kamu ihale kurumu",
+        "kamu ihale"
+      ],
+      "file": "kik.png"
+    },
+    {
+      "keys": [
+        "bankacilik duzenleme",
+        "bddk"
+      ],
+      "file": "10090.png"
+    },
+    {
+      "keys": [
+        "sermaye piyasasi kurulu",
+        "spk"
+      ],
+      "file": "10065.png"
+    },
+    {
+      "keys": [
+        "tasarruf mevduati",
+        "tmsf"
+      ],
+      "file": "10135.png"
+    },
+    {
+      "keys": [
+        "turk patent",
+        "patent ve marka"
+      ],
+      "file": "300.png"
+    },
+    {
+      "keys": [
+        "savunma sanayii",
+        "ssb"
+      ],
+      "file": "232.png"
+    },
+    {
+      "keys": [
+        "vakiflar genel",
+        "vakiflar"
+      ],
+      "file": "615.png"
+    },
+    {
+      "keys": [
+        "iletisim baskanligi"
+      ],
+      "file": "213.png"
+    },
+    {
+      "keys": [
+        "tapu ve kadastro"
+      ],
+      "file": "250.png"
+    },
+    {
+      "keys": [
+        "ozellestirme idaresi"
+      ],
+      "file": "289.png"
+    },
+    {
+      "keys": [
+        "turk standartlari",
+        "tse"
+      ],
+      "file": "813.png"
+    },
+    {
+      "keys": [
+        "milli saraylar"
+      ],
+      "file": "millisaraylar.png"
+    },
+    {
+      "keys": [
+        "genclik ve spor"
+      ],
+      "file": "gsb.png"
+    },
+    {
+      "keys": [
+        "kultur ve turizm"
+      ],
+      "file": "ktb.png"
+    },
+    {
+      "keys": [
+        "tarim ve orman",
+        "seker fabrikalari"
+      ],
+      "file": "tarimorman.png"
+    },
+    {
+      "keys": [
+        "turkiye barolar birligi",
+        "barolar birligi"
+      ],
+      "file": "tbb.png"
+    },
+    {
+      "keys": [
+        "rize belediye",
+        "rize belediyesi"
+      ],
+      "file": "rize.png"
+    },
+    {
+      "keys": [
+        "ankara buyuksehir",
+        "ankara belka",
+        "belka a s",
+        "yenimahalle belediye",
+        "pursaklar belediye"
+      ],
+      "file": "ankara.png"
+    },
+    {
+      "keys": [
+        "istanbul buyuksehir",
+        "iett",
+        "iski",
+        "sile belediye"
+      ],
+      "file": "istanbul.png"
+    },
+    {
+      "keys": [
+        "igdir universite"
+      ],
+      "file": "igdir.png"
+    },
+    {
+      "keys": [
+        "kocaeli universite"
+      ],
+      "file": "kocaeli.png"
+    },
+    {
+      "keys": [
+        "bakircay universite"
+      ],
+      "file": "bakircay.png"
+    },
+    {
+      "keys": [
+        "alanya alaaddin keykubat",
+        "alku"
+      ],
+      "file": "alanya.png"
+    },
+    {
+      "keys": [
+        "tokat gaziosmanpasa",
+        "gaziosmanpasa universite"
+      ],
+      "file": "gop.png"
+    },
+    {
+      "keys": [
+        "kusadasi"
+      ],
+      "file": "BEL2.png"
+    },
+    {
+      "keys": [
+        "belediye",
+        "belediyesi",
+        "personel as",
+        "personel a s",
+        "ltd sti",
+        "baskanligi"
+      ],
+      "file": "BEL2.png"
+    }
+  ]
+}

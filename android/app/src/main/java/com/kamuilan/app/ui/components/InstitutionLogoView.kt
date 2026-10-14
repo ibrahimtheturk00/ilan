@@ -1,8 +1,13 @@
 package com.kamuilan.app.ui.components
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,13 +24,20 @@ import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Stars
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import org.json.JSONObject
+import java.io.InputStream
+import java.util.concurrent.ConcurrentHashMap
 
 enum class InstitutionLogoType {
     MINISTRY,
@@ -53,7 +65,6 @@ object InstitutionLogoDetector {
             .replace("ş", "s")
             .replace("ü", "u")
 
-        // 1. Adalet & Yargı
         if (norm.contains("adalet") ||
             norm.contains("yargitay") ||
             norm.contains("danistay") ||
@@ -64,7 +75,6 @@ object InstitutionLogoDetector {
             return InstitutionLogoType.JUSTICE
         }
 
-        // 2. Savunma, Askeri & Emniyet
         if (norm.contains("milli savunma") ||
             norm.contains("msb") ||
             norm.contains("kara kuvvetleri") ||
@@ -79,7 +89,6 @@ object InstitutionLogoDetector {
             return InstitutionLogoType.DEFENSE
         }
 
-        // 3. Sağlık & Hastaneler
         if (norm.contains("saglik") ||
             norm.contains("hastane") ||
             norm.contains("tip") ||
@@ -89,7 +98,6 @@ object InstitutionLogoDetector {
             return InstitutionLogoType.HEALTH
         }
 
-        // 4. Üniversiteler & Akademi
         if (norm.contains("universite") ||
             norm.contains("rektorluk") ||
             norm.contains("fakulte") ||
@@ -99,7 +107,6 @@ object InstitutionLogoDetector {
             return InstitutionLogoType.UNIVERSITY
         }
 
-        // 5. Belediyeler & Yerel Şirketler
         if (norm.contains("belediye") ||
             norm.contains("belediyesi") ||
             norm.contains("personel as") ||
@@ -111,7 +118,6 @@ object InstitutionLogoDetector {
             return InstitutionLogoType.MUNICIPALITY
         }
 
-        // 6. İŞKUR & Sosyal Güvenlik
         if (norm.contains("iskur") ||
             norm.contains("is kurumu") ||
             norm.contains("sgk") ||
@@ -121,7 +127,6 @@ object InstitutionLogoDetector {
             return InstitutionLogoType.ISKUR
         }
 
-        // 7. Finans, Denetim & Düzenleme
         if (norm.contains("hazine ve maliye") ||
             norm.contains("bddk") ||
             norm.contains("spk") ||
@@ -135,12 +140,10 @@ object InstitutionLogoDetector {
             return InstitutionLogoType.FINANCE
         }
 
-        // 8. Kalkınma Ajansları
         if (norm.contains("kalkinma ajansi") || norm.contains("ajansi")) {
             return InstitutionLogoType.DEVELOPMENT
         }
 
-        // 9. Cumhurbaşkanlığı & Bakanlıklar
         if (norm.contains("bakanlik") ||
             norm.contains("bakanligi") ||
             norm.contains("cumhurbaskanligi") ||
@@ -151,6 +154,98 @@ object InstitutionLogoDetector {
         }
 
         return InstitutionLogoType.GENERAL
+    }
+}
+
+object NativeLogoResolver {
+    private val bitmapCache = ConcurrentHashMap<String, Bitmap?>()
+    private var isLoaded = false
+    private val sbbEntries = mutableListOf<Pair<String, String>>()
+    private val extraRules = mutableListOf<Pair<List<String>, String>>()
+
+    private fun normalize(str: String): String {
+        return str.lowercase()
+            .replace("ç", "c")
+            .replace("ğ", "g")
+            .replace("ı", "i")
+            .replace("i̇", "i")
+            .replace("ö", "o")
+            .replace("ş", "s")
+            .replace("ü", "u")
+            .replace(Regex("[^a-z0-9]"), " ")
+            .replace(Regex("\\s+"), " ")
+            .trim()
+    }
+
+    private fun loadRules(context: Context) {
+        if (isLoaded) return
+        try {
+            val jsonStr = context.assets.open("institutionLogoData.json").bufferedReader().use { it.readText() }
+            val root = JSONObject(jsonStr)
+            val sbbArr = root.optJSONArray("sbbEntries")
+            if (sbbArr != null) {
+                for (i in 0 until sbbArr.length()) {
+                    val obj = sbbArr.getJSONObject(i)
+                    sbbEntries.add(Pair(obj.getString("key"), obj.getString("file")))
+                }
+            }
+            val extraArr = root.optJSONArray("extraRules")
+            if (extraArr != null) {
+                for (i in 0 until extraArr.length()) {
+                    val obj = extraArr.getJSONObject(i)
+                    val keysArr = obj.getJSONArray("keys")
+                    val keysList = mutableListOf<String>()
+                    for (k in 0 until keysArr.length()) {
+                        keysList.add(keysArr.getString(k))
+                    }
+                    extraRules.add(Pair(keysList, obj.getString("file")))
+                }
+            }
+            isLoaded = true
+        } catch (_: Exception) {
+            isLoaded = true
+        }
+    }
+
+    fun resolveFilename(context: Context, name: String?): String? {
+        if (name.isNullOrBlank()) return null
+        loadRules(context)
+        val n = normalize(name)
+
+        // 1. SBB exact/substring
+        for ((key, file) in sbbEntries) {
+            if (file == "BEL2.png") continue
+            if (n.contains(key) || key.contains(n)) {
+                return file
+            }
+        }
+
+        // 2. Extra rules
+        for ((keys, file) in extraRules) {
+            if (file == "BEL2.png") continue
+            for (k in keys) {
+                if (n.contains(k)) return file
+            }
+        }
+
+        // 3. Fallback municipal
+        if (n.contains("belediye") || n.contains("belediyesi") || n.contains("personel as") || n.contains("belka") || n.contains("ltd sti")) {
+            return "BEL2.png"
+        }
+
+        return null
+    }
+
+    fun loadBitmap(context: Context, filename: String): Bitmap? {
+        return bitmapCache.computeIfAbsent(filename) { file ->
+            try {
+                context.assets.open("logos/$file").use { inputStream ->
+                    BitmapFactory.decodeStream(inputStream)
+                }
+            } catch (_: Exception) {
+                null
+            }
+        }
     }
 }
 
@@ -227,7 +322,7 @@ private fun getLogoMeta(type: InstitutionLogoType): LogoVisualMeta {
 }
 
 /**
- * Hem web hem de mobilde tüm kurumların logolarını birebir eşit ebatta çizen bileşen.
+ * Hem web hem de mobilde tüm kurumların gerçek logolarını birebir eşit ebatta çizen bileşen.
  */
 @Composable
 fun InstitutionLogoView(
@@ -235,8 +330,11 @@ fun InstitutionLogoView(
     modifier: Modifier = Modifier,
     size: Dp = 38.dp
 ) {
-    val type = InstitutionLogoDetector.detectType(institution)
-    val meta = getLogoMeta(type)
+    val context = LocalContext.current
+    val realBitmap = remember(institution) {
+        val filename = NativeLogoResolver.resolveFilename(context, institution)
+        if (filename != null) NativeLogoResolver.loadBitmap(context, filename) else null
+    }
 
     Box(
         modifier = modifier
@@ -246,20 +344,32 @@ fun InstitutionLogoView(
             .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(8.dp)),
         contentAlignment = Alignment.Center
     ) {
-        // İç amblem rozeti (Daire şeklinde resmi mühür stili)
-        Box(
-            modifier = Modifier
-                .size(size - 6.dp)
-                .clip(CircleShape)
-                .background(meta.primaryColor),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = meta.icon,
-                contentDescription = meta.label,
-                tint = meta.iconTint,
-                modifier = Modifier.size(size * 0.54f)
+        if (realBitmap != null) {
+            Image(
+                bitmap = realBitmap.asImageBitmap(),
+                contentDescription = institution ?: "Kurum Logosu",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .size(size)
+                    .padding(3.dp)
             )
+        } else {
+            val type = InstitutionLogoDetector.detectType(institution)
+            val meta = getLogoMeta(type)
+            Box(
+                modifier = Modifier
+                    .size(size - 6.dp)
+                    .clip(CircleShape)
+                    .background(meta.primaryColor),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = meta.icon,
+                    contentDescription = meta.label,
+                    tint = meta.iconTint,
+                    modifier = Modifier.size(size * 0.54f)
+                )
+            }
         }
     }
 }
