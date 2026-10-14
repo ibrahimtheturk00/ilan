@@ -43,10 +43,10 @@ export default function HomePage() {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 transition-colors">
       {/* Kompakt, Net ve Sade Hero Başlık */}
       <div className="max-w-3xl mb-5 text-left sm:text-center sm:mx-auto">
-        <h1 className="font-heading text-2xl sm:text-3xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight">
+        <h1 className="font-heading text-3xl sm:text-4xl font-extrabold text-zinc-900 dark:text-zinc-100 tracking-tight leading-tight">
           Kamu Personeli ve Memur Alımları
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+        <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 mt-1.5">
           Kariyer Kapısı, SBB, İlan.gov.tr, İŞKUR ve Resmî Gazete ilanları tek ekranda.
         </p>
       </div>

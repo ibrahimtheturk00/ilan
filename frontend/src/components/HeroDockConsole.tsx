@@ -136,7 +136,7 @@ export function HeroDockConsole({
       <div className="relative rounded-2xl sm:rounded-[30px] border border-zinc-200/90 dark:border-white/10 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl shadow-xl dark:shadow-2xl p-3 sm:p-4 space-y-3 transition-all before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-zinc-300/60 dark:before:via-white/20 before:to-transparent">
         
         {/* 1. Üst Sekme Navigasyonu (Dock Tabs) */}
-        <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-zinc-100/70 dark:bg-zinc-950/60 border border-zinc-200/60 dark:border-white/5">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-zinc-100/70 dark:bg-zinc-950/60 border border-zinc-200/60 dark:border-white/5">
           {/* Tüm İlanlar */}
           <button
             onClick={() => {
@@ -144,13 +144,13 @@ export function HeroDockConsole({
               setActiveTab("all");
             }}
             type="button"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0 ${
               activeTab === "all"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm"
                 : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800/80"
             }`}
           >
-            <LayoutList className="w-3.5 h-3.5" />
+            <LayoutList className="w-4 h-4" />
             <span>Tüm İlanlar</span>
           </button>
 
@@ -158,15 +158,15 @@ export function HeroDockConsole({
           <button
             onClick={onSelectToday}
             type="button"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0 ${
               activeTab === "today"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm"
                 : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800/80"
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
+            <Sparkles className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
             <span>Bugün Eklenenler</span>
-            <span className="ml-0.5 px-1.5 py-0.2 rounded-full text-[9px] font-bold tracking-wide uppercase bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">
+            <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">
               Yeni
             </span>
           </button>
@@ -175,13 +175,13 @@ export function HeroDockConsole({
           <button
             onClick={() => setActiveTab("department")}
             type="button"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0 ${
               activeTab === "department"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm"
                 : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800/80"
             }`}
           >
-            <GraduationCap className="w-3.5 h-3.5" />
+            <GraduationCap className="w-4 h-4" />
             <span>Bölümüne Göre Ara</span>
           </button>
 
@@ -189,14 +189,14 @@ export function HeroDockConsole({
           <button
             onClick={() => setActiveTab("favorites")}
             type="button"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0 ${
               activeTab === "favorites"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm"
                 : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800/80"
             }`}
           >
             <Heart
-              className={`w-3.5 h-3.5 ${
+              className={`w-4 h-4 ${
                 activeTab === "favorites"
                   ? "fill-white text-white dark:fill-zinc-900 dark:text-zinc-900"
                   : "text-rose-500"
@@ -205,7 +205,7 @@ export function HeroDockConsole({
             <span>Favorilerim</span>
             {favoriteCount > 0 && (
               <span
-                className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono tabular-nums font-bold ${
+                className={`px-2 py-0.5 rounded-full text-xs font-mono tabular-nums font-bold ${
                   activeTab === "favorites"
                     ? "bg-zinc-700 text-white dark:bg-zinc-200 dark:text-zinc-900"
                     : "bg-rose-100 dark:bg-rose-950/70 text-rose-700 dark:text-rose-300"
@@ -220,13 +220,13 @@ export function HeroDockConsole({
           <button
             onClick={() => setActiveTab("report")}
             type="button"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-lg sm:rounded-xl text-xs font-semibold whitespace-nowrap transition-all shrink-0 ${
+            className={`inline-flex items-center gap-1.5 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-all shrink-0 ${
               activeTab === "report"
                 ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900 shadow-sm"
                 : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800/80"
             }`}
           >
-            <BarChart3 className="w-3.5 h-3.5" />
+            <BarChart3 className="w-4 h-4" />
             <span>İstihdam Raporu</span>
           </button>
         </div>
@@ -250,7 +250,7 @@ export function HeroDockConsole({
                 }
               }}
               placeholder="Unvan, kurum veya şehir ara (örn. Mühendis, Büro, Sağlık, İTÜ, Ankara)..."
-              className="w-full pl-10 pr-20 py-2.5 sm:py-3 text-xs sm:text-sm bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800/80 rounded-xl sm:rounded-2xl placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-400/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all text-zinc-900 dark:text-zinc-100 shadow-inner"
+              className="w-full pl-10 pr-20 py-3 sm:py-3.5 text-sm sm:text-base bg-zinc-50 dark:bg-zinc-950/80 border border-zinc-200 dark:border-zinc-800/80 rounded-xl sm:rounded-2xl placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-zinc-400/20 dark:focus:ring-white/10 focus:border-zinc-400 dark:focus:border-zinc-600 transition-all text-zinc-900 dark:text-zinc-100 shadow-inner"
             />
 
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center gap-1.5">
@@ -267,7 +267,7 @@ export function HeroDockConsole({
                   <X className="w-4 h-4" />
                 </button>
               ) : (
-                <div className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-800/80 border border-zinc-300/70 dark:border-zinc-700 text-[10px] font-mono text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">
+                <div className="hidden sm:flex items-center gap-0.5 px-2 py-0.5 rounded bg-zinc-200/70 dark:bg-zinc-800/80 border border-zinc-300/70 dark:border-zinc-700 text-xs font-mono text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">
                   <span>Ctrl</span>
                   <span>K</span>
                 </div>
@@ -277,8 +277,8 @@ export function HeroDockConsole({
 
           {/* Sadece arama çubuğuna tıklandığında/odaklanıldığında açılan kategoriler */}
           {isSearchFocused && (
-            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-1 px-1 rounded-xl bg-zinc-100/60 dark:bg-zinc-950/40 border border-zinc-200/50 dark:border-white/5 transition-all animate-fadeIn">
-              <span className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 shrink-0 pl-1">
+            <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-sm py-1.5 px-1.5 rounded-xl bg-zinc-100/60 dark:bg-zinc-950/40 border border-zinc-200/50 dark:border-white/5 transition-all animate-fadeIn">
+              <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 shrink-0 pl-1">
                 Kategoriler:
               </span>
               {QUICK_SEARCH_TAGS.map((tag) => {
@@ -288,7 +288,7 @@ export function HeroDockConsole({
                     key={tag}
                     type="button"
                     onClick={() => handleTagClick(tag)}
-                    className={`shrink-0 px-2.5 py-1 rounded-lg text-[11px] font-medium transition-colors border ${
+                    className={`shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors border ${
                       isSelected
                         ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-semibold"
                         : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
@@ -313,14 +313,14 @@ export function HeroDockConsole({
                   key={item.key || "all"}
                   type="button"
                   onClick={() => handlePostTypeClick(item.key)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-semibold whitespace-nowrap transition-colors border shrink-0 ${
+                  className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg sm:rounded-xl text-sm font-semibold whitespace-nowrap transition-colors border shrink-0 ${
                     isSelected
                       ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xs"
                       : "bg-white/80 dark:bg-zinc-900/80 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                   }`}
                 >
                   <span
-                    className={`w-1.5 h-1.5 rounded-full ${
+                    className={`w-2 h-2 rounded-full ${
                       isSelected ? "bg-white dark:bg-zinc-900" : item.dotColor
                     }`}
                   />
@@ -335,20 +335,20 @@ export function HeroDockConsole({
             <button
               type="button"
               onClick={() => setIsSortOpen(!isSortOpen)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg sm:rounded-xl text-xs font-semibold border transition-colors ${
+              className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-lg sm:rounded-xl text-sm font-semibold border transition-colors ${
                 isSortOpen
                   ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 shadow-xs"
                   : "bg-white/80 dark:bg-zinc-900/80 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
               }`}
               title="Sıralama Seçenekleri"
             >
-              <ArrowUpDown className="w-3.5 h-3.5 text-zinc-500" />
+              <ArrowUpDown className="w-4 h-4 text-zinc-500" />
               <span className="hidden md:inline">Sırala:</span>
               <span className="font-bold truncate max-w-[130px] sm:max-w-[160px]">
                 {currentSort.label}
               </span>
               <ChevronDown
-                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                className={`w-4 h-4 transition-transform duration-200 ${
                   isSortOpen ? "rotate-180" : ""
                 }`}
               />
@@ -356,8 +356,8 @@ export function HeroDockConsole({
 
             {/* Açılır Sıralama Menüsü */}
             {isSortOpen && (
-              <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-30 py-1.5 animate-fadeIn overflow-hidden">
-                <div className="px-3 py-1 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-700/60">
+              <div className="absolute right-0 mt-1.5 w-64 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-30 py-1.5 animate-fadeIn overflow-hidden">
+                <div className="px-3.5 py-1.5 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-700/60">
                   İlanları Sırala
                 </div>
                 <div className="p-1 space-y-0.5">
@@ -374,7 +374,7 @@ export function HeroDockConsole({
                             setActiveTab("all");
                           }
                         }}
-                        className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs flex items-center justify-between transition-colors ${
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between transition-colors ${
                           isActive
                             ? "bg-zinc-100 dark:bg-zinc-700 text-zinc-900 dark:text-zinc-100 font-bold"
                             : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700/60"
@@ -382,12 +382,12 @@ export function HeroDockConsole({
                       >
                         <div>
                           <div className="leading-tight">{opt.label}</div>
-                          <div className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-normal">
+                          <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5 font-normal">
                             {opt.desc}
                           </div>
                         </div>
                         {isActive && (
-                          <Check className="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100 shrink-0 ml-2" />
+                          <Check className="w-4 h-4 text-zinc-900 dark:text-zinc-100 shrink-0 ml-2" />
                         )}
                       </button>
                     );

@@ -23,6 +23,7 @@ import {
   cleanJobTitle,
   cleanInstitution,
   cleanJobDescription,
+  cleanTitleWithoutInstitution,
 } from "@/lib/utils";
 import { getJobMetaDetails } from "@/lib/jobParser";
 import { useFavorites } from "@/hooks/useFavorites";
@@ -43,16 +44,8 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   const rawTitle = cleanJobTitle(job.title, job.city, job.original_url);
   const displayInstitution = cleanInstitution(job.institution, job.title, job.city, job.original_url);
 
-  // Başlık ve Kurum adı birebir aynıysa (örn. Didim Belediyesi Personel Aş) tekrarı önle
-  const normTitle = rawTitle.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, "");
-  const normInst = displayInstitution.toLowerCase().replace(/[^a-z0-9ğüşıöç]/g, "");
-  const isTitleIdenticalToInst = normTitle === normInst;
-
-  const displayTitle = isTitleIdenticalToInst
-    ? rawTitle.toLowerCase().includes("personel") || rawTitle.toLowerCase().includes("alım")
-      ? rawTitle
-      : `${rawTitle} Personel Alımı`
-    : rawTitle;
+  // Kurum adı zaten üstte logo ile birlikte gösterildiği için başlıkta mükerrer kurum adını temizle
+  const displayTitle = cleanTitleWithoutInstitution(rawTitle, displayInstitution);
 
   const typeInfo = job.post_type ? POST_TYPE_LABELS[job.post_type] : POST_TYPE_LABELS.diger;
   const categoryInfo = job.category ? CATEGORY_LABELS[job.category] : CATEGORY_LABELS.diger;
@@ -212,12 +205,10 @@ export function JobCard({ job, onSelect }: JobCardProps) {
           </span>
         </div>
 
-        {/* İlan Başlığı (Punto 2 birim artırıldı: text-sm -> text-base sm:text-lg) */}
-        {!isTitleIdenticalToInst && (
-          <h3 className="font-heading text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 leading-snug tracking-tight">
-            {displayTitle}
-          </h3>
-        )}
+        {/* İlan Başlığı (Punto 2 birim artırıldı: text-base sm:text-lg) */}
+        <h3 className="font-heading text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-sky-600 dark:group-hover:text-sky-400 transition-colors line-clamp-2 leading-snug tracking-tight">
+          {displayTitle}
+        </h3>
 
         {/* Zenginleştirilmiş Meta (KPSS Şartsız, Eğitim, Yaş) - Puntolar text-xs yapıldı */}
         {(meta.kpssLabel || meta.educationLabel || meta.maxAge) && (

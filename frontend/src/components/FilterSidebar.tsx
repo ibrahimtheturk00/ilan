@@ -137,19 +137,19 @@ export function FilterSidebar() {
   };
 
   return (
-    <aside className="w-full lg:w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 space-y-5 transition-all sticky top-20">
+    <aside className="w-full lg:w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-4 space-y-5 transition-all sticky top-20">
       {/* Üst Başlık & Sıfırla */}
       <div className="flex items-center justify-between pb-3 border-b border-zinc-100 dark:border-zinc-800">
-        <div className="flex items-center gap-2 text-zinc-800 dark:text-zinc-200 font-bold text-xs">
-          <Filter className="w-3.5 h-3.5 text-zinc-600 dark:text-zinc-400" />
+        <div className="flex items-center gap-2 text-zinc-800 dark:text-zinc-200 font-bold text-sm">
+          <Filter className="w-4 h-4 text-zinc-600 dark:text-zinc-400" />
           <span>Filtreler</span>
         </div>
         {hasActiveFilters && (
           <button
             onClick={resetFilters}
-            className="flex items-center gap-1 text-[11px] text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 font-medium transition-colors"
+            className="flex items-center gap-1 text-xs text-zinc-500 hover:text-rose-600 dark:hover:text-rose-400 font-medium transition-colors"
           >
-            <RotateCcw className="w-3 h-3" />
+            <RotateCcw className="w-3.5 h-3.5" />
             <span>Temizle</span>
           </button>
         )}
@@ -161,61 +161,61 @@ export function FilterSidebar() {
         <button
           type="button"
           onClick={() => setOnlyToday(!onlyToday)}
-          className={`w-full flex items-center justify-between p-2.5 rounded-md border text-xs font-semibold transition-colors ${
+          className={`w-full flex items-center justify-between p-2.5 rounded-lg border text-sm font-semibold transition-colors ${
             onlyToday
               ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100"
               : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           }`}
         >
           <div className="flex items-center gap-2">
-            <Sparkles className={`w-3.5 h-3.5 ${onlyToday ? "text-white dark:text-zinc-900" : "text-emerald-600 dark:text-emerald-400"}`} />
+            <Sparkles className={`w-4 h-4 ${onlyToday ? "text-white dark:text-zinc-900" : "text-emerald-600 dark:text-emerald-400"}`} />
             <span>Bugün Eklenenler</span>
           </div>
-          {onlyToday && <Check className="w-3.5 h-3.5 text-white dark:text-zinc-900" />}
+          {onlyToday && <Check className="w-4 h-4 text-white dark:text-zinc-900" />}
         </button>
 
         {/* Son 3 Gün Filtresi (Emoji ve Ünlemsiz) */}
         <button
           type="button"
           onClick={() => setOnlyUrgent(!onlyUrgent)}
-          className={`w-full flex items-center justify-between p-2.5 rounded-md border text-xs font-semibold transition-colors ${
+          className={`w-full flex items-center justify-between p-2.5 rounded-lg border text-sm font-semibold transition-colors ${
             onlyUrgent
               ? "bg-rose-600 text-white border-rose-700"
               : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
           }`}
         >
           <div className="flex items-center gap-2">
-            <Clock className={`w-3.5 h-3.5 ${onlyUrgent ? "text-white" : "text-rose-600 dark:text-rose-400"}`} />
+            <Clock className={`w-4 h-4 ${onlyUrgent ? "text-white" : "text-rose-600 dark:text-rose-400"}`} />
             <span>Son 3 Gün</span>
           </div>
-          {onlyUrgent && <Check className="w-3.5 h-3.5 text-white" />}
+          {onlyUrgent && <Check className="w-4 h-4 text-white" />}
         </button>
       </div>
 
       {/* Şehir Seçimi & GPS Butonu */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
             Şehir / İl
           </label>
           <button
             type="button"
             onClick={handleDetectLocation}
             disabled={isLocating}
-            className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
             title="GPS ile yakınımdaki ilanları filtrele"
           >
             {isLocating ? (
-              <Loader2 className="w-3 h-3 animate-spin" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
             ) : (
-              <Navigation className="w-3 h-3" />
+              <Navigation className="w-3.5 h-3.5" />
             )}
             <span>Konumumu Bul</span>
           </button>
         </div>
 
         {locationMessage && (
-          <div className="text-[11px] p-2 rounded-lg bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+          <div className="text-xs p-2 rounded-lg bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
             {locationMessage}
           </div>
         )}
@@ -223,7 +223,7 @@ export function FilterSidebar() {
         <select
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="w-full text-xs py-2 px-3 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500 font-medium"
+          className="w-full text-sm py-2 px-3 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500 font-medium"
         >
           <option value="">
             Tüm Türkiye {cityCounts["Tüm Türkiye"] ? `(${cityCounts["Tüm Türkiye"]})` : ""}
@@ -241,8 +241,8 @@ export function FilterSidebar() {
 
       {/* KPSS Puan Türü Filtresi */}
       <div>
-        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-          <Award className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+          <Award className="w-4 h-4 text-blue-600 dark:text-blue-400" />
           <span>KPSS Puan Türü</span>
         </label>
         <div className="space-y-1">
@@ -253,14 +253,14 @@ export function FilterSidebar() {
                 key={opt.key || "all"}
                 type="button"
                 onClick={() => setKpssType(opt.key)}
-                className={`w-full text-left text-xs px-2.5 py-1.5 rounded-lg flex items-center justify-between transition-colors ${
+                className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                   isSelected
                     ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 font-bold"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
                 }`}
               >
                 <span>{opt.label}</span>
-                {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400" />}
+                {isSelected && <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />}
               </button>
             );
           })}
@@ -269,8 +269,8 @@ export function FilterSidebar() {
 
       {/* Eğitim Düzeyi Filtresi */}
       <div>
-        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-          <GraduationCap className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+          <GraduationCap className="w-4 h-4 text-purple-600 dark:text-purple-400" />
           <span>Eğitim Düzeyi</span>
         </label>
         <div className="space-y-1">
@@ -281,14 +281,14 @@ export function FilterSidebar() {
                 key={opt.key || "all"}
                 type="button"
                 onClick={() => setEducationLevel(opt.key)}
-                className={`w-full text-left text-xs px-2.5 py-1.5 rounded-lg flex items-center justify-between transition-colors ${
+                className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                   isSelected
                     ? "bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 font-bold"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
                 }`}
               >
                 <span>{opt.label}</span>
-                {isSelected && <span className="w-1.5 h-1.5 rounded-full bg-purple-600 dark:bg-purple-400" />}
+                {isSelected && <span className="w-2 h-2 rounded-full bg-purple-600 dark:bg-purple-400" />}
               </button>
             );
           })}
@@ -297,13 +297,13 @@ export function FilterSidebar() {
 
       {/* Kadro Türü */}
       <div>
-        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
           Kadro Türü
         </label>
         <div className="space-y-1">
           <button
             onClick={() => setPostType("")}
-            className={`w-full text-left text-xs px-2.5 py-1.5 rounded-lg transition-colors ${
+            className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
               !postType
                 ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
@@ -315,14 +315,14 @@ export function FilterSidebar() {
             <button
               key={key}
               onClick={() => setPostType(postType === key ? "" : key)}
-              className={`w-full text-left text-xs px-2.5 py-1.5 rounded-lg flex items-center justify-between transition-colors ${
+              className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                 postType === key
                   ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
                   : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
               }`}
             >
               <span>{info.label}</span>
-              {postType === key && <span className="w-1.5 h-1.5 rounded-full bg-brand-600 dark:bg-brand-400" />}
+              {postType === key && <span className="w-2 h-2 rounded-full bg-brand-600 dark:bg-brand-400" />}
             </button>
           ))}
         </div>
@@ -330,13 +330,13 @@ export function FilterSidebar() {
 
       {/* Meslek Alanı / Kategori */}
       <div>
-        <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
           Meslek / Alan
         </label>
         <div className="space-y-1">
           <button
             onClick={() => setCategory("")}
-            className={`w-full text-left text-xs px-2.5 py-1.5 rounded-lg transition-colors ${
+            className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
               !category
                 ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
@@ -348,14 +348,14 @@ export function FilterSidebar() {
             <button
               key={key}
               onClick={() => setCategory(category === key ? "" : key)}
-              className={`w-full text-left text-xs px-2.5 py-1.5 rounded-lg flex items-center justify-between transition-colors ${
+              className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                 category === key
                   ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
                   : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
               }`}
             >
               <span>{info.label}</span>
-              {category === key && <span className="w-1.5 h-1.5 rounded-full bg-brand-600 dark:bg-brand-400" />}
+              {category === key && <span className="w-2 h-2 rounded-full bg-brand-600 dark:bg-brand-400" />}
             </button>
           ))}
         </div>
@@ -363,7 +363,7 @@ export function FilterSidebar() {
 
       {/* Sadece Aktif İlanlar */}
       <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60">
-        <label className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-700 dark:text-slate-300">
+        <label className="flex items-center gap-2.5 cursor-pointer text-sm font-medium text-slate-700 dark:text-slate-300">
           <input
             type="checkbox"
             checked={onlyActive}

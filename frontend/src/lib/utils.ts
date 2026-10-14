@@ -75,6 +75,76 @@ export function cleanJobTitle(title: string | null | undefined, city?: string | 
   return cleaned || "Resmi Kamu İlanı";
 }
 
+/**
+ * Eğer kurum adı kartın üstünde zaten gösteriliyorsa,
+ * başlığın başında tekrar eden kurum adını temizler.
+ * Örnek: "MEVLANA KALKINMA AJANSI Personel Alım İlanı..." -> "Personel Alım İlanı..."
+ * Örnek: "ŞİLE BELEDİYE BAŞKANLIĞI 6 MEMUR ALACAK" -> "6 MEMUR ALACAK"
+ */
+export function cleanTitleWithoutInstitution(title: string | null | undefined, institution: string | null | undefined): string {
+  if (!title) return "Personel Alım İlanı";
+  if (!institution) return title;
+
+  let t = title.trim();
+  const inst = institution.trim();
+
+  // Tam eşleşme (Title sadece kurum adından ibaretse)
+  if (t.toLocaleLowerCase("tr-TR") === inst.toLocaleLowerCase("tr-TR")) {
+    return "Personel Alım İlanı";
+  }
+
+  // Kurum adının başlıktaki varyasyonları
+  const instClean = inst.replace(/^T\.?C\.?\s+/i, "");
+  const instVariants: string[] = [
+    inst,
+    instClean,
+    inst.replace(/\s+Başkanlığı$/i, ""),
+    instClean.replace(/\s+Başkanlığı$/i, ""),
+    inst.replace(/\s+Belediye\s+Başkanlığı$/i, " Belediyesi"),
+    instClean.replace(/\s+Belediye\s+Başkanlığı$/i, " Belediyesi"),
+    inst.replace(/\s+Belediyesi$/i, " Belediye Başkanlığı"),
+    instClean.replace(/\s+Belediyesi$/i, " Belediye Başkanlığı"),
+    inst.replace(/\s+Belediyesi$/i, ""),
+    instClean.replace(/\s+Belediyesi$/i, ""),
+    inst.replace(/\s+Müdürlüğü$/i, ""),
+    instClean.replace(/\s+Müdürlüğü$/i, ""),
+    inst.replace(/\s+Genel\s+Müdürlüğü$/i, ""),
+    instClean.replace(/\s+Genel\s+Müdürlüğü$/i, ""),
+    inst.replace(/\s+Rektörlüğü$/i, ""),
+    instClean.replace(/\s+Rektörlüğü$/i, ""),
+    inst.replace(/\s+Bakanlığı$/i, ""),
+    instClean.replace(/\s+Bakanlığı$/i, ""),
+  ].filter(Boolean);
+
+  // Uzundan kısaya sırala ki en uzun eşleşen kurum kökü önce temizlensin
+  instVariants.sort((a, b) => b.length - a.length);
+
+  for (const variant of instVariants) {
+    if (!variant || variant.length < 3) continue;
+
+    const lowerT = t.toLocaleLowerCase("tr-TR");
+    const lowerV = variant.toLocaleLowerCase("tr-TR");
+
+    if (lowerT.startsWith(lowerV)) {
+      let remainder = t.slice(variant.length).trim();
+      // Başındaki ayraçları temizle: '-', ':', '/', '–', '.', vb.
+      remainder = remainder.replace(/^[-:–/•|.]+\s*/, "").trim();
+      if (remainder.length >= 3) {
+        t = remainder;
+        break;
+      }
+    }
+  }
+
+  // Eğer temizlendikten sonra boş veya çok kısa kaldıysa
+  if (!t || t.length < 3) {
+    return "Personel Alım İlanı";
+  }
+
+  // İlk harfini düzelt
+  return t.charAt(0).toLocaleUpperCase("tr-TR") + t.slice(1);
+}
+
 export function sanitizePositionCount(count: number | null | undefined): number {
   if (!count || typeof count !== "number" || isNaN(count) || count <= 0) return 1;
   // Takvim yılları (2020..2035) örn. "2026 Personel" gibi hatalı yakalanan yılları 1 say

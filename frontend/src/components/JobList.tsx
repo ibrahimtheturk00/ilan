@@ -94,7 +94,7 @@ export function JobList() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 px-1">
+      <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400 px-1">
         <span>
           Toplam <strong className="text-slate-800 dark:text-slate-200">{totalCount}</strong> güncel ilan listeleniyor
         </span>
@@ -108,14 +108,14 @@ export function JobList() {
 
       {/* Sayfalama Kontrolleri */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-1 pt-6 pb-2">
+        <div className="flex items-center justify-center gap-1.5 pt-6 pb-2">
           {filters.page > 1 && (
             <button
               onClick={() => {
                 filters.setPage(filters.page - 1);
                 window.scrollTo({ top: 200, behavior: "smooth" });
               }}
-              className="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100 px-2.5 py-1.5 transition-colors mr-1"
+              className="text-sm font-semibold text-zinc-600 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100 px-3 py-1.5 transition-colors mr-1"
             >
               önceki
             </button>
@@ -133,16 +133,16 @@ export function JobList() {
               return (
                 <div key={p} className="flex items-center gap-1">
                   {showEllipsis && (
-                    <span className="text-xs text-zinc-400 px-1 select-none">...</span>
+                    <span className="text-sm text-zinc-400 px-1.5 select-none">...</span>
                   )}
                   <button
                     onClick={() => {
                       filters.setPage(p);
                       window.scrollTo({ top: 200, behavior: "smooth" });
                     }}
-                    className={`w-8 h-8 rounded-md text-xs font-mono tabular-nums font-semibold flex items-center justify-center transition-colors ${
+                    className={`w-9 h-9 rounded-lg text-sm font-mono tabular-nums font-bold flex items-center justify-center transition-colors ${
                       filters.page === p
-                        ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
+                        ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 shadow-xs"
                         : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200/70 dark:hover:bg-zinc-800"
                     }`}
                   >
@@ -158,7 +158,7 @@ export function JobList() {
                 filters.setPage(filters.page + 1);
                 window.scrollTo({ top: 200, behavior: "smooth" });
               }}
-              className="text-xs font-medium text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100 px-2.5 py-1.5 transition-colors ml-1"
+              className="text-sm font-semibold text-zinc-700 hover:text-zinc-900 dark:text-zinc-300 dark:hover:text-zinc-100 px-3 py-1.5 transition-colors ml-1"
             >
               sonraki
             </button>

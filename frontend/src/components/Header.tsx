@@ -14,10 +14,10 @@ export function Header() {
             <Building2 className="w-4 h-4" />
           </div>
           <div>
-            <span className="font-heading text-base sm:text-lg font-bold text-zinc-900 dark:text-zinc-100 tracking-tight block leading-tight">
+            <span className="font-heading text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight block leading-tight">
               Kamu İlan Merkezi
             </span>
-            <span className="text-[11px] text-zinc-500 dark:text-zinc-400 block -mt-0.5">
+            <span className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 block mt-0.5">
               Güncel Resmî Personel Alımları
             </span>
           </div>
@@ -31,21 +31,21 @@ export function Header() {
             download="kamu-ilan.apk"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 text-xs font-semibold shadow-xs transition-colors"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-white text-white dark:text-zinc-900 text-sm font-semibold shadow-xs transition-colors"
             title="Kamu İlan Android uygulamasını (.apk) doğrudan indirin"
           >
-            <Smartphone className="w-3.5 h-3.5" />
+            <Smartphone className="w-4 h-4" />
             <span className="hidden sm:inline">Mobil Uygulama</span>
-            <Download className="w-3 h-3 opacity-80" />
+            <Download className="w-3.5 h-3.5 opacity-80" />
           </a>
 
           <ThemeToggle />
 
           <Link
             href="/admin/"
-            className="flex items-center gap-1.5 text-xs font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white px-2.5 py-1.5 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+            className="flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-zinc-500" />
+            <ShieldCheck className="w-4 h-4 text-zinc-500" />
             <span className="hidden sm:inline">Loglar</span>
           </Link>
         </div>

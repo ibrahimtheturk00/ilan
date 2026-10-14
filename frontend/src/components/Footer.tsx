@@ -38,7 +38,7 @@ export function Footer() {
   }, []);
 
   return (
-    <footer className="relative border-t border-zinc-200/80 dark:border-white/10 bg-white/40 dark:bg-[#0c101a]/70 backdrop-blur-2xl py-12 text-xs text-zinc-500 dark:text-zinc-400 transition-colors overflow-hidden">
+    <footer className="relative border-t border-zinc-200/80 dark:border-white/10 bg-white/40 dark:bg-[#0c101a]/70 backdrop-blur-2xl py-12 text-sm text-zinc-500 dark:text-zinc-400 transition-colors overflow-hidden">
       {/* 
         Marquee Card: Glassmorphism Kaynaklar Bandı
         Tıpkı verilen template'teki "Trusted by Industry Leaders" gibi maskelenmiş ve kesintisiz kayan kart
@@ -51,11 +51,11 @@ export function Footer() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <h3 className="text-xs sm:text-sm font-semibold tracking-wide uppercase text-zinc-700 dark:text-zinc-300">
+              <h3 className="text-sm sm:text-base font-semibold tracking-wide uppercase text-zinc-700 dark:text-zinc-300">
                 Canlı Doğrulanan Resmî Kaynaklar
               </h3>
             </div>
-            <span className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 hidden sm:inline">
+            <span className="text-xs sm:text-sm font-medium text-zinc-400 dark:text-zinc-500 hidden sm:inline">
               Doğrudan devlet portallarından senkronize edilir
             </span>
           </div>
@@ -75,17 +75,17 @@ export function Footer() {
                 return (
                   <div 
                     key={i}
-                    className="flex items-center gap-3 px-4 py-2 rounded-2xl border border-zinc-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 opacity-80 transition-all hover:opacity-100 hover:scale-105 cursor-default hover:border-blue-500/40 shadow-xs"
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-2xl border border-zinc-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 opacity-80 transition-all hover:opacity-100 hover:scale-105 cursor-default hover:border-blue-500/40 shadow-xs"
                   >
-                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 dark:bg-blue-400/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                    <div className="w-9 h-9 rounded-xl bg-blue-500/10 dark:bg-blue-400/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
                       <IconComponent className="w-4 h-4" />
                     </div>
                     <div className="text-left">
-                      <div className="text-xs sm:text-sm font-bold text-zinc-900 dark:text-zinc-100 tracking-tight flex items-center gap-1.5">
+                      <div className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100 tracking-tight flex items-center gap-1.5">
                         <span>{src.name}</span>
-                        <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />
+                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                       </div>
-                      <div className="text-[10px] text-zinc-400 dark:text-zinc-500 font-medium font-mono">
+                      <div className="text-xs text-zinc-400 dark:text-zinc-500 font-medium font-mono">
                         {src.sub}
                       </div>
                     </div>
@@ -100,7 +100,7 @@ export function Footer() {
       {/* Alt Footer Alanı: Telif, Kullanıcı Sayısı & İletişim */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-zinc-200/60 dark:border-white/5">
         {/* Sol: Telif & İletişim */}
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left">
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-center sm:text-left text-sm">
           <span className="font-medium text-zinc-600 dark:text-zinc-400">
             © {new Date().getFullYear()} Kamu İlan Merkezi. Tüm hakları saklıdır.
           </span>
@@ -109,7 +109,7 @@ export function Footer() {
             href="mailto:turk.ibrahim395@gmail.com"
             className="inline-flex items-center gap-1.5 text-zinc-700 dark:text-zinc-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium transition-colors"
           >
-            <Mail className="w-3.5 h-3.5" />
+            <Mail className="w-4 h-4" />
             <span>İletişim: turk.ibrahim395@gmail.com</span>
           </a>
         </div>
@@ -117,8 +117,8 @@ export function Footer() {
         {/* Sağ: Kullanıcı Sayısı Rozeti */}
         <div className="flex items-center gap-3">
           {visitorCount !== null && (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-200/70 dark:bg-white/5 border border-zinc-300/60 dark:border-white/10 text-xs font-medium text-zinc-700 dark:text-zinc-300 backdrop-blur-md">
-              <Users className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-200/70 dark:bg-white/5 border border-zinc-300/60 dark:border-white/10 text-sm font-medium text-zinc-700 dark:text-zinc-300 backdrop-blur-md">
+              <Users className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
               <span>Kullanıcı Sayısı:</span>
               <strong className="font-mono tabular-nums font-bold text-zinc-950 dark:text-white">
                 {visitorCount.toLocaleString("tr-TR")}
