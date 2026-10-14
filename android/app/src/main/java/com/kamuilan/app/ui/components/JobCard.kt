@@ -186,7 +186,7 @@ fun JobCard(
                         Text(
                             text = "$sourceName · $catLabel",
                             fontSize = 12.sp,
-                            color = Color(0xFF71717A),
+                            color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -194,15 +194,15 @@ fun JobCard(
                         if (isToday) {
                             Box(
                                 modifier = Modifier
-                                    .background(Color(0xFFECFDF5), RoundedCornerShape(6.dp))
-                                    .border(1.dp, Color(0xFFA7F3D0), RoundedCornerShape(6.dp))
+                                    .background(if (isDark) Color(0x3310B981) else Color(0xFFECFDF5), RoundedCornerShape(6.dp))
+                                    .border(1.dp, if (isDark) Color(0x6610B981) else Color(0xFFA7F3D0), RoundedCornerShape(6.dp))
                                     .padding(horizontal = 6.dp, vertical = 2.dp)
                             ) {
                                 Text(
                                     text = "Bugün",
                                     fontSize = 11.sp,
                                     fontWeight = FontWeight.Bold,
-                                    color = Color(0xFF047857)
+                                    color = if (isDark) Color(0xFF6EE7B7) else Color(0xFF047857)
                                 )
                             }
                         }
@@ -348,14 +348,14 @@ fun JobCard(
                             Icon(
                                 imageVector = Icons.Default.LocationOn,
                                 contentDescription = null,
-                                tint = Color(0xFFA1A1AA),
+                                tint = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
                                 modifier = Modifier.size(15.dp)
                             )
                             Text(
                                 text = displayCity,
-                                fontSize = 14.sp,
+                                fontSize = 13.sp,
                                 fontWeight = FontWeight.Medium,
-                                color = Color(0xFF3F3F46),
+                                color = if (isDark) Color(0xFFE2E8F0) else Color(0xFF334155),
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
@@ -366,20 +366,21 @@ fun JobCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 modifier = Modifier
-                                    .background(Color(0xFFF4F4F5), RoundedCornerShape(4.dp))
-                                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                                    .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
+                                    .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 6.dp, vertical = 2.5.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.People,
                                     contentDescription = null,
-                                    tint = Color(0xFFA1A1AA),
-                                    modifier = Modifier.size(14.dp)
+                                    tint = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                                    modifier = Modifier.size(13.dp)
                                 )
                                 Text(
                                     text = "${job.positionCount} Kişi",
-                                    fontSize = 13.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = Color(0xFF18181B),
+                                    color = if (isDark) Color(0xFFF8FAFC) else Color(0xFF0F172A),
                                     maxLines = 1
                                 )
                             }
@@ -397,15 +398,15 @@ fun JobCard(
                             isCancelled -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(Color(0xFFFEE2E2), RoundedCornerShape(6.dp))
-                                        .border(1.dp, Color(0xFFFCA5A5), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0x33EF4444) else Color(0xFFFEE2E2), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0x66EF4444) else Color(0xFFFCA5A5), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = "İptal Edildi",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color(0xFFDC2626),
+                                        color = if (isDark) Color(0xFFF87171) else Color(0xFFDC2626),
                                         maxLines = 1
                                     )
                                 }
@@ -413,15 +414,15 @@ fun JobCard(
                             daysRemaining == null -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(Color(0xFFF4F4F5), RoundedCornerShape(6.dp))
-                                        .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = "Başvuru Aktif",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = Color(0xFF52525B),
+                                        color = if (isDark) Color(0xFFCBD5E1) else Color(0xFF475569),
                                         maxLines = 1
                                     )
                                 }
@@ -429,15 +430,15 @@ fun JobCard(
                             daysRemaining < 0 -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(Color(0xFFF4F4F5), RoundedCornerShape(6.dp))
-                                        .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = "Süresi Doldu",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = Color(0xFF71717A),
+                                        color = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
                                         maxLines = 1
                                     )
                                 }
@@ -446,15 +447,15 @@ fun JobCard(
                                 val urgentText = if (daysRemaining == 0L) "Bugün Son Gün!" else "Son $daysRemaining gün!"
                                 Box(
                                     modifier = Modifier
-                                        .background(Color(0xFFFFE4E6), RoundedCornerShape(6.dp))
-                                        .border(1.dp, Color(0xFFFECDD3), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0x33F43F5E) else Color(0xFFFFE4E6), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0x66F43F5E) else Color(0xFFFECDD3), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = urgentText,
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
-                                        color = Color(0xFFBE123C),
+                                        color = if (isDark) Color(0xFFFDA4AF) else Color(0xFFBE123C),
                                         maxLines = 1
                                     )
                                 }
@@ -462,15 +463,15 @@ fun JobCard(
                             daysRemaining <= 7 -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(Color(0xFFFEF3C7), RoundedCornerShape(6.dp))
-                                        .border(1.dp, Color(0xFFFDE68A), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0x33F59E0B) else Color(0xFFFEF3C7), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0x66F59E0B) else Color(0xFFFDE68A), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = "$daysRemaining gün kaldı",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Medium,
-                                        color = Color(0xFF92400E),
+                                        color = if (isDark) Color(0xFFFDE68A) else Color(0xFF92400E),
                                         maxLines = 1
                                     )
                                 }
@@ -478,15 +479,15 @@ fun JobCard(
                             else -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(Color(0xFFF4F4F5), RoundedCornerShape(6.dp))
-                                        .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = "$daysRemaining gün kaldı",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Normal,
-                                        color = Color(0xFF52525B),
+                                        color = if (isDark) Color(0xFFCBD5E1) else Color(0xFF475569),
                                         maxLines = 1
                                     )
                                 }
@@ -497,8 +498,8 @@ fun JobCard(
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(Color(0xFFF4F4F5))
-                                .border(1.dp, Color(0xFFE4E4E7), RoundedCornerShape(6.dp))
+                                .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9))
+                                .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFCBD5E1), RoundedCornerShape(6.dp))
                                 .clickable { onClick() }
                                 .padding(horizontal = 10.dp, vertical = 5.dp),
                             contentAlignment = Alignment.Center
@@ -511,13 +512,13 @@ fun JobCard(
                                     text = "İncele",
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = Color(0xFF18181B),
+                                    color = if (isDark) Color(0xFFF8FAFC) else Color(0xFF0F172A),
                                     maxLines = 1
                                 )
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                     contentDescription = null,
-                                    tint = Color(0xFF18181B),
+                                    tint = if (isDark) Color(0xFFF8FAFC) else Color(0xFF0F172A),
                                     modifier = Modifier.size(13.dp)
                                 )
                             }

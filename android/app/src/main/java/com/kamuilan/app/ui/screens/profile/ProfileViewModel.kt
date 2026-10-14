@@ -36,6 +36,25 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             initialValue = true
         )
 
+    val themeMode: StateFlow<String> = preferencesManager.themeModeFlow
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = "system"
+        )
+
+    fun setThemeMode(mode: String) {
+        viewModelScope.launch {
+            preferencesManager.setThemeMode(mode)
+            val msg = when (mode) {
+                "light" -> "Açık tema uygulandı."
+                "dark" -> "Koyu tema uygulandı."
+                else -> "Sistem varsayılan teması uygulandı."
+            }
+            _uiState.value = _uiState.value.copy(infoMessage = msg)
+        }
+    }
+
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 

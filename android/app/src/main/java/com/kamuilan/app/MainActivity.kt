@@ -9,8 +9,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import com.kamuilan.app.data.local.PreferencesManager
 import com.kamuilan.app.notification.JobNotificationHelper
 import com.kamuilan.app.notification.NotificationScheduler
 import com.kamuilan.app.ui.navigation.AppNavigation
@@ -52,9 +55,27 @@ class MainActivity : ComponentActivity() {
             com.kamuilan.app.data.api.VisitorTracker.trackAppLaunch(applicationContext)
         }
 
+        val preferencesManager = PreferencesManager(applicationContext)
+
         setContent {
-            KamuIlanMerkeziTheme {
-                AppNavigation(initialJobId = initialJobId)
+            val themeMode by preferencesManager.themeModeFlow.collectAsState(initial = "system")
+            val systemDark = androidx.compose.foundation.isSystemInDarkTheme()
+            val isDark = when (themeMode) {
+                "dark" -> true
+                "light" -> false
+                else -> systemDark
+            }
+
+            KamuIlanMerkeziTheme(darkTheme = isDark) {
+                AppNavigation(
+                    initialJobId = initialJobId,
+                    currentThemeMode = themeMode,
+                    onThemeModeChange = { newMode ->
+                        lifecycleScope.launch {
+                            preferencesManager.setThemeMode(newMode)
+                        }
+                    }
+                )
             }
         }
     }

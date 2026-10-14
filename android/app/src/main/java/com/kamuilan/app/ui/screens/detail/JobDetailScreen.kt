@@ -196,7 +196,7 @@ fun JobDetailScreen(
                         .background(
                             brush = Brush.verticalGradient(
                                 colors = listOf(
-                                    BrandPrimary.copy(alpha = 0.06f),
+                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.08f),
                                     Color.Transparent
                                 )
                             )

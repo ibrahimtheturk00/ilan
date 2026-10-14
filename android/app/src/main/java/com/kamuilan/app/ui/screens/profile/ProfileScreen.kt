@@ -19,6 +19,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.SettingsBrightness
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
@@ -64,6 +68,8 @@ import com.kamuilan.app.ui.theme.UrgentRose
 fun ProfileScreen(
     viewModel: ProfileViewModel,
     onEditPreferences: () -> Unit = {},
+    currentThemeMode: String = "system",
+    onThemeModeChange: (String) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -200,7 +206,77 @@ fun ProfileScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // 2. Bildirim Tercihleri Kartı
+            // 2. Görünüm & Tema Modu Kartı
+            SettingsCard(
+                title = "Görünüm & Tema",
+                subtitle = "Uygulama renk ve tema modunu seçin",
+                icon = Icons.Default.Palette,
+                iconColor = androidx.compose.material3.MaterialTheme.colorScheme.primary
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        val themeOptions = listOf(
+                            Triple("system", "Sistem", Icons.Default.SettingsBrightness),
+                            Triple("light", "Açık", Icons.Default.LightMode),
+                            Triple("dark", "Koyu", Icons.Default.DarkMode)
+                        )
+
+                        themeOptions.forEach { (modeKey, modeTitle, modeIcon) ->
+                            val isSelected = currentThemeMode == modeKey
+                            val shape = RoundedCornerShape(12.dp)
+
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(shape)
+                                    .clickable {
+                                        onThemeModeChange(modeKey)
+                                        viewModel.setThemeMode(modeKey)
+                                    }
+                                    .background(
+                                        if (isSelected) androidx.compose.material3.MaterialTheme.colorScheme.primary.copy(alpha = 0.15f)
+                                        else androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                                    )
+                                    .border(
+                                        width = if (isSelected) 1.5.dp else 1.dp,
+                                        color = if (isSelected) androidx.compose.material3.MaterialTheme.colorScheme.primary
+                                                else androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                                        shape = shape
+                                    )
+                                    .padding(vertical = 12.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = modeIcon,
+                                        contentDescription = modeTitle,
+                                        tint = if (isSelected) androidx.compose.material3.MaterialTheme.colorScheme.primary
+                                               else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant,
+                                        modifier = Modifier.size(20.dp)
+                                    )
+                                    Text(
+                                        text = modeTitle,
+                                        fontSize = 12.sp,
+                                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                        color = if (isSelected) androidx.compose.material3.MaterialTheme.colorScheme.primary
+                                               else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // 3. Bildirim Tercihleri Kartı
             SettingsCard(
                 title = "Bildirim Tercihleri",
                 subtitle = "Kamu ilan bildirimlerini yapılandırın",

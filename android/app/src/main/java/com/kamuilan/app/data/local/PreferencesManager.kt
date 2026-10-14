@@ -35,6 +35,19 @@ class PreferencesManager(private val context: Context) {
         // Bildirim Ayarları ve Görülen İlanlar
         private val KEY_NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
         private val KEY_SEEN_JOB_IDS = stringSetPreferencesKey("seen_job_ids")
+
+        // Tema Modu ("system", "light", "dark")
+        private val KEY_THEME_MODE = stringPreferencesKey("app_theme_mode")
+    }
+
+    val themeModeFlow: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[KEY_THEME_MODE] ?: "system"
+    }
+
+    suspend fun setThemeMode(mode: String) {
+        context.dataStore.edit { preferences ->
+            preferences[KEY_THEME_MODE] = mode
+        }
     }
 
     val favoriteJobIdsFlow: Flow<Set<String>> = context.dataStore.data.map { preferences ->

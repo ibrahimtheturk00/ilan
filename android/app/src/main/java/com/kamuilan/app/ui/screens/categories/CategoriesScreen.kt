@@ -225,15 +225,18 @@ fun YokCategoryCard(
                 }
 
                 // Canlı İlan Sayısı Rozeti
+                val isDark = androidx.compose.foundation.isSystemInDarkTheme()
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
                         .background(
-                            if (count > 0) ActiveEmeraldBg else androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
+                            if (count > 0) (if (isDark) Color(0x3310B981) else ActiveEmeraldBg)
+                            else androidx.compose.material3.MaterialTheme.colorScheme.surfaceVariant
                         )
                         .border(
                             1.dp,
-                            if (count > 0) ActiveEmeraldBorder else androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant,
+                            if (count > 0) (if (isDark) Color(0x6610B981) else ActiveEmeraldBorder)
+                            else androidx.compose.material3.MaterialTheme.colorScheme.outlineVariant,
                             RoundedCornerShape(12.dp)
                         )
                         .padding(horizontal = 7.dp, vertical = 3.dp)
@@ -242,7 +245,8 @@ fun YokCategoryCard(
                         text = "$count İlan",
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
-                        color = if (count > 0) ActiveEmerald else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
+                        color = if (count > 0) (if (isDark) Color(0xFF6EE7B7) else ActiveEmerald)
+                               else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

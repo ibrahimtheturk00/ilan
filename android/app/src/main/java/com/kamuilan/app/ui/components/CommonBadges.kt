@@ -102,12 +102,13 @@ fun AppIconBadge(
 
 @Composable
 fun TodayAddedBadge(modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = "Bugün Eklendi",
         icon = Icons.Default.AutoAwesome,
-        backgroundColor = Color(0xFFFEF3C7),
-        textColor = Color(0xFF92400E),
-        borderColor = Color(0xFFFDE68A),
+        backgroundColor = if (isDark) Color(0x33F59E0B) else Color(0xFFFEF3C7),
+        textColor = if (isDark) Color(0xFFFDE68A) else Color(0xFF92400E),
+        borderColor = if (isDark) Color(0x66F59E0B) else Color(0xFFFDE68A),
         modifier = modifier
     )
 }
@@ -139,6 +140,7 @@ fun PostTypeBadge(postType: String?, modifier: Modifier = Modifier) {
 
 @Composable
 fun UrgentBadge(daysRemaining: Long, modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     val text = when {
         daysRemaining <= 0 -> "Bugün Son Gün!"
         daysRemaining == 1L -> "Son 1 Gün Kaldı!"
@@ -147,20 +149,22 @@ fun UrgentBadge(daysRemaining: Long, modifier: Modifier = Modifier) {
     AppIconBadge(
         text = text,
         icon = Icons.Default.AccessTime,
-        backgroundColor = UrgentRoseBg,
-        textColor = UrgentRose,
-        borderColor = UrgentRoseBorder,
+        backgroundColor = if (isDark) Color(0x33F43F5E) else Color(0xFFFFE4E6),
+        textColor = if (isDark) Color(0xFFFDA4AF) else Color(0xFFBE123C),
+        borderColor = if (isDark) Color(0x66F43F5E) else Color(0xFFFECDD3),
         modifier = modifier
     )
 }
 
 @Composable
 fun CancelledBadge(modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = "İptal İlanı",
         icon = Icons.Default.Cancel,
-        backgroundColor = CancelledRed,
-        textColor = Color.White,
+        backgroundColor = if (isDark) Color(0x33EF4444) else Color(0xFFFEE2E2),
+        textColor = if (isDark) Color(0xFFF87171) else Color(0xFFDC2626),
+        borderColor = if (isDark) Color(0x66EF4444) else Color(0xFFFCA5A5),
         modifier = modifier
     )
 }
@@ -168,12 +172,13 @@ fun CancelledBadge(modifier: Modifier = Modifier) {
 @Composable
 fun KpssBadge(kpssType: String, modifier: Modifier = Modifier) {
     if (kpssType == "Belirtilmemiş") return
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = kpssType,
         icon = Icons.Default.MilitaryTech,
-        backgroundColor = KpssBlueBg,
-        textColor = KpssBlue,
-        borderColor = KpssBlueBorder,
+        backgroundColor = if (isDark) Color(0x2E38BDF8) else Color(0xFFEFF6FF),
+        textColor = if (isDark) Color(0xFF7DD3FC) else Color(0xFF1D4ED8),
+        borderColor = if (isDark) Color(0x5938BDF8) else Color(0xFFBFDBFE),
         modifier = modifier
     )
 }
@@ -181,60 +186,65 @@ fun KpssBadge(kpssType: String, modifier: Modifier = Modifier) {
 @Composable
 fun EducationBadge(educationLevel: String, modifier: Modifier = Modifier) {
     if (educationLevel == "Belirtilmemiş") return
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = educationLevel,
         icon = Icons.Default.School,
-        backgroundColor = EducationPurpleBg,
-        textColor = EducationPurple,
-        borderColor = EducationPurpleBorder,
+        backgroundColor = if (isDark) Color(0x2EA855F7) else Color(0xFFFAF5FF),
+        textColor = if (isDark) Color(0xFFD8B4FE) else Color(0xFF6B21A8),
+        borderColor = if (isDark) Color(0x59A855F7) else Color(0xFFE9D5FF),
         modifier = modifier
     )
 }
 
 @Composable
 fun AgeBadge(maxAge: Int, modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = "Maks. $maxAge Yaş",
         icon = Icons.Default.Schedule,
-        backgroundColor = AgeAmberBg,
-        textColor = AgeAmber,
-        borderColor = AgeAmberBorder,
+        backgroundColor = if (isDark) Color(0x2EF59E0B) else Color(0xFFFFFBEB),
+        textColor = if (isDark) Color(0xFFFCD34D) else Color(0xFFB45309),
+        borderColor = if (isDark) Color(0x59F59E0B) else Color(0xFFFEF3C7),
         modifier = modifier
     )
 }
 
 @Composable
 fun SourceBadge(sourceName: String, modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = sourceName,
         icon = Icons.Default.Public,
-        backgroundColor = SourceIndigoBg,
-        textColor = SourceIndigo,
-        borderColor = SourceIndigoBorder,
+        backgroundColor = if (isDark) Color(0x2E818CF8) else Color(0xFFEEF2FF),
+        textColor = if (isDark) Color(0xFFA5B4FC) else Color(0xFF3730A3),
+        borderColor = if (isDark) Color(0x59818CF8) else Color(0xFFC7D2FE),
         modifier = modifier
     )
 }
 
 @Composable
 fun CityBadge(city: String, modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = city,
         icon = Icons.Default.LocationOn,
-        backgroundColor = Color(0xFFF1F5F9),
-        textColor = Slate700,
-        borderColor = Slate200,
+        backgroundColor = if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9),
+        textColor = if (isDark) Color(0xFFE2E8F0) else Color(0xFF334155),
+        borderColor = if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0),
         modifier = modifier
     )
 }
 
 @Composable
 fun PositionCountBadge(count: Int, modifier: Modifier = Modifier) {
+    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
     AppIconBadge(
         text = "$count Kişi",
         icon = Icons.Default.People,
-        backgroundColor = Color(0xFFECFDF5),
-        textColor = Color(0xFF047857),
-        borderColor = Color(0xFFA7F3D0),
+        backgroundColor = if (isDark) Color(0x2E10B981) else Color(0xFFECFDF5),
+        textColor = if (isDark) Color(0xFF6EE7B7) else Color(0xFF047857),
+        borderColor = if (isDark) Color(0x5910B981) else Color(0xFFA7F3D0),
         modifier = modifier
     )
 }

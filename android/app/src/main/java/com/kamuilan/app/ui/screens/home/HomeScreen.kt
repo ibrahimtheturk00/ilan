@@ -83,6 +83,8 @@ import com.kamuilan.app.ui.theme.BricolageGrotesque
 import com.kamuilan.app.ui.theme.Manrope
 import com.kamuilan.app.ui.theme.Slate900
 import com.kamuilan.app.ui.theme.SozlesmeliTeal
+import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -96,12 +98,20 @@ fun HomeScreen(
     viewModel: HomeViewModel,
     onJobClick: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    listState: LazyListState = rememberLazyListState()
+    listState: LazyListState = rememberLazyListState(),
+    currentThemeMode: String = "system",
+    onToggleTheme: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val favoriteIds by viewModel.favoriteIds.collectAsState()
 
     var showCategoryGridDialog by remember { mutableStateOf(false) }
+    val systemDark = isSystemInDarkTheme()
+    val isDark = when (currentThemeMode) {
+        "dark" -> true
+        "light" -> false
+        else -> systemDark
+    }
 
     // Canlı kategori ilan sayıları
     val categoryCounts = remember(uiState.allJobs) {
@@ -183,7 +193,24 @@ fun HomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // 4x4 Kategori Izgarasını Açan Buton
+                    // 1. Hızlı Tema Değiştirme Butonu
+                    IconButton(
+                        onClick = onToggleTheme,
+                        modifier = Modifier
+                            .size(38.dp)
+                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
+                    ) {
+                        val icon = if (isDark) Icons.Default.DarkMode else Icons.Default.LightMode
+                        val tint = if (isDark) Color(0xFF38BDF8) else Color(0xFFF59E0B)
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = "Tema Değiştir",
+                            tint = tint,
+                            modifier = Modifier.size(19.dp)
+                        )
+                    }
+
+                    // 2. 4x4 Kategori Izgarasını Açan Buton
                     IconButton(
                         onClick = { showCategoryGridDialog = true },
                         modifier = Modifier
@@ -198,6 +225,7 @@ fun HomeScreen(
                         )
                     }
 
+                    // 3. Yenile Butonu
                     IconButton(
                         onClick = { viewModel.loadJobs() },
                         modifier = Modifier
@@ -226,7 +254,7 @@ fun HomeScreen(
                 placeholder = {
                     Text(
                         "Unvan, kurum veya şehir ara (örn. Mühendis)...",
-                        color = Slate400,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.65f),
                         fontSize = 14.sp
                     )
                 },
@@ -234,7 +262,7 @@ fun HomeScreen(
                     Icon(
                         imageVector = Icons.Default.Search,
                         contentDescription = "Ara",
-                        tint = if (uiState.searchQuery.isNotEmpty()) BrandPrimary else Slate400,
+                        tint = if (uiState.searchQuery.isNotEmpty()) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(20.dp)
                     )
                 },
@@ -244,7 +272,7 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = "Temizle",
-                                tint = Slate500,
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.size(18.dp)
                             )
                         }
@@ -253,10 +281,12 @@ fun HomeScreen(
                 singleLine = true,
                 shape = RoundedCornerShape(10.dp),
                 colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = BrandPrimary,
-                    unfocusedBorderColor = Slate200,
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant,
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
-                    unfocusedContainerColor = MaterialTheme.colorScheme.surface
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface
                 )
             )
 
@@ -264,14 +294,14 @@ fun HomeScreen(
 
             // ── Hızlı Arama Etiketleri (Website ile Birebir Renk & Filtre Eşleşmesi) ──
             val quickSearchTags = listOf(
-                Triple("Sağlık", Color(0xFF059669), Color(0xFFECFDF5)),
-                Triple("Büro Personeli", Color(0xFF4338CA), Color(0xFFEEF2FF)),
-                Triple("Mühendis", Color(0xFFD97706), Color(0xFFFFFBEB)),
-                Triple("Bilişim", Color(0xFF0284C7), Color(0xFFF0F9FF)),
-                Triple("Öğretim Görevlisi", Color(0xFF7C3AED), Color(0xFFFAF5FF)),
-                Triple("KPSS Şartsız", Color(0xFFE11D48), Color(0xFFFFF1F2)),
-                Triple("Temizlik", Color(0xFF0D9488), Color(0xFFF0FDFA)),
-                Triple("Belediye", Color(0xFF2563EB), Color(0xFFEFF6FF))
+                Triple("Sağlık", if (isDark) Color(0xFF34D399) else Color(0xFF059669), if (isDark) Color(0x33059669) else Color(0xFFECFDF5)),
+                Triple("Büro Personeli", if (isDark) Color(0xFFA5B4FC) else Color(0xFF4338CA), if (isDark) Color(0x33818CF8) else Color(0xFFEEF2FF)),
+                Triple("Mühendis", if (isDark) Color(0xFFFCD34D) else Color(0xFFD97706), if (isDark) Color(0x33F59E0B) else Color(0xFFFFFBEB)),
+                Triple("Bilişim", if (isDark) Color(0xFF7DD3FC) else Color(0xFF0284C7), if (isDark) Color(0x3338BDF8) else Color(0xFFF0F9FF)),
+                Triple("Öğretim Görevlisi", if (isDark) Color(0xFFD8B4FE) else Color(0xFF7C3AED), if (isDark) Color(0x33A855F7) else Color(0xFFFAF5FF)),
+                Triple("KPSS Şartsız", if (isDark) Color(0xFFFDA4AF) else Color(0xFFE11D48), if (isDark) Color(0x33F43F5E) else Color(0xFFFFF1F2)),
+                Triple("Temizlik", if (isDark) Color(0xFF5EEAD4) else Color(0xFF0D9488), if (isDark) Color(0x3314B8A6) else Color(0xFFF0FDFA)),
+                Triple("Belediye", if (isDark) Color(0xFF93C5FD) else Color(0xFF2563EB), if (isDark) Color(0x333B82F6) else Color(0xFFEFF6FF))
             )
 
             Row(
@@ -285,7 +315,7 @@ fun HomeScreen(
                     text = "Hızlı:",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Slate500,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(end = 2.dp)
                 )
                 quickSearchTags.forEach { (tag, brandCol, bgCol) ->
@@ -306,7 +336,7 @@ fun HomeScreen(
                                 } else {
                                     Modifier
                                         .background(bgCol, shape)
-                                        .border(1.dp, brandCol.copy(alpha = 0.25f), shape)
+                                        .border(1.dp, brandCol.copy(alpha = if (isDark) 0.45f else 0.25f), shape)
                                 }
                             )
                             .padding(horizontal = 11.dp, vertical = 6.dp),
@@ -316,7 +346,7 @@ fun HomeScreen(
                             text = tag,
                             fontSize = 13.sp,
                             fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) Color.White else brandCol
+                            color = if (isSelected) (if (isDark) Color(0xFF090D16) else Color.White) else brandCol
                         )
                     }
                 }
@@ -383,7 +413,6 @@ fun HomeScreen(
             }
 
             // ── Hızlı Filtre Pill'leri: Bugün Eklenenler & Kadro Türleri ────────
-            val isDark = isSystemInDarkTheme()
             val memurColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF059669)
             val sozlesmeliColor = if (isDark) Color(0xFF818CF8) else Color(0xFF2563EB)
             val isciColor = if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706)

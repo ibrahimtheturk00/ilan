@@ -63,6 +63,8 @@ import com.kamuilan.app.ui.theme.Slate400
 @Composable
 fun AppNavigation(
     initialJobId: Long? = null,
+    currentThemeMode: String = "system",
+    onThemeModeChange: (String) -> Unit = {},
     homeViewModel: HomeViewModel = viewModel(),
     profileViewModel: ProfileViewModel = viewModel()
 ) {
@@ -226,6 +228,15 @@ fun AppNavigation(
                 HomeScreen(
                     viewModel = homeViewModel,
                     listState = homeListState,
+                    currentThemeMode = currentThemeMode,
+                    onToggleTheme = {
+                        val nextMode = when (currentThemeMode) {
+                            "light" -> "dark"
+                            "dark" -> "system"
+                            else -> "light"
+                        }
+                        onThemeModeChange(nextMode)
+                    },
                     onJobClick = { jobId ->
                         navController.navigate(Screen.Detail.createRoute(jobId))
                     }
@@ -279,6 +290,8 @@ fun AppNavigation(
             composable(Screen.Profile.route) {
                 ProfileScreen(
                     viewModel = profileViewModel,
+                    currentThemeMode = currentThemeMode,
+                    onThemeModeChange = onThemeModeChange,
                     onEditPreferences = {
                         navController.navigate(Screen.Onboarding.route)
                     }

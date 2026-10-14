@@ -16,12 +16,14 @@ private val DarkColorScheme = darkColorScheme(
     secondary = DarkThemeSecondary,
     background = DarkThemeBg,
     surface = DarkThemeSurface,
-    surfaceVariant = Zinc800,
-    onPrimary = Zinc950,
+    surfaceVariant = Color(0xFF1E293B),
+    onPrimary = Color(0xFF090D16),
     onSecondary = Color.White,
-    onBackground = Zinc50,
-    onSurface = Zinc50,
-    outline = DarkThemeBorder
+    onBackground = Color(0xFFF8FAFC),
+    onSurface = Color(0xFFF8FAFC),
+    onSurfaceVariant = Color(0xFF94A3B8),
+    outline = DarkThemeBorder,
+    outlineVariant = Color(0xFF334155)
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -29,12 +31,14 @@ private val LightColorScheme = lightColorScheme(
     secondary = LightThemeSecondary,
     background = LightThemeBg,
     surface = LightThemeSurface,
-    surfaceVariant = Zinc100,
+    surfaceVariant = Color(0xFFF1F5F9),
     onPrimary = Color.White,
     onSecondary = Color.White,
-    onBackground = Zinc950,
-    onSurface = Zinc950,
-    outline = LightThemeBorder
+    onBackground = Color(0xFF0F172A),
+    onSurface = Color(0xFF0F172A),
+    onSurfaceVariant = Color(0xFF475569),
+    outline = LightThemeBorder,
+    outlineVariant = Color(0xFFCBD5E1)
 )
 
 @Composable

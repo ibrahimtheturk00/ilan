@@ -27,8 +27,10 @@ import androidx.compose.ui.unit.dp
 import kotlin.random.Random
 
 /**
- * OnwardBackground: Web sitesindeki ikonik Onward Summit chevron / ok desenini
- * sayfanın en altına kadar kesintisiz ve performanslı bir şekilde çizer.
+ * Modern Ambient Gradient Background:
+ * Eski ok/chevron deseni tamamen kaldırıldı; yerine ultra modern, yumuşak
+ * ambiyans gradyan renk geçişleri (Aurora / Glow Mesh) yerleştirildi.
+ * Açık temada soft zümrüt-gökyüzü geçişi, koyu temada derin gece mavisi & mor ışıma.
  */
 @Composable
 fun OnwardBackground(
@@ -38,9 +40,12 @@ fun OnwardBackground(
     val isDark = isSystemInDarkTheme()
     val bgColor = MaterialTheme.colorScheme.background
 
-    // Açık temada tok kömür arduvaz, koyu temada çelik mavisi (mobilde net görünür kontrast)
-    val arrowColor = if (isDark) Color(0xFF94A3B8).copy(alpha = 0.22f)
-                     else Color(0xFF334155).copy(alpha = 0.24f)
+    // Üst sağ ışıma rengi
+    val glowTopRight = if (isDark) Color(0x2438BDF8) else Color(0x14059669)
+    // Sol alt ışıma rengi
+    val glowBottomLeft = if (isDark) Color(0x1E818CF8) else Color(0x102563EB)
+    // Orta hafif parlama
+    val glowCenter = if (isDark) Color(0x146366F1) else Color(0x0A0284C7)
 
     Box(
         modifier = modifier
@@ -48,40 +53,41 @@ fun OnwardBackground(
             .background(bgColor)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val cellPx = 28.dp.toPx()
-            val strokePx = 1.4.dp.toPx()
-            val h = cellPx * 0.28f
+            val width = size.width
+            val height = size.height
 
-            val cols = (size.width / cellPx).toInt() + 1
-            val rows = (size.height / cellPx).toInt() + 1
+            // 1. Üst Sağ Yumuşak Radyal Gradyan Işıma
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(glowTopRight, Color.Transparent),
+                    center = Offset(width * 0.92f, height * 0.12f),
+                    radius = width * 0.85f
+                ),
+                center = Offset(width * 0.92f, height * 0.12f),
+                radius = width * 0.85f
+            )
 
-            for (r in 0 until rows) {
-                for (c in 0 until cols) {
-                    val cx = c * cellPx + cellPx / 2f
-                    val cy = r * cellPx + cellPx / 2f
+            // 2. Sol Alt Yumuşak Gradyan Işıma
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(glowBottomLeft, Color.Transparent),
+                    center = Offset(width * 0.08f, height * 0.75f),
+                    radius = width * 0.95f
+                ),
+                center = Offset(width * 0.08f, height * 0.75f),
+                radius = width * 0.95f
+            )
 
-                    // Çapraz gövde çizgisi
-                    drawLine(
-                        color = arrowColor,
-                        start = Offset(cx - h, cy + h),
-                        end = Offset(cx + h, cy - h),
-                        strokeWidth = strokePx,
-                        cap = StrokeCap.Round
-                    )
-
-                    // Ok ucu (sağ-üst açı)
-                    val arrowPath = Path().apply {
-                        moveTo(cx - h * 0.15f, cy - h)
-                        lineTo(cx + h, cy - h)
-                        lineTo(cx + h, cy + h * 0.15f)
-                    }
-                    drawPath(
-                        path = arrowPath,
-                        color = arrowColor,
-                        style = Stroke(width = strokePx, cap = StrokeCap.Round, join = StrokeJoin.Round)
-                    )
-                }
-            }
+            // 3. Orta Katman Çok Hafif Vurgu
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(glowCenter, Color.Transparent),
+                    center = Offset(width * 0.5f, height * 0.45f),
+                    radius = width * 0.6f
+                ),
+                center = Offset(width * 0.5f, height * 0.45f),
+                radius = width * 0.6f
+            )
         }
 
         content()
@@ -134,6 +140,33 @@ fun DotGridBackground(
             .background(bgColor)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
+            val width = size.width
+            val height = size.height
+
+            // Üst sağ & sol alt ambiyans ışıma katmanı
+            val glowTop = if (isDark) Color(0x2438BDF8) else Color(0x12059669)
+            val glowBottom = if (isDark) Color(0x1E818CF8) else Color(0x0E2563EB)
+
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(glowTop, Color.Transparent),
+                    center = Offset(width * 0.9f, height * 0.1f),
+                    radius = width * 0.85f
+                ),
+                center = Offset(width * 0.9f, height * 0.1f),
+                radius = width * 0.85f
+            )
+
+            drawCircle(
+                brush = Brush.radialGradient(
+                    colors = listOf(glowBottom, Color.Transparent),
+                    center = Offset(width * 0.1f, height * 0.8f),
+                    radius = width * 0.9f
+                ),
+                center = Offset(width * 0.1f, height * 0.8f),
+                radius = width * 0.9f
+            )
+
             val gap = 24.dp.toPx()
             val cols = (size.width / gap).toInt() + 1
             val rows = (size.height / gap).toInt() + 1

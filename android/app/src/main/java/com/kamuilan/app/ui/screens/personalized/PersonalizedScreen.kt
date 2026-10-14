@@ -150,7 +150,7 @@ fun PersonalizedScreen(
                     Text(
                         text = "Mezuniyetinize ve KPSS puanınıza en uygun alımlar",
                         fontSize = 11.sp,
-                        color = Slate500,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -162,7 +162,7 @@ fun PersonalizedScreen(
                     onClick = onEditPreferences,
                     shape = RoundedCornerShape(10.dp),
                     contentPadding = PaddingValues(horizontal = 10.dp, vertical = 6.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Slate700)
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.onSurface)
                 ) {
                     Icon(
                         imageVector = Icons.Default.Tune,
