@@ -62,6 +62,12 @@ import com.kamuilan.app.ui.theme.UrgentRose
 import com.kamuilan.app.ui.theme.UrgentRoseBg
 import com.kamuilan.app.ui.theme.UrgentRoseBorder
 
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.graphics.luminance
+
+@Composable
+fun isAppDark(): Boolean = MaterialTheme.colorScheme.surface.luminance() < 0.5f
+
 @Composable
 fun AppIconBadge(
     text: String,
@@ -94,7 +100,7 @@ fun AppIconBadge(
         Text(
             text = text,
             color = textColor,
-            fontSize = 11.sp,
+            fontSize = 12.sp,
             fontWeight = FontWeight.SemiBold
         )
     }
@@ -102,7 +108,7 @@ fun AppIconBadge(
 
 @Composable
 fun TodayAddedBadge(modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = "Bugün Eklendi",
         icon = Icons.Default.AutoAwesome,
@@ -115,7 +121,7 @@ fun TodayAddedBadge(modifier: Modifier = Modifier) {
 
 @Composable
 fun PostTypeBadge(postType: String?, modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     val (label, bg, text, border) = when (postType?.lowercase()) {
         "memur" -> if (isDark) Quad("Memur", com.kamuilan.app.ui.theme.MemurDarkBg, com.kamuilan.app.ui.theme.MemurDarkText, com.kamuilan.app.ui.theme.MemurDarkBorder)
                    else Quad("Memur", com.kamuilan.app.ui.theme.MemurLightBg, com.kamuilan.app.ui.theme.MemurLightText, com.kamuilan.app.ui.theme.MemurLightBorder)
@@ -140,7 +146,7 @@ fun PostTypeBadge(postType: String?, modifier: Modifier = Modifier) {
 
 @Composable
 fun UrgentBadge(daysRemaining: Long, modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     val text = when {
         daysRemaining <= 0 -> "Bugün Son Gün!"
         daysRemaining == 1L -> "Son 1 Gün Kaldı!"
@@ -158,7 +164,7 @@ fun UrgentBadge(daysRemaining: Long, modifier: Modifier = Modifier) {
 
 @Composable
 fun CancelledBadge(modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = "İptal İlanı",
         icon = Icons.Default.Cancel,
@@ -172,7 +178,7 @@ fun CancelledBadge(modifier: Modifier = Modifier) {
 @Composable
 fun KpssBadge(kpssType: String, modifier: Modifier = Modifier) {
     if (kpssType == "Belirtilmemiş") return
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = kpssType,
         icon = Icons.Default.MilitaryTech,
@@ -186,7 +192,7 @@ fun KpssBadge(kpssType: String, modifier: Modifier = Modifier) {
 @Composable
 fun EducationBadge(educationLevel: String, modifier: Modifier = Modifier) {
     if (educationLevel == "Belirtilmemiş") return
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = educationLevel,
         icon = Icons.Default.School,
@@ -199,7 +205,7 @@ fun EducationBadge(educationLevel: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun AgeBadge(maxAge: Int, modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = "Maks. $maxAge Yaş",
         icon = Icons.Default.Schedule,
@@ -212,7 +218,7 @@ fun AgeBadge(maxAge: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun SourceBadge(sourceName: String, modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = sourceName,
         icon = Icons.Default.Public,
@@ -225,7 +231,7 @@ fun SourceBadge(sourceName: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun CityBadge(city: String, modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = city,
         icon = Icons.Default.LocationOn,
@@ -238,7 +244,7 @@ fun CityBadge(city: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun PositionCountBadge(count: Int, modifier: Modifier = Modifier) {
-    val isDark = androidx.compose.foundation.isSystemInDarkTheme()
+    val isDark = isAppDark()
     AppIconBadge(
         text = "$count Kişi",
         icon = Icons.Default.People,

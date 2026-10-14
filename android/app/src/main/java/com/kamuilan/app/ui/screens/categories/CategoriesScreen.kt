@@ -94,7 +94,7 @@ fun CategoriesScreen(
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = "YÖK Atlas & Mezuniyet Alanları",
-                    fontSize = 11.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = androidx.compose.material3.MaterialTheme.colorScheme.primary
                 )
@@ -243,7 +243,7 @@ fun YokCategoryCard(
                 ) {
                     Text(
                         text = "$count İlan",
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.Bold,
                         color = if (count > 0) (if (isDark) Color(0xFF6EE7B7) else ActiveEmerald)
                                else androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
@@ -256,10 +256,10 @@ fun YokCategoryCard(
             // Kategori Adı
             Text(
                 text = category.name,
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 fontWeight = FontWeight.Bold,
                 color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface,
-                lineHeight = 16.sp,
+                lineHeight = 17.sp,
                 minLines = 2,
                 maxLines = 2
             )
@@ -273,7 +273,7 @@ fun YokCategoryCard(
             ) {
                 Text(
                     text = "İlanları İncele",
-                    fontSize = 10.sp,
+                    fontSize = 12.sp,
                     fontWeight = FontWeight.SemiBold,
                     color = category.color
                 )

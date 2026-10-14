@@ -149,7 +149,7 @@ fun PersonalizedScreen(
                     }
                     Text(
                         text = "Mezuniyetinize ve KPSS puanınıza en uygun alımlar",
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -172,7 +172,7 @@ fun PersonalizedScreen(
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "Kriterler",
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
                         softWrap = false
@@ -332,7 +332,7 @@ fun PersonalizedScreen(
                                     Spacer(modifier = Modifier.width(5.dp))
                                     Text(
                                         text = "Kriterlerinizle Doğrudan Eşleşen Kadro",
-                                        fontSize = 11.sp,
+                                        fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = ActiveEmerald
                                     )

@@ -37,7 +37,7 @@ fun OnwardBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val isDark = isSystemInDarkTheme()
+    val isDark = isAppDark()
     val bgColor = MaterialTheme.colorScheme.background
 
     // Üst sağ ışıma rengi
@@ -104,7 +104,7 @@ fun DotGridBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    val isDark = isSystemInDarkTheme()
+    val isDark = isAppDark()
     val bgColor = MaterialTheme.colorScheme.background
 
     // Nokta temel renkleri

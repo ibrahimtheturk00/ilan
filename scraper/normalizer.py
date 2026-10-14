@@ -116,3 +116,65 @@ def extract_position_count(text: str) -> Optional[int]:
             continue
     return None
 
+def extract_kpss_info(text: Optional[str]) -> Tuple[Optional[float], Optional[str]]:
+    """Metin içinden KPSS puan türünü (P3, P93, P94 vb.) ve asgari taban puanı ayrıştırır."""
+    if not text:
+        return None, None
+    lower = text.lower()
+    
+    if any(k in lower for k in ["kpss sartsiz", "kpss sarti aranmaksizin", "kpss sarti yok", "kpsssiz"]):
+        return 0.0, "Şartsız"
+        
+    score_type = None
+    p_match = re.search(r'\b(p3|p93|p94|p1|p2|p48|p121)\b', lower)
+    if p_match:
+        score_type = f"KPSS {p_match.group(1).upper()}"
+    elif "kpss" in lower:
+        score_type = "KPSS"
+        
+    score_match = re.search(r'(?:en\s+az|taban|asgari|en\s+dusuk)?\s*(\d{2}(?:[\.,]\d{1,2})?)\s*(?:ve\s+uzeri|puan)', lower)
+    min_score = None
+    if score_match:
+        try:
+            val = float(score_match.group(1).replace(',', '.'))
+            if 50.0 <= val <= 100.0:
+                min_score = val
+        except ValueError:
+            pass
+            
+    return min_score, score_type
+
+def extract_max_age(text: Optional[str]) -> Optional[int]:
+    """Metin içinden yaş sınırını (örn. 30, 35, 40) ayrıştırır."""
+    if not text:
+        return None
+    lower = text.lower()
+    match = re.search(r'(\d{2})\s*(?:yasini|yasindan|yas|yasinda|yasini\s+doldurmamis)', lower)
+    if match:
+        try:
+            val = int(match.group(1))
+            if 18 <= val <= 65:
+                return val
+        except ValueError:
+            pass
+    return None
+
+def extract_education_levels(text: Optional[str]) -> list:
+    """Metin içinden öğrenim düzeylerini (Lisans, Ön Lisans, Ortaöğretim, Yüksek Lisans, Doktora) ayrıştırır."""
+    if not text:
+        return []
+    lower = text.lower()
+    levels = []
+    if any(k in lower for k in ["doktora", "doktoralı"]):
+        levels.append("Doktora")
+    if any(k in lower for k in ["yuksek lisans", "tezli yuksek"]):
+        levels.append("Yüksek Lisans")
+    if any(k in lower for k in ["lisans", "fakulte", "muhendislik", "iktisat", "isletme"]):
+        levels.append("Lisans")
+    if any(k in lower for k in ["on lisans", "onlisans", "meslek yuksek"]):
+        levels.append("Ön Lisans")
+    if any(k in lower for k in ["lise", "ortaogretim", "orta ogretim", "dengi"]):
+        levels.append("Ortaöğretim (Lise)")
+    return levels
+
+

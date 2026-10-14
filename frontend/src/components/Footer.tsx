@@ -67,7 +67,7 @@ export function Footer() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <h3 className="text-sm sm:text-base font-bold tracking-wide uppercase text-zinc-900 dark:text-zinc-100">
-                37 Canlı Doğrulanan Resmî Devlet & Kamu Kaynağı
+                14 Doğrudan Resmî Portal & 1.000+ Bağlı Kamu Kurumu
               </h3>
             </div>
             <span className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400 hidden sm:inline">

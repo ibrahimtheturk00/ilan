@@ -339,7 +339,7 @@ fun JobDetailScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Column {
-                                Text("Resmî Kaynak", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                Text("Resmî Kaynak", fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                                 Text(
                                     text = job.source.name,
                                     fontSize = 13.sp,
@@ -460,7 +460,7 @@ private fun StatCard(
                     )
                 }
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(label, fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(label, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
             Spacer(modifier = Modifier.height(6.dp))
             Text(

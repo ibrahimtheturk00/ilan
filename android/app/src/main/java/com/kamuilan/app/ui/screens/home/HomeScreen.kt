@@ -5,6 +5,10 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -54,6 +58,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -106,6 +111,7 @@ fun HomeScreen(
     val favoriteIds by viewModel.favoriteIds.collectAsState()
 
     var showCategoryGridDialog by remember { mutableStateOf(false) }
+    var isSearchFocused by remember { mutableStateOf(false) }
     val systemDark = isSystemInDarkTheme()
     val isDark = when (currentThemeMode) {
         "dark" -> true
@@ -181,7 +187,7 @@ fun HomeScreen(
                             letterSpacing = (-0.3).sp
                         )
                         Text(
-                            text = "Resmî Portallar • Anlık Veri Akışı",
+                            text = "14 Resmî Portal • 1.000+ Kurum • Anlık Veri Akışı",
                             fontFamily = Manrope,
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
@@ -250,7 +256,8 @@ fun HomeScreen(
                 onValueChange = { viewModel.onSearchQueryChanged(it) },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(52.dp),
+                    .height(52.dp)
+                    .onFocusChanged { isSearchFocused = it.isFocused },
                 placeholder = {
                     Text(
                         "Unvan, kurum veya şehir ara (örn. Mühendis)...",
@@ -290,64 +297,71 @@ fun HomeScreen(
                 )
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            // ── Hızlı Arama Etiketleri (Website ile Birebir Renk & Filtre Eşleşmesi) ──
-            val quickSearchTags = listOf(
-                Triple("Sağlık", if (isDark) Color(0xFF34D399) else Color(0xFF059669), if (isDark) Color(0x33059669) else Color(0xFFECFDF5)),
-                Triple("Büro Personeli", if (isDark) Color(0xFFA5B4FC) else Color(0xFF4338CA), if (isDark) Color(0x33818CF8) else Color(0xFFEEF2FF)),
-                Triple("Mühendis", if (isDark) Color(0xFFFCD34D) else Color(0xFFD97706), if (isDark) Color(0x33F59E0B) else Color(0xFFFFFBEB)),
-                Triple("Bilişim", if (isDark) Color(0xFF7DD3FC) else Color(0xFF0284C7), if (isDark) Color(0x3338BDF8) else Color(0xFFF0F9FF)),
-                Triple("Öğretim Görevlisi", if (isDark) Color(0xFFD8B4FE) else Color(0xFF7C3AED), if (isDark) Color(0x33A855F7) else Color(0xFFFAF5FF)),
-                Triple("KPSS Şartsız", if (isDark) Color(0xFFFDA4AF) else Color(0xFFE11D48), if (isDark) Color(0x33F43F5E) else Color(0xFFFFF1F2)),
-                Triple("Temizlik", if (isDark) Color(0xFF5EEAD4) else Color(0xFF0D9488), if (isDark) Color(0x3314B8A6) else Color(0xFFF0FDFA)),
-                Triple("Belediye", if (isDark) Color(0xFF93C5FD) else Color(0xFF2563EB), if (isDark) Color(0x333B82F6) else Color(0xFFEFF6FF))
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically
+            // ── Hızlı Arama Etiketleri (Yalnızca Arama Çubuğu Odaklandığında Açılır) ──
+            AnimatedVisibility(
+                visible = isSearchFocused || uiState.searchQuery.isNotBlank(),
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
             ) {
-                Text(
-                    text = "Hızlı:",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(end = 2.dp)
-                )
-                quickSearchTags.forEach { (tag, brandCol, bgCol) ->
-                    val isSelected = uiState.searchQuery.equals(tag, ignoreCase = true)
-                    val shape = RoundedCornerShape(8.dp)
+                Column {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    val quickSearchTags = listOf(
+                        Triple("Sağlık", if (isDark) Color(0xFF34D399) else Color(0xFF059669), if (isDark) Color(0x33059669) else Color(0xFFECFDF5)),
+                        Triple("Büro Personeli", if (isDark) Color(0xFFA5B4FC) else Color(0xFF4338CA), if (isDark) Color(0x33818CF8) else Color(0xFFEEF2FF)),
+                        Triple("Mühendis", if (isDark) Color(0xFFFCD34D) else Color(0xFFD97706), if (isDark) Color(0x33F59E0B) else Color(0xFFFFFBEB)),
+                        Triple("Bilişim", if (isDark) Color(0xFF7DD3FC) else Color(0xFF0284C7), if (isDark) Color(0x3338BDF8) else Color(0xFFF0F9FF)),
+                        Triple("Öğretim Görevlisi", if (isDark) Color(0xFFD8B4FE) else Color(0xFF7C3AED), if (isDark) Color(0x33A855F7) else Color(0xFFFAF5FF)),
+                        Triple("KPSS Şartsız", if (isDark) Color(0xFFFDA4AF) else Color(0xFFE11D48), if (isDark) Color(0x33F43F5E) else Color(0xFFFFF1F2)),
+                        Triple("Temizlik", if (isDark) Color(0xFF5EEAD4) else Color(0xFF0D9488), if (isDark) Color(0x3314B8A6) else Color(0xFFF0FDFA)),
+                        Triple("Belediye", if (isDark) Color(0xFF93C5FD) else Color(0xFF2563EB), if (isDark) Color(0x333B82F6) else Color(0xFFEFF6FF))
+                    )
 
-                    Box(
+                    Row(
                         modifier = Modifier
-                            .clickable {
-                                if (isSelected) viewModel.onSearchQueryChanged("")
-                                else viewModel.onSearchQueryChanged(tag)
-                            }
-                            .then(
-                                if (isSelected) {
-                                    Modifier
-                                        .background(brandCol, shape)
-                                        .border(1.dp, brandCol, shape)
-                                } else {
-                                    Modifier
-                                        .background(bgCol, shape)
-                                        .border(1.dp, brandCol.copy(alpha = if (isDark) 0.45f else 0.25f), shape)
-                                }
-                            )
-                            .padding(horizontal = 11.dp, vertical = 6.dp),
-                        contentAlignment = Alignment.Center
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = tag,
+                            text = "Hızlı:",
                             fontSize = 13.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) (if (isDark) Color(0xFF090D16) else Color.White) else brandCol
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(end = 2.dp)
                         )
+                        quickSearchTags.forEach { (tag, brandCol, bgCol) ->
+                            val isSelected = uiState.searchQuery.equals(tag, ignoreCase = true)
+                            val shape = RoundedCornerShape(8.dp)
+
+                            Box(
+                                modifier = Modifier
+                                    .clickable {
+                                        if (isSelected) viewModel.onSearchQueryChanged("")
+                                        else viewModel.onSearchQueryChanged(tag)
+                                    }
+                                    .then(
+                                        if (isSelected) {
+                                            Modifier
+                                                .background(brandCol, shape)
+                                                .border(1.dp, brandCol, shape)
+                                        } else {
+                                            Modifier
+                                                .background(bgCol, shape)
+                                                .border(1.dp, brandCol.copy(alpha = if (isDark) 0.45f else 0.25f), shape)
+                                        }
+                                    )
+                                    .padding(horizontal = 11.dp, vertical = 6.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = tag,
+                                    fontSize = 13.sp,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                                    color = if (isSelected) (if (isDark) Color(0xFF090D16) else Color.White) else brandCol
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -402,7 +416,7 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = "Temizle",
-                                fontSize = 11.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
                                 color = BrandPrimary
                             )
@@ -412,109 +426,87 @@ fun HomeScreen(
                 }
             }
 
-            // ── Hızlı Filtre Pill'leri: Bugün Eklenenler & Kadro Türleri ────────
-            val memurColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF059669)
-            val sozlesmeliColor = if (isDark) Color(0xFF818CF8) else Color(0xFF2563EB)
-            val isciColor = if (isDark) Color(0xFFF59E0B) else Color(0xFFD97706)
-            val akademikColor = if (isDark) Color(0xFFA855F7) else Color(0xFF9333EA)
-
-            val postTypePills = listOf(
-                Triple("all", "Tümü", MaterialTheme.colorScheme.onSurface),
-                Triple("memur", "Memur", memurColor),
-                Triple("sozlesmeli", "Sözleşmeli", sozlesmeliColor),
-                Triple("isci", "İşçi", isciColor),
-                Triple("akademik", "Akademik", akademikColor)
-            )
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(7.dp)
+            // ── 3x2 Eşit Ebatlı Izgara Filtre Butonları (Kare/Dikdörtgen Kartlar) ──
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // 1. Özel "Bugün Eklenenler" Pill
-                val isTodaySelected = uiState.onlyToday
-                val todayShape = RoundedCornerShape(20.dp)
-                Box(
-                    modifier = Modifier
-                        .clickable { viewModel.toggleOnlyToday() }
-                        .then(
-                            if (isTodaySelected) {
-                                Modifier.background(
-                                    brush = Brush.horizontalGradient(
-                                        listOf(ActiveEmerald, Color(0xFF047857))
-                                    ),
-                                    shape = todayShape
-                                )
-                            } else {
-                                Modifier
-                                    .background(
-                                        color = if (isDark) Color(0x26059669) else ActiveEmeraldBg,
-                                        shape = todayShape
-                                    )
-                                    .border(width = 1.dp, color = if (isDark) Color(0x4D059669) else ActiveEmeraldBorder, shape = todayShape)
-                            }
-                        )
-                        .padding(horizontal = 13.dp, vertical = 8.dp),
-                    contentAlignment = Alignment.Center
+                // Üst Satır: [ ✨ Bugün ] [ Tümü ] [ Memur ]
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.AutoAwesome,
-                            contentDescription = null,
-                            tint = if (isTodaySelected) Color.White else if (isDark) Color(0xFF34D399) else ActiveEmerald,
-                            modifier = Modifier.size(13.dp)
-                        )
-                        Text(
-                            text = "Bugün Eklenenler",
-                            fontSize = 12.sp,
-                            fontWeight = if (isTodaySelected) FontWeight.Bold else FontWeight.SemiBold,
-                            color = if (isTodaySelected) Color.White else if (isDark) Color(0xFF34D399) else ActiveEmerald
-                        )
-                    }
+                    FilterGridTile(
+                        label = "Bugün",
+                        icon = Icons.Default.AutoAwesome,
+                        isSelected = uiState.onlyToday,
+                        activeColor = Color(0xFF059669),
+                        isDark = isDark,
+                        onClick = { viewModel.toggleOnlyToday() },
+                        modifier = Modifier.weight(1f)
+                    )
+                    FilterGridTile(
+                        label = "Tümü",
+                        isSelected = !uiState.onlyToday && (uiState.selectedPostType == "all" || uiState.selectedPostType.isBlank()),
+                        activeColor = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
+                        isDark = isDark,
+                        onClick = {
+                            if (uiState.onlyToday) viewModel.toggleOnlyToday()
+                            viewModel.onPostTypeSelected("all")
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    FilterGridTile(
+                        label = "Memur",
+                        isSelected = !uiState.onlyToday && uiState.selectedPostType == "memur",
+                        activeColor = Color(0xFF0284C7),
+                        isDark = isDark,
+                        onClick = {
+                            if (uiState.onlyToday) viewModel.toggleOnlyToday()
+                            viewModel.onPostTypeSelected("memur")
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
-                postTypePills.forEach { (typeKey, typeLabel, brandColor) ->
-                    val isSelected = uiState.selectedPostType == typeKey
-                    val interSource = remember { MutableInteractionSource() }
-                    val isPressed by interSource.collectIsPressedAsState()
-                    val shape = RoundedCornerShape(20.dp)
 
-                    Box(
-                        modifier = Modifier
-                            .clickable(
-                                interactionSource = interSource,
-                                indication = null
-                            ) { viewModel.onPostTypeSelected(typeKey) }
-                            .then(
-                                if (isSelected) {
-                                    Modifier.background(
-                                        brush = Brush.horizontalGradient(
-                                            listOf(brandColor, brandColor.copy(alpha = 0.75f))
-                                        ),
-                                        shape = shape
-                                    )
-                                } else {
-                                    Modifier
-                                        .background(
-                                            color = if (isPressed) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface,
-                                            shape = shape
-                                        )
-                                        .border(width = 1.dp, color = MaterialTheme.colorScheme.outline, shape = shape)
-                                }
-                            )
-                            .padding(horizontal = 14.dp, vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = typeLabel,
-                            fontSize = 12.sp,
-                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
-                            color = if (isSelected) Color.White else MaterialTheme.colorScheme.onSurface
-                        )
-                    }
+                // Alt Satır: [ Sözleşmeli ] [ İşçi ] [ Akademik ]
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    FilterGridTile(
+                        label = "Sözleşmeli",
+                        isSelected = !uiState.onlyToday && (uiState.selectedPostType == "sozlesmeli" || uiState.selectedPostType == "sözleşmeli"),
+                        activeColor = Color(0xFF0D9488),
+                        isDark = isDark,
+                        onClick = {
+                            if (uiState.onlyToday) viewModel.toggleOnlyToday()
+                            viewModel.onPostTypeSelected("sozlesmeli")
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    FilterGridTile(
+                        label = "İşçi",
+                        isSelected = !uiState.onlyToday && (uiState.selectedPostType == "isci" || uiState.selectedPostType == "işçi"),
+                        activeColor = Color(0xFFD97706),
+                        isDark = isDark,
+                        onClick = {
+                            if (uiState.onlyToday) viewModel.toggleOnlyToday()
+                            viewModel.onPostTypeSelected("isci")
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
+                    FilterGridTile(
+                        label = "Akademik",
+                        isSelected = !uiState.onlyToday && uiState.selectedPostType == "akademik",
+                        activeColor = Color(0xFF9333EA),
+                        isDark = isDark,
+                        onClick = {
+                            if (uiState.onlyToday) viewModel.toggleOnlyToday()
+                            viewModel.onPostTypeSelected("akademik")
+                        },
+                        modifier = Modifier.weight(1f)
+                    )
                 }
             }
 
@@ -570,7 +562,7 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = uiState.errorMessage ?: "Bağlantı hatası oluştu",
-                                color = Slate900,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 14.sp
                             )
@@ -594,14 +586,14 @@ fun HomeScreen(
                         ) {
                             Text(
                                 text = "Aradığınız kriterlere uygun ilan bulunamadı",
-                                color = Slate900,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 15.sp
                             )
                             Spacer(modifier = Modifier.height(6.dp))
                             Text(
                                 text = "Arama kelimenizi değiştirerek veya filtreleri temizleyerek tekrar deneyebilirsiniz.",
-                                color = Slate500,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 fontSize = 12.sp
                             )
                             Spacer(modifier = Modifier.height(14.dp))
@@ -612,7 +604,10 @@ fun HomeScreen(
                                     viewModel.clearCategoryFilter()
                                 },
                                 shape = RoundedCornerShape(12.dp),
-                                colors = ButtonDefaults.buttonColors(containerColor = Slate900)
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isDark) MaterialTheme.colorScheme.primary else Color(0xFF0F172A),
+                                    contentColor = Color.White
+                                )
                             ) {
                                 Text("Tüm Filtreleri Temizle")
                             }
@@ -638,6 +633,68 @@ fun HomeScreen(
                     }
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun FilterGridTile(
+    label: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    icon: androidx.compose.ui.graphics.vector.ImageVector? = null,
+    activeColor: Color = MaterialTheme.colorScheme.primary,
+    isDark: Boolean = false
+) {
+    val shape = RoundedCornerShape(10.dp)
+    val bg = when {
+        isSelected -> activeColor
+        isDark -> Color(0xFF1E293B)
+        else -> Color(0xFFF8FAFC)
+    }
+    val borderCol = when {
+        isSelected -> activeColor
+        isDark -> Color(0xFF334155)
+        else -> Color(0xFFE2E8F0)
+    }
+    val textCol = when {
+        isSelected -> Color.White
+        isDark -> Color(0xFFF1F5F9)
+        else -> Color(0xFF0F172A)
+    }
+
+    Box(
+        modifier = modifier
+            .height(44.dp)
+            .clip(shape)
+            .background(bg)
+            .border(1.dp, borderCol, shape)
+            .clickable(onClick = onClick)
+            .padding(horizontal = 4.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            if (icon != null) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = if (isSelected) Color.White else (if (isDark) Color(0xFF34D399) else Color(0xFF059669)),
+                    modifier = Modifier.size(15.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+            }
+            Text(
+                text = label,
+                fontSize = 12.sp,
+                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.SemiBold,
+                color = textCol,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         }
     }
 }

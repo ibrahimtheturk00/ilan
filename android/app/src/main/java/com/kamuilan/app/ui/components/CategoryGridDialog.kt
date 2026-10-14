@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.ui.components
+package com.kamuilan.app.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -69,7 +69,7 @@ fun CategoryGridDialog(
             modifier = Modifier
                 .fillMaxWidth(0.95f)
                 .clip(RoundedCornerShape(24.dp))
-                .border(1.dp, Slate200, RoundedCornerShape(24.dp)),
+                .border(1.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(24.dp)),
             shape = RoundedCornerShape(24.dp),
             color = MaterialTheme.colorScheme.surface,
             shadowElevation = 8.dp
@@ -106,12 +106,12 @@ fun CategoryGridDialog(
                                 text = "Tüm Mezuniyet Alanları",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Slate900
+                                color = MaterialTheme.colorScheme.onSurface
                             )
                             Text(
                                 text = "16 Branş • YÖK Atlas Uyumlu",
-                                fontSize = 11.sp,
-                                color = Slate500
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
                         }
                     }
@@ -123,7 +123,7 @@ fun CategoryGridDialog(
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Kapat",
-                            tint = Slate500,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -131,9 +131,9 @@ fun CategoryGridDialog(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
-                // 4x4 Kategorik Görsel Izgara
+                // 3 Kolonlu Geniş & Okunaklı Kategorik Görsel Izgara
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(4),
+                    columns = GridCells.Fixed(3),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                     modifier = Modifier
@@ -153,8 +153,8 @@ fun CategoryGridDialog(
                                     onDismiss()
                                 }
                                 .background(dept.bgColor.copy(alpha = 0.5f))
-                                .border(1.dp, dept.color.copy(alpha = 0.2f), RoundedCornerShape(14.dp))
-                                .padding(horizontal = 4.dp, vertical = 10.dp)
+                                .border(1.dp, dept.color.copy(alpha = 0.25f), RoundedCornerShape(14.dp))
+                                .padding(horizontal = 6.dp, vertical = 10.dp)
                         ) {
                             Box(
                                 modifier = Modifier
@@ -175,17 +175,17 @@ fun CategoryGridDialog(
 
                             Text(
                                 text = dept.name.split("&", "•", "/").first().trim(),
-                                fontSize = 10.sp,
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Slate700,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 textAlign = TextAlign.Center,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
 
                             Text(
-                                text = " ilan",
-                                fontSize = 9.sp,
+                                text = "$count ilan",
+                                fontSize = 12.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = dept.color
                             )

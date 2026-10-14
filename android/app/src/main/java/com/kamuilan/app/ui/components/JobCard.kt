@@ -10,7 +10,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -118,7 +117,7 @@ fun JobCard(
 
     val cleanedDesc = JobParser.cleanJobDescription(job.description, displayTitle, displayInstitution)
 
-    val isDark = isSystemInDarkTheme()
+    val isDark = isAppDark()
     val cardBorderColor = when {
         isCancelled -> if (isDark) Color(0xFFEF4444).copy(alpha = 0.5f) else Color(0xFFFCA5A5)
         isUrgent -> if (isDark) Color(0xFFF43F5E).copy(alpha = 0.5f) else Color(0xFFFDA4AF)
@@ -200,7 +199,7 @@ fun JobCard(
                             ) {
                                 Text(
                                     text = "Bugün",
-                                    fontSize = 11.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = if (isDark) Color(0xFF6EE7B7) else Color(0xFF047857)
                                 )
@@ -366,21 +365,21 @@ fun JobCard(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                                 modifier = Modifier
-                                    .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
-                                    .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
-                                    .padding(horizontal = 6.dp, vertical = 2.5.dp)
+                                    .background(if (isDark) Color(0x260284C7) else Color(0xFFEFF6FF), RoundedCornerShape(6.dp))
+                                    .border(1.dp, if (isDark) Color(0x4D0284C7) else Color(0xFFBFDBFE), RoundedCornerShape(6.dp))
+                                    .padding(horizontal = 7.dp, vertical = 3.dp)
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.People,
                                     contentDescription = null,
-                                    tint = if (isDark) Color(0xFF94A3B8) else Color(0xFF64748B),
+                                    tint = if (isDark) Color(0xFF38BDF8) else Color(0xFF2563EB),
                                     modifier = Modifier.size(13.dp)
                                 )
                                 Text(
                                     text = "${job.positionCount} Kişi",
                                     fontSize = 12.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = if (isDark) Color(0xFFF8FAFC) else Color(0xFF0F172A),
+                                    color = if (isDark) Color(0xFF7DD3FC) else Color(0xFF1D4ED8),
                                     maxLines = 1
                                 )
                             }
@@ -414,15 +413,15 @@ fun JobCard(
                             daysRemaining == null -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
-                                        .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0x2610B981) else Color(0xFFECFDF5), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0x4D10B981) else Color(0xFFA7F3D0), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = "Başvuru Aktif",
                                         fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = if (isDark) Color(0xFFCBD5E1) else Color(0xFF475569),
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = if (isDark) Color(0xFF6EE7B7) else Color(0xFF047857),
                                         maxLines = 1
                                     )
                                 }
@@ -430,8 +429,8 @@ fun JobCard(
                             daysRemaining < 0 -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
-                                        .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0x2664748B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0x4D64748B) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
@@ -470,8 +469,8 @@ fun JobCard(
                                     Text(
                                         text = "$daysRemaining gün kaldı",
                                         fontSize = 12.sp,
-                                        fontWeight = FontWeight.Medium,
-                                        color = if (isDark) Color(0xFFFDE68A) else Color(0xFF92400E),
+                                        fontWeight = FontWeight.SemiBold,
+                                        color = if (isDark) Color(0xFFFDE68A) else Color(0xFFB45309),
                                         maxLines = 1
                                     )
                                 }
@@ -479,27 +478,27 @@ fun JobCard(
                             else -> {
                                 Box(
                                     modifier = Modifier
-                                        .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9), RoundedCornerShape(6.dp))
-                                        .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFE2E8F0), RoundedCornerShape(6.dp))
+                                        .background(if (isDark) Color(0x266366F1) else Color(0xFFEEF2FF), RoundedCornerShape(6.dp))
+                                        .border(1.dp, if (isDark) Color(0x4D6366F1) else Color(0xFFC7D2FE), RoundedCornerShape(6.dp))
                                         .padding(horizontal = 8.dp, vertical = 4.dp)
                                 ) {
                                     Text(
                                         text = "$daysRemaining gün kaldı",
                                         fontSize = 12.sp,
-                                        fontWeight = FontWeight.Normal,
-                                        color = if (isDark) Color(0xFFCBD5E1) else Color(0xFF475569),
+                                        fontWeight = FontWeight.Medium,
+                                        color = if (isDark) Color(0xFFA5B4FC) else Color(0xFF4338CA),
                                         maxLines = 1
                                     )
                                 }
                             }
                         }
 
-                        // İncele Butonu (Minimalist Linear/Apple stili)
+                        // İncele Butonu (Canlı, temaya uygun modern buton)
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(6.dp))
-                                .background(if (isDark) Color(0xFF1E293B) else Color(0xFFF1F5F9))
-                                .border(1.dp, if (isDark) Color(0xFF334155) else Color(0xFFCBD5E1), RoundedCornerShape(6.dp))
+                                .background(if (isDark) Color(0x260284C7) else Color(0xFFF0F9FF))
+                                .border(1.dp, if (isDark) Color(0x4D0284C7) else Color(0xFFBAE6FD), RoundedCornerShape(6.dp))
                                 .clickable { onClick() }
                                 .padding(horizontal = 10.dp, vertical = 5.dp),
                             contentAlignment = Alignment.Center
@@ -510,15 +509,15 @@ fun JobCard(
                             ) {
                                 Text(
                                     text = "İncele",
-                                    fontSize = 13.sp,
+                                    fontSize = 12.sp,
                                     fontWeight = FontWeight.SemiBold,
-                                    color = if (isDark) Color(0xFFF8FAFC) else Color(0xFF0F172A),
+                                    color = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
                                     maxLines = 1
                                 )
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                                     contentDescription = null,
-                                    tint = if (isDark) Color(0xFFF8FAFC) else Color(0xFF0F172A),
+                                    tint = if (isDark) Color(0xFF38BDF8) else Color(0xFF0284C7),
                                     modifier = Modifier.size(13.dp)
                                 )
                             }
@@ -536,7 +535,7 @@ private data class QuadBadge(val label: String, val bg: Color, val text: Color, 
 
 @Composable
 private fun PostTypeSolidBadge(postType: String?) {
-    val isDark = isSystemInDarkTheme()
+    val isDark = isAppDark()
     val badge = when (postType?.lowercase()) {
         "memur" -> if (isDark) QuadBadge("Memur", com.kamuilan.app.ui.theme.MemurDarkBg, com.kamuilan.app.ui.theme.MemurDarkText, com.kamuilan.app.ui.theme.MemurDarkBorder)
                    else QuadBadge("Memur", com.kamuilan.app.ui.theme.MemurLightBg, com.kamuilan.app.ui.theme.MemurLightText, com.kamuilan.app.ui.theme.MemurLightBorder)
@@ -570,7 +569,7 @@ private fun WebMetaBadge(
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     iconColor: Color
 ) {
-    val isDark = isSystemInDarkTheme()
+    val isDark = isAppDark()
     val bg = if (isDark) Color(0xFF27272A) else Color(0xFFF4F4F5)
     val border = if (isDark) Color(0x33FFFFFF) else Color(0xFFE4E4E7)
     val textCol = if (isDark) Color(0xFFE4E4E7) else Color(0xFF3F3F46)

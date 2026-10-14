@@ -189,7 +189,7 @@ fun AppNavigation(
                                 label = {
                                     Text(
                                         text = screen.title,
-                                        fontSize = 10.sp,
+                                        fontSize = 12.sp,
                                         maxLines = 1
                                     )
                                 },
