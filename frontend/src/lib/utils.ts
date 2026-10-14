@@ -435,13 +435,64 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     if (norm.includes("sahil guvenlik")) {
       return "https://www.sg.gov.tr/";
     }
-    if (norm.includes("emniyet") || norm.includes("polis")) {
+    if (norm.includes("emniyet") || norm.includes("polis") || norm.includes("pomem") || norm.includes("pmyo") || norm.includes("paem")) {
       return "https://www.pa.edu.tr/";
     }
 
-    // 2. Bakanlıklar ve Bağlı Kuruluşlar
+    // 2. Bakanlıklar ve Özel Kurumlar
+    if (norm.includes("saglik") || norm.includes("yhgm") || norm.includes("hastane") || norm.includes("hemsire")) {
+      return "https://yhgm.saglik.gov.tr/";
+    }
+    if (norm.includes("milli egitim") || norm.includes("meb") || norm.includes("ogretmen")) {
+      return "https://personel.meb.gov.tr/";
+    }
+    if (norm.includes("diyanet") || norm.includes("dibbys") || norm.includes("muezzin") || norm.includes("imam")) {
+      return "https://sinav.diyanet.gov.tr/";
+    }
+    if (norm.includes("aile ve sosyal") || norm.includes("asdep")) {
+      return "https://aile.gov.tr/pgm";
+    }
+    if (norm.includes("osym") || norm.includes("kpss")) {
+      return "https://www.osym.gov.tr/";
+    }
+    if (norm.includes("tarim ve orman") || norm.includes("ogm") || norm.includes("orman genel")) {
+      return "https://www.tarimorman.gov.tr/PERGEM";
+    }
+    if (norm.includes("ticaret bakanligi")) {
+      return "https://personel.ticaret.gov.tr/";
+    }
+    if (norm.includes("calisma ve sosyal") || norm.includes("csgb")) {
+      return "https://www.csgb.gov.tr/duyurular/";
+    }
+    if (norm.includes("ulastirma ve altyapi") || norm.includes("uab")) {
+      return "https://www.uab.gov.tr/duyurular/";
+    }
+    if (norm.includes("hazine ve maliye") || norm.includes("hmb")) {
+      return "https://www.hmb.gov.tr/";
+    }
+    if (norm.includes("kultur ve turizm") || norm.includes("ktb")) {
+      return "https://www.ktb.gov.tr/";
+    }
+    if (norm.includes("genclik ve spor") || norm.includes("gsb")) {
+      return "https://gsb.gov.tr/";
+    }
+    if (norm.includes("sosyal guvenlik") || norm.includes("sgk")) {
+      return "https://www.sgk.gov.tr/";
+    }
+    if (norm.includes("afad") || norm.includes("afet ve acil")) {
+      return "https://www.afad.gov.tr/";
+    }
+    if (norm.includes("tcdd") || norm.includes("demiryol")) {
+      return "https://www.tcdd.gov.tr/";
+    }
+    if (norm.includes("goc idaresi")) {
+      return "https://www.goc.gov.tr/";
+    }
+    if (norm.includes("disisleri")) {
+      return "https://www.mfa.gov.tr/duyurular.tr.mfa";
+    }
     if (norm.includes("tapu ve kadastro") || norm.includes("tkgm")) {
-      return "https://kariyerkapisi.gov.tr/isealim";
+      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
     }
     if (norm.includes("adalet bakanligi") || norm.includes("icra")) {
       return "https://pgm.adalet.gov.tr/";
@@ -471,10 +522,10 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
       return "https://www.gib.gov.tr/";
     }
     if (norm.includes("ozellestirme")) {
-      return "https://kariyerkapisi.gov.tr/isealim";
+      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
     }
     if (norm.includes("iletisim baskanligi")) {
-      return "https://kariyerkapisi.gov.tr/isealim";
+      return "https://isealimkariyerkapisi.cbiko.gov.tr/";
     }
     if (norm.includes("savunma sanayii") || norm.includes("ssb")) {
       return "https://www.ssb.gov.tr/";
@@ -599,11 +650,11 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     }
 
     if (norm.includes("universite") || norm.includes("universitesi")) {
-      return "https://kariyerkapisi.gov.tr/isealim";
+      return "https://akademik.yok.gov.tr/";
     }
 
     // 5. Resmi Kamu Kariyer Kapısı (Cumhurbaşkanlığı İşe Alım Portalı)
-    return "https://kariyerkapisi.gov.tr/isealim";
+    return "https://isealimkariyerkapisi.cbiko.gov.tr/";
   }
 
   return originalUrl;

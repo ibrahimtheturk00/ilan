@@ -68,7 +68,7 @@ export default function HomePage() {
           Kamu Personeli ve Memur Alımları
         </h1>
         <p className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 mt-1.5">
-          Kariyer Kapısı, SBB, İlan.gov.tr, İŞKUR ve Resmî Gazete ilanları tek ekranda.
+          Kariyer Kapısı, SBB/DPB, ÖSYM, Resmî Gazete, İlan.gov.tr, İŞKUR, Bakanlıklar ve Belediyeler dahil 37 resmî kaynak tek ekranda.
         </p>
       </div>
 

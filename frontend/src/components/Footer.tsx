@@ -11,20 +11,35 @@ import {
   Building2, 
   GraduationCap, 
   CheckCircle2,
-  ExternalLink
+  ExternalLink,
+  Award
 } from "lucide-react";
 import { trackUniqueVisitor, getCachedVisitorCount } from "@/lib/visitor";
 
 // Resmî İlan Kaynakları - Glassmorphism Marquee Listesi
 const OFFICIAL_SOURCES = [
   { name: "Kariyer Kapısı (CBİKO)", icon: GraduationCap, sub: "Cumhurbaşkanlığı İK Ofisi", domain: "kariyerkapisi.cbiko.gov.tr" },
-  { name: "İlan.gov.tr", icon: Landmark, sub: "Basın İlan Kurumu", domain: "ilan.gov.tr" },
-  { name: "SBB Kamu İlan", icon: Building2, sub: "Strateji ve Bütçe Bşk.", domain: "kamuilan.sbb.gov.tr" },
-  { name: "İŞKUR Kamu İlanları", icon: Briefcase, sub: "Türkiye İş Kurumu", domain: "iskur.gov.tr" },
+  { name: "İşe Alım Kapısı", icon: CheckCircle2, sub: "e-Devlet Resmî Başvuru", domain: "isealimkariyerkapisi.cbiko.gov.tr" },
+  { name: "Kamu İlan (SBB / DPB)", icon: Building2, sub: "Merkezi Kamu Portalı", domain: "kamuilan.sbb.gov.tr" },
+  { name: "ÖSYM", icon: Award, sub: "KPSS Tercih & Yerleştirme", domain: "osym.gov.tr" },
   { name: "Resmî Gazete", icon: Scroll, sub: "T.C. Cumhurbaşkanlığı", domain: "resmigazete.gov.tr" },
-  { name: "YÖK Akademik", icon: GraduationCap, sub: "Yükseköğretim Kurulu", domain: "yok.gov.tr" },
-  { name: "Adalet Bakanlığı", icon: ShieldCheck, sub: "Personel Genel Müd.", domain: "pgm.adalet.gov.tr" },
-  { name: "Millî Savunma Bşk.", icon: Landmark, sub: "MSB Personel Temin", domain: "personeltemin.msb.gov.tr" },
+  { name: "İlan.gov.tr", icon: Landmark, sub: "Basın İlan Kurumu", domain: "ilan.gov.tr" },
+  { name: "İŞKUR Kamu İlanları", icon: Briefcase, sub: "Türkiye İş Kurumu", domain: "iskur.gov.tr" },
+  { name: "Sağlık Bakanlığı (YHGM)", icon: ShieldCheck, sub: "Yönetim Hizmetleri GM", domain: "yhgm.saglik.gov.tr" },
+  { name: "Millî Eğitim Bşk. (MEB)", icon: GraduationCap, sub: "Personel Genel Müd.", domain: "personel.meb.gov.tr" },
+  { name: "Polis Akademisi (EGM)", icon: ShieldCheck, sub: "POMEM / PMYO / PAEM", domain: "pa.edu.tr" },
+  { name: "Jandarma & JSGA", icon: Landmark, sub: "Personel Temin (PTM)", domain: "vatandas.jandarma.gov.tr" },
+  { name: "Millî Savunma Bşk. (MSB)", icon: Landmark, sub: "MSB Personel Temin", domain: "personeltemin.msb.gov.tr" },
+  { name: "Adalet Bakanlığı (PGM)", icon: ShieldCheck, sub: "Personel Genel Müd.", domain: "pgm.adalet.gov.tr" },
+  { name: "Diyanet İşleri Bşk.", icon: Building2, sub: "DİBBYS Sınav Sistemi", domain: "sinav.diyanet.gov.tr" },
+  { name: "Aile & Sosyal Hizmetler", icon: Users, sub: "Personel Genel Müd.", domain: "aile.gov.tr" },
+  { name: "TÜBİTAK Kariyer", icon: Briefcase, sub: "Araştırmacı Kadroları", domain: "kariyer.tubitak.gov.tr" },
+  { name: "Gelir İdaresi Bşk. (GİB)", icon: Landmark, sub: "Gelir Uzman Alımları", domain: "gib.gov.tr" },
+  { name: "Tarım ve Orman Bşk.", icon: Building2, sub: "PERGEM & OGM Alımları", domain: "tarimorman.gov.tr" },
+  { name: "YÖK Akademik", icon: GraduationCap, sub: "Üniversite Kadroları", domain: "akademik.yok.gov.tr" },
+  { name: "TBB & Belediyeler", icon: Building2, sub: "İBB, ABB, İZBB ve Yerel", domain: "tbb.gov.tr" },
+  { name: "TCDD Demiryolları", icon: Landmark, sub: "Kamu İktisadi Teşebbüsü", domain: "tcdd.gov.tr" },
+  { name: "AFAD Başkanlığı", icon: ShieldCheck, sub: "Arama Kurtarma & Teknik", domain: "afad.gov.tr" },
 ];
 
 export function Footer() {
@@ -52,11 +67,11 @@ export function Footer() {
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
               <h3 className="text-sm sm:text-base font-semibold tracking-wide uppercase text-zinc-700 dark:text-zinc-300">
-                Canlı Doğrulanan Resmî Kaynaklar
+                37 Canlı Doğrulanan Resmî Devlet & Kamu Kaynağı
               </h3>
             </div>
             <span className="text-xs sm:text-sm font-medium text-zinc-400 dark:text-zinc-500 hidden sm:inline">
-              Doğrudan devlet portallarından senkronize edilir
+              7/24 Kesintisiz resmî devlet portallarından senkronize edilir
             </span>
           </div>
 
