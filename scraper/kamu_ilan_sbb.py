@@ -99,6 +99,66 @@ class KamuIlanSbbScraper(BaseScraper):
                                 final_url = kk_url
                                 break
 
+                        # SBB doğrudan PDF hotlink engeli varsa ve Kariyer Kapısı ile eşleşmediyse resmi web adresini ata
+                        if final_url == href and "kamuilan.sbb.gov.tr" in final_url:
+                            norm = inst_lower.replace("ç","c").replace("ğ","g").replace("ı","i").replace("i̇","i").replace("ö","o").replace("ş","s").replace("ü","u")
+                            if "jandarma" in norm: final_url = "https://vatandas.jandarma.gov.tr/ptm/giris"
+                            elif "milli savunma" in norm or "msb" in norm: final_url = "https://personeltemin.msb.gov.tr/"
+                            elif "yargitay" in norm: final_url = "https://www.yargitay.gov.tr/"
+                            elif "gelir idaresi" in norm or "gib" in norm: final_url = "https://www.gib.gov.tr/"
+                            elif "iett" in norm: final_url = "https://iett.istanbul/"
+                            elif "iletisim" in norm: final_url = "https://kariyerkapisi.gov.tr/isealim"
+                            elif "orta karadeniz" in norm or "oka" in norm: final_url = "https://www.oka.ka.gov.tr/"
+                            elif "mevlana" in norm or "mevka" in norm: final_url = "https://www.mevka.org.tr/"
+                            else:
+                                uni_map = {
+                                    "sakarya": "https://www.subu.edu.tr/", "subu": "https://www.subu.edu.tr/",
+                                    "canakkale": "https://www.comu.edu.tr/", "yildiz": "https://www.yildiz.edu.tr/",
+                                    "medeniyet": "https://www.medeniyet.edu.tr/", "ondokuz mayis": "https://www.omu.edu.tr/",
+                                    "erbakan": "https://www.erbakan.edu.tr/", "sirnak": "https://www.sirnak.edu.tr/",
+                                    "bandirma": "https://www.bandirma.edu.tr/", "marmara": "https://www.marmara.edu.tr/",
+                                    "giresun": "https://www.giresun.edu.tr/", "bozok": "https://bozok.edu.tr/",
+                                    "siirt": "https://www.siirt.edu.tr/", "bogazici": "https://www.boun.edu.tr/",
+                                    "dicle": "https://www.dicle.edu.tr/", "akdeniz": "https://www.akdeniz.edu.tr/",
+                                    "artvin": "https://www.artvin.edu.tr/", "ahi evran": "https://www.ahievran.edu.tr/",
+                                    "haci bayram": "https://hacibayram.edu.tr/", "isparta": "https://isparta.edu.tr/",
+                                    "samsun": "https://samsun.edu.tr/", "igdir": "https://www.igdir.edu.tr/",
+                                    "adiyaman": "https://www.adiyaman.edu.tr/", "adnan menderes": "https://www.adu.edu.tr/",
+                                    "balikesir": "https://www.baun.edu.tr/", "karatekin": "https://www.karatekin.edu.tr/",
+                                    "cankiri": "https://www.karatekin.edu.tr/", "usak": "https://www.usak.edu.tr/",
+                                    "suleyman demirel": "https://w3.sdu.edu.tr/", "yuzuncu yil": "https://www.yyu.edu.tr/",
+                                    "turk-alman": "https://www.tau.edu.tr/", "alaaddin keykubat": "https://www.alanya.edu.tr/",
+                                    "gaziosmanpasa": "https://www.gop.edu.tr/", "tokat": "https://www.gop.edu.tr/",
+                                    "eskisehir": "https://www.eskisehir.edu.tr/", "duzce": "https://duzce.edu.tr/",
+                                    "ankara": "https://www.ankara.edu.tr/", "ataturk": "https://atauni.edu.tr/",
+                                    "batman": "https://batman.edu.tr/", "itu": "https://www.itu.edu.tr/"
+                                }
+                                for u_key, u_url in uni_map.items():
+                                    if u_key in norm:
+                                        final_url = u_url
+                                        break
+                                if final_url == href:
+                                    bel_map = {
+                                        "sariidris": "https://sariidris.bel.tr/", "eleskirt": "http://www.eleskirt.bel.tr/",
+                                        "sile": "https://www.sile.bel.tr/", "celtik": "https://www.celtik.bel.tr/",
+                                        "kesan": "https://www.kesan.bel.tr/", "ortahisar": "https://www.ortahisar.bel.tr/",
+                                        "inebolu": "https://www.inebolu.bel.tr/", "malazgirt": "https://www.malazgirt.bel.tr/",
+                                        "rize": "https://rize.bel.tr/", "posof": "https://posof.bel.tr/",
+                                        "atalan": "https://www.atalan.bel.tr/", "elmakaya": "https://elmakaya.bel.tr/",
+                                        "mucur": "https://mucur.bel.tr/", "didim": "https://www.didim.bel.tr/",
+                                        "gerede": "https://gerede.bel.tr/", "pursaklar": "https://www.pursaklar.bel.tr/",
+                                        "taskesti": "https://www.taskesti.bel.tr/", "aralik": "https://www.aralik.bel.tr/",
+                                        "cukurkuyu": "https://cukurkuyu.bel.tr/"
+                                    }
+                                    for b_key, b_url in bel_map.items():
+                                        if b_key in norm:
+                                            final_url = b_url
+                                            break
+                                if final_url == href and ("belediye" in norm or "belediyesi" in norm):
+                                    final_url = "https://yerelyonetimler.csb.gov.tr/"
+                                elif final_url == href and ("universite" in norm or "universitesi" in norm):
+                                    final_url = "https://kariyerkapisi.gov.tr/isealim"
+
                         posts.append({
                             "title": full_title,
                             "institution": institution,

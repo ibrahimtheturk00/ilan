@@ -374,8 +374,8 @@ fun JobDetailScreen(
                                 )
                             )
                             .clickable {
-                                val url = job.originalUrl
-                                if (!url.isNullOrBlank()) {
+                                val url = JobParser.resolveApplicationUrl(job.institution, job.originalUrl)
+                                if (url.isNotBlank()) {
                                     context.startActivity(
                                         Intent(Intent.ACTION_VIEW, Uri.parse(url))
                                     )

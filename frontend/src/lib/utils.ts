@@ -316,16 +316,68 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     if (norm.includes("spk") || norm.includes("sermaye piyasasi")) {
       return "https://spk.gov.tr/";
     }
+    if (norm.includes("iett")) {
+      return "https://iett.istanbul/";
+    }
+    if (norm.includes("orta karadeniz") || norm.includes("oka")) {
+      return "https://www.oka.ka.gov.tr/";
+    }
+    if (norm.includes("mevlana") || norm.includes("mevka")) {
+      return "https://www.mevka.org.tr/";
+    }
 
-    // 3. Üniversiteler (Özel Domainler)
-    if (norm.includes("eskisehir teknik")) return "https://www.eskisehir.edu.tr/";
-    if (norm.includes("sirnak")) return "https://www.sirnak.edu.tr/";
-    if (norm.includes("ondokuz mayis")) return "https://www.omu.edu.tr/";
-    if (norm.includes("necmettin erbakan")) return "https://www.erbakan.edu.tr/";
-    if (norm.includes("ankara universitesi")) return "https://www.ankara.edu.tr/";
-    if (norm.includes("ataturk universitesi")) return "https://atauni.edu.tr/";
-    if (norm.includes("batman universitesi")) return "https://batman.edu.tr/";
-    if (norm.includes("istanbul teknik") || norm.includes("itu")) return "https://www.itu.edu.tr/";
+    // 3. Üniversiteler (Doğrulanmış Resmî Web & Personel Portalları)
+    const uniDomains: [string, string][] = [
+      ["sakarya", "https://www.subu.edu.tr/"],
+      ["subu", "https://www.subu.edu.tr/"],
+      ["canakkale", "https://www.comu.edu.tr/"],
+      ["onsekiz mart", "https://www.comu.edu.tr/"],
+      ["yildiz", "https://www.yildiz.edu.tr/"],
+      ["medeniyet", "https://www.medeniyet.edu.tr/"],
+      ["ondokuz mayis", "https://www.omu.edu.tr/"],
+      ["erbakan", "https://www.erbakan.edu.tr/"],
+      ["sirnak", "https://www.sirnak.edu.tr/"],
+      ["bandirma", "https://www.bandirma.edu.tr/"],
+      ["marmara", "https://www.marmara.edu.tr/"],
+      ["giresun", "https://www.giresun.edu.tr/"],
+      ["bozok", "https://bozok.edu.tr/"],
+      ["siirt", "https://www.siirt.edu.tr/"],
+      ["bogazici", "https://www.boun.edu.tr/"],
+      ["dicle", "https://www.dicle.edu.tr/"],
+      ["akdeniz", "https://www.akdeniz.edu.tr/"],
+      ["artvin", "https://www.artvin.edu.tr/"],
+      ["ahi evran", "https://www.ahievran.edu.tr/"],
+      ["haci bayram", "https://hacibayram.edu.tr/"],
+      ["isparta", "https://isparta.edu.tr/"],
+      ["samsun", "https://samsun.edu.tr/"],
+      ["igdir", "https://www.igdir.edu.tr/"],
+      ["adiyaman", "https://www.adiyaman.edu.tr/"],
+      ["adnan menderes", "https://www.adu.edu.tr/"],
+      ["balikesir", "https://www.baun.edu.tr/"],
+      ["karatekin", "https://www.karatekin.edu.tr/"],
+      ["cankiri", "https://www.karatekin.edu.tr/"],
+      ["usak", "https://www.usak.edu.tr/"],
+      ["suleyman demirel", "https://w3.sdu.edu.tr/"],
+      ["yuzuncu yil", "https://www.yyu.edu.tr/"],
+      ["turk-alman", "https://www.tau.edu.tr/"],
+      ["turk alman", "https://www.tau.edu.tr/"],
+      ["alaaddin keykubat", "https://www.alanya.edu.tr/"],
+      ["gaziosmanpasa", "https://www.gop.edu.tr/"],
+      ["tokat", "https://www.gop.edu.tr/"],
+      ["eskisehir", "https://www.eskisehir.edu.tr/"],
+      ["duzce", "https://duzce.edu.tr/"],
+      ["ankara", "https://www.ankara.edu.tr/"],
+      ["ataturk", "https://atauni.edu.tr/"],
+      ["batman", "https://batman.edu.tr/"],
+      ["itu", "https://www.itu.edu.tr/"],
+      ["istanbul teknik", "https://www.itu.edu.tr/"],
+    ];
+
+    for (const [key, url] of uniDomains) {
+      if (norm.includes(key)) {
+        return url;
+      }
+    }
 
     // Otomatik Üniversite Tespiti: "<İsim> Üniversite..." -> "https://www.<isim>.edu.tr/"
     const uniMatch = norm.match(/([a-z]+)\s+universite/);
@@ -350,6 +402,19 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
     if (norm.includes("celtik")) return "https://www.celtik.bel.tr/";
     if (norm.includes("kesan")) return "https://www.kesan.bel.tr/";
     if (norm.includes("ortahisar")) return "https://www.ortahisar.bel.tr/";
+    if (norm.includes("inebolu")) return "https://www.inebolu.bel.tr/";
+    if (norm.includes("malazgirt")) return "https://www.malazgirt.bel.tr/";
+    if (norm.includes("rize")) return "https://rize.bel.tr/";
+    if (norm.includes("posof")) return "https://posof.bel.tr/";
+    if (norm.includes("atalan")) return "https://www.atalan.bel.tr/";
+    if (norm.includes("elmakaya")) return "https://elmakaya.bel.tr/";
+    if (norm.includes("mucur")) return "https://mucur.bel.tr/";
+    if (norm.includes("didim")) return "https://www.didim.bel.tr/";
+    if (norm.includes("gerede")) return "https://gerede.bel.tr/";
+    if (norm.includes("pursaklar")) return "https://www.pursaklar.bel.tr/";
+    if (norm.includes("taskesti")) return "https://www.taskesti.bel.tr/";
+    if (norm.includes("aralik")) return "https://www.aralik.bel.tr/";
+    if (norm.includes("cukurkuyu")) return "https://cukurkuyu.bel.tr/";
 
     // C) İlçe / Belde Belediyeleri Dinamik: "<İsim> Belediye..." -> "https://www.<isim>.bel.tr/"
     const belMatch = norm.match(/([a-z]+)\s+belediye/);
