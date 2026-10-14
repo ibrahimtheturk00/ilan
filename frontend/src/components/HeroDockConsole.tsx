@@ -133,7 +133,7 @@ export function HeroDockConsole({
   const currentSort = SORT_OPTIONS.find((s) => s.key === sortBy) || SORT_OPTIONS[0];
 
   return (
-    <div className="relative w-full mb-6">
+    <div className="relative z-30 w-full mb-6">
       {/* Ambient Halo Glow */}
       <div className="absolute -inset-1 bg-gradient-to-r from-zinc-300/30 via-zinc-200/10 to-zinc-300/30 dark:from-white/10 dark:via-white/5 dark:to-white/10 rounded-[32px] blur-xl opacity-70 pointer-events-none transition-all duration-500" />
 
@@ -368,7 +368,7 @@ export function HeroDockConsole({
           </div>
 
           {/* Sağ: Sıralama Butonu & Açılır Menü */}
-          <div className="relative shrink-0 self-end sm:self-auto" ref={sortRef}>
+          <div className="relative z-40 shrink-0 self-end sm:self-auto" ref={sortRef}>
             <button
               type="button"
               onClick={() => setIsSortOpen(!isSortOpen)}
@@ -393,7 +393,7 @@ export function HeroDockConsole({
 
             {/* Açılır Sıralama Menüsü */}
             {isSortOpen && (
-              <div className="absolute right-0 mt-1.5 w-64 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-xl z-30 py-1.5 animate-fadeIn overflow-hidden">
+              <div className="absolute right-0 mt-1.5 w-64 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl shadow-2xl z-50 py-1.5 animate-fadeIn overflow-hidden">
                 <div className="px-3.5 py-1.5 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-700/60">
                   İlanları Sırala
                 </div>

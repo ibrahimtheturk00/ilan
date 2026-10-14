@@ -101,7 +101,7 @@ export function PostTypeQuickFilter() {
       </div>
 
       {/* Sağ: Sıralama Butonu & Açılır Menü */}
-      <div className="relative shrink-0 self-end sm:self-auto" ref={sortRef}>
+      <div className="relative z-40 shrink-0 self-end sm:self-auto" ref={sortRef}>
         <button
           type="button"
           onClick={() => setIsSortOpen(!isSortOpen)}
@@ -120,7 +120,7 @@ export function PostTypeQuickFilter() {
 
         {/* Açılır Sıralama Menüsü */}
         {isSortOpen && (
-          <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-xl z-30 py-1.5 animate-fadeIn overflow-hidden">
+          <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-2xl z-50 py-1.5 animate-fadeIn overflow-hidden">
             <div className="px-3 py-1 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-700/60">
               İlanları Sırala
             </div>
