@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { createPortal } from "react-dom";
 import {
   X,
   GraduationCap,
@@ -57,6 +58,11 @@ export function PersonalizedCriteriaModal({
   const [selectedPostTypes, setSelectedPostTypes] = useState<string[]>([]);
   const [includeNoKpss, setIncludeNoKpss] = useState(true);
   const [citySearch, setCitySearch] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (initialCriteria) {
@@ -130,15 +136,15 @@ export function PersonalizedCriteriaModal({
     onClose();
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   const totalSelectedFilters =
     selectedDepts.length +
     selectedCities.length +
     selectedPostTypes.length;
 
-  return (
-    <div className="fixed inset-0 z-[120] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn overflow-hidden">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md animate-fadeIn overflow-hidden">
       {/* Arka plan ışık noktaları ve dalga efekti (Canvas 2D) */}
       <div className="absolute inset-0 pointer-events-auto z-0">
         <InteractiveDotGridBackground className="w-full h-full" />
@@ -419,6 +425,7 @@ export function PersonalizedCriteriaModal({
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
