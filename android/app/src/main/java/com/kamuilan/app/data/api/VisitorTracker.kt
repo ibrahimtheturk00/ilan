@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.data.api
+package com.kamuilan.app.data.api
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey
@@ -36,7 +36,7 @@ object VisitorTracker {
                 val alreadyCounted = prefs[KEY_MOBILE_COUNTED] ?: false
                 if (alreadyCounted) return@withContext
 
-                val url = "https://countapi.mileshilliard.com/api/v1/hit/"
+                val url = "https://countapi.mileshilliard.com/api/v1/hit/$COUNTER_KEY"
                 val request = Request.Builder()
                     .url(url)
                     .header("Accept", "application/json")
