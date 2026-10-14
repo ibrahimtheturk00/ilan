@@ -155,7 +155,10 @@ fun HomeScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = Modifier.weight(1f),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     // Logo kutusu (Modern, minimalist)
                     Box(
                         modifier = Modifier
@@ -177,7 +180,7 @@ fun HomeScreen(
 
                     Spacer(modifier = Modifier.width(10.dp))
 
-                    Column {
+                    Column(modifier = Modifier.weight(1f, fill = false)) {
                         Text(
                             text = "Kamu İlan",
                             fontFamily = BricolageGrotesque,
@@ -187,64 +190,36 @@ fun HomeScreen(
                             letterSpacing = (-0.3).sp
                         )
                         Text(
-                            text = "14 Resmî Portal • 1.000+ Kurum • Anlık Veri Akışı",
+                            text = "14 Resmî Portal • 1.000+ Kurum",
                             fontFamily = Manrope,
-                            fontSize = 12.sp,
+                            fontSize = 11.5.sp,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.65f)
                         )
                     }
                 }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                Spacer(modifier = Modifier.width(12.dp))
+
+                // Hızlı Gece / Gündüz Tema Değiştirme Butonu (Tek, temiz ve taşma yapmayan)
+                IconButton(
+                    onClick = onToggleTheme,
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(
+                            color = if (isDark) Color(0xFF1E293B) else Color(0xFFE2E8F0),
+                            shape = RoundedCornerShape(12.dp)
+                        )
                 ) {
-                    // 1. Hızlı Tema Değiştirme Butonu
-                    IconButton(
-                        onClick = onToggleTheme,
-                        modifier = Modifier
-                            .size(38.dp)
-                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
-                    ) {
-                        val icon = if (isDark) Icons.Default.DarkMode else Icons.Default.LightMode
-                        val tint = if (isDark) Color(0xFF38BDF8) else Color(0xFFF59E0B)
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = "Tema Değiştir",
-                            tint = tint,
-                            modifier = Modifier.size(19.dp)
-                        )
-                    }
-
-                    // 2. 4x4 Kategori Izgarasını Açan Buton
-                    IconButton(
-                        onClick = { showCategoryGridDialog = true },
-                        modifier = Modifier
-                            .size(38.dp)
-                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.12f), RoundedCornerShape(10.dp))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.GridView,
-                            contentDescription = "Kategoriler Izgara",
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(19.dp)
-                        )
-                    }
-
-                    // 3. Yenile Butonu
-                    IconButton(
-                        onClick = { viewModel.loadJobs() },
-                        modifier = Modifier
-                            .size(38.dp)
-                            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(10.dp))
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = "Yenile",
-                            tint = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.size(18.dp)
-                        )
-                    }
+                    val icon = if (isDark) Icons.Default.DarkMode else Icons.Default.LightMode
+                    val tint = if (isDark) Color(0xFF38BDF8) else Color(0xFFF59E0B)
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = "Tema Değiştir",
+                        tint = tint,
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
             }
 
