@@ -111,17 +111,14 @@ export function JobCard({ job, onSelect }: JobCardProps) {
   return (
     <div
       onClick={handleClick}
-      className={`group relative bg-white/75 dark:bg-[#121624]/75 backdrop-blur-xl border ${
+      className={`group tech-corner-card relative bg-white/80 dark:bg-[#121624]/85 backdrop-blur-xl border ${
         statusInfo.isCancelled
-          ? "border-red-300/80 dark:border-red-900/60 shadow-red-500/5"
+          ? "border-red-300/80 dark:border-red-900/60"
           : statusInfo.type === "urgent"
-          ? "border-rose-300/80 dark:border-rose-900/60 shadow-rose-500/5"
-          : "border-zinc-200/80 dark:border-white/10 hover:border-zinc-300 dark:hover:border-white/20"
-      } rounded-2xl p-5 sm:p-6 card-hover-clean flex flex-col justify-between h-full cursor-pointer transition-all overflow-hidden shadow-lg shadow-zinc-950/2 dark:shadow-black/25`}
+          ? "border-rose-300/80 dark:border-rose-900/60"
+          : "border-zinc-200/60 dark:border-white/5"
+      } rounded-lg p-5 sm:p-6 card-hover-clean flex flex-col justify-between h-full cursor-pointer transition-all shadow-xs`}
     >
-      {/* Subtle Ambient Radial Glow on Hover */}
-      <div className="absolute top-0 right-0 -mr-16 -mt-16 h-48 w-48 rounded-full bg-blue-500/5 dark:bg-white/5 blur-3xl pointer-events-none group-hover:bg-blue-500/10 dark:group-hover:bg-white/10 transition-colors" />
-
       <div className="relative z-10">
         {/* Üst Satır: Tek küçük kadro rozeti + İnce kaynak & meslek metni */}
         <div className="flex items-center justify-between gap-2 mb-3.5">

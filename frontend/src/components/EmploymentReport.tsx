@@ -344,12 +344,12 @@ export function EmploymentReport({
           onClick={onGoToAllJobs}
           role="button"
           tabIndex={0}
-          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-500/80 dark:hover:border-brand-500 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-brand-500/10 hover:ring-1 hover:ring-brand-500/20 cursor-pointer flex flex-col justify-between"
+          className="group tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs cursor-pointer flex flex-col justify-between transition-all"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Aktif İlan Sayısı</span>
-              <Briefcase className="w-4 h-4 text-brand-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-200" />
+              <Briefcase className="w-4 h-4 text-brand-600 group-hover:scale-105 transition-transform duration-200" />
             </div>
             <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
               {stats.totalActiveJobs.toLocaleString("tr-TR")}
@@ -363,7 +363,7 @@ export function EmploymentReport({
         </div>
 
         {/* 2. KART: Toplam Kadro Kontenjanı */}
-        <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-emerald-500/10 hover:border-emerald-500/60 hover:ring-1 hover:ring-emerald-500/20 flex flex-col justify-between">
+        <div className="tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs flex flex-col justify-between transition-all">
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Toplam Kadro Kontenjanı</span>
@@ -382,12 +382,12 @@ export function EmploymentReport({
           onClick={onGoToUrgentJobs}
           role="button"
           tabIndex={0}
-          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-rose-500/80 dark:hover:border-rose-500 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-rose-500/10 hover:ring-1 hover:ring-rose-500/20 cursor-pointer flex flex-col justify-between"
+          className="group tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs cursor-pointer flex flex-col justify-between transition-all"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Acil Başvurular</span>
-              <Clock className="w-4 h-4 text-rose-500 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-200" />
+              <Clock className="w-4 h-4 text-rose-500 group-hover:scale-105 transition-transform duration-200" />
             </div>
             <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 mt-1 group-hover:text-rose-700 dark:group-hover:text-rose-300 transition-colors">
               {stats.urgentJobsCount}
@@ -408,12 +408,12 @@ export function EmploymentReport({
           }}
           role="button"
           tabIndex={0}
-          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-indigo-500/80 dark:hover:border-indigo-500 rounded-2xl p-4 sm:p-5 shadow-sm card-hover-glow hover:shadow-xl hover:shadow-indigo-500/10 hover:ring-1 hover:ring-indigo-500/20 cursor-pointer flex flex-col justify-between"
+          className="group tech-corner-card bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5 rounded-lg p-4 sm:p-5 shadow-xs cursor-pointer flex flex-col justify-between transition-all"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">İlan Veren Kurumlar</span>
-              <Building2 className="w-4 h-4 text-indigo-600 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-200" />
+              <Building2 className="w-4 h-4 text-indigo-600 group-hover:scale-105 transition-transform duration-200" />
             </div>
             <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400 mt-1 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 transition-colors">
               {stats.totalInstitutions}+
