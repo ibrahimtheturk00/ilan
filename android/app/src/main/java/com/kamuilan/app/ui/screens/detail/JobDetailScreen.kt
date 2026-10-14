@@ -212,36 +212,34 @@ fun JobDetailScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     // ── Hero Header (Kesiksiz akıcı arka plan) ──────────────────────
-                    Box(
+                    Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp, vertical = 14.dp)
                     ) {
-                        Column {
-                            // Kurum satırı
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                InstitutionLogoView(
-                                    institution = job.institution,
-                                    size = 42.dp
+                        // Kurum satırı
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            InstitutionLogoView(
+                                institution = job.institution,
+                                size = 42.dp
+                            )
+                            Spacer(modifier = Modifier.width(12.dp))
+                            Column {
+                                Text(
+                                    text = job.institution ?: "T.C. Kamu Kurumu",
+                                    fontFamily = Manrope,
+                                    fontSize = 14.5.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onSurface
                                 )
-                                Spacer(modifier = Modifier.width(12.dp))
-                                Column {
+                                if (job.source != null) {
                                     Text(
-                                        text = job.institution ?: "T.C. Kamu Kurumu",
+                                        text = job.source.name,
                                         fontFamily = Manrope,
-                                        fontSize = 14.5.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = MaterialTheme.colorScheme.onSurface
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
-                                    if (job.source != null) {
-                                        Text(
-                                            text = job.source.name,
-                                            fontFamily = Manrope,
-                                            fontSize = 12.sp,
-                                            fontWeight = FontWeight.Medium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                    }
                                 }
                             }
                         }
@@ -280,9 +278,8 @@ fun JobDetailScreen(
                             if (job.source != null) SourceBadge(sourceName = job.source.name)
                         }
                     }
-                }
 
-                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), thickness = 1.dp)
+                    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f), thickness = 1.dp)
 
                 // ── Stat Kartları (3'lü grid) ────────────────────────────────
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp)) {
@@ -445,6 +442,7 @@ fun JobDetailScreen(
             }
         }
     }
+}
 }
 
 @Composable
