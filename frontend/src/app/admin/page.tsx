@@ -191,7 +191,7 @@ export default function AdminDashboardPage() {
                     <td className="py-3 px-4">{new Date(log.started_at).toLocaleTimeString("tr-TR")}</td>
                     <td className="py-3 px-4">
                       <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-semibold text-[10px] ${
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded font-semibold text-xs ${
                           log.status === "success"
                             ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300"
                             : log.status === "partial"

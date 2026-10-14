@@ -171,7 +171,7 @@ export function HeroDockConsole({
           >
             <Sparkles className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
             <span>Bugün Eklenenler</span>
-            <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-100 text-emerald-950 border border-emerald-300 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30">
+            <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-xs font-bold tracking-wide uppercase bg-emerald-100 text-emerald-950 border border-emerald-300 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30">
               Yeni
             </span>
           </button>

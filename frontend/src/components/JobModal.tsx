@@ -92,22 +92,22 @@ export function JobModal({ job, onClose }: JobModalProps) {
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800">
           <div className="flex flex-wrap items-center gap-1.5 flex-1 pr-3">
             {typeInfo && (
-              <span className={`text-[11px] px-2.5 py-0.5 rounded-lg ${typeInfo.color}`}>
+              <span className={`text-xs px-2.5 py-0.5 rounded-lg ${typeInfo.color}`}>
                 {typeInfo.label}
               </span>
             )}
             {categoryInfo && (
-              <span className="text-[11px] px-2.5 py-0.5 rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+              <span className="text-xs px-2.5 py-0.5 rounded-lg font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                 {categoryInfo.label}
               </span>
             )}
             {statusInfo.isCancelled ? (
-              <span className="text-[11px] px-2.5 py-0.5 rounded-lg font-bold bg-red-600 text-white uppercase tracking-wider shadow-sm">
+              <span className="text-xs px-2.5 py-0.5 rounded-lg font-bold bg-red-600 text-white uppercase tracking-wider shadow-sm">
                 {statusInfo.statusTitle}
               </span>
             ) : (
               <span
-                className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-lg ${statusInfo.badgeClass}`}
+                className={`text-xs font-semibold px-2.5 py-0.5 rounded-lg ${statusInfo.badgeClass}`}
               >
                 {statusInfo.fullBadgeText}
               </span>
@@ -151,7 +151,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
                 <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
                   {displayInstitution}
                 </span>
-                <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-md ${institutionVisual.bgColor} ${institutionVisual.iconColor}`}>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-md ${institutionVisual.bgColor} ${institutionVisual.iconColor}`}>
                   {institutionVisual.categoryLabel}
                 </span>
               </div>

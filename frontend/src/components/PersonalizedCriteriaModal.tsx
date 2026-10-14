@@ -304,7 +304,7 @@ export function PersonalizedCriteriaModal({
 
             {selectedCities.length > 0 && (
               <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                <span className="text-[11px] text-zinc-400 font-medium">Seçili İller:</span>
+                <span className="text-xs text-zinc-400 font-medium">Seçili İller:</span>
                 {selectedCities.map((c) => (
                   <span
                     key={c}
@@ -350,7 +350,7 @@ export function PersonalizedCriteriaModal({
                     <div>
                       <div className="font-bold text-xs sm:text-sm">{pt.label}</div>
                       <div
-                        className={`text-[11px] mt-0.5 ${
+                        className={`text-xs mt-0.5 ${
                           isSelected
                             ? "text-zinc-300 dark:text-zinc-600"
                             : "text-zinc-500 dark:text-zinc-400"
@@ -374,7 +374,7 @@ export function PersonalizedCriteriaModal({
               <div className="font-bold text-xs sm:text-sm text-zinc-900 dark:text-white">
                 KPSS Şartsız İlanları Dahil Et
               </div>
-              <div className="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5">
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
                 KPSS puanı gerektirmeyen veya taban puan aramayan resmi kamu alımları da listene eklenir.
               </div>
             </div>

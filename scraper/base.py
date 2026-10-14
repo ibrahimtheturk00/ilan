@@ -2,7 +2,8 @@ import os
 import sys
 import logging
 from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+import re
+from datetime import datetime, timezone, timedelta
 from typing import List, Dict, Any, Optional, Tuple
 
 from dotenv import load_dotenv
@@ -242,12 +243,15 @@ class BaseScraper(ABC):
         pass
 
     def deactivate_expired_and_cancelled_jobs(self):
-        """Veritabanındaki son başvuru tarihi geçmiş veya iptal edilmiş ilanları otomatik olarak is_active=False yapar."""
+        """Veritabanındaki süresi geçmiş, iptal edilmiş veya eski tarihli (90 günden eski/geçmiş yıllara ait) ilanları is_active=False yapar."""
         if not self.client:
             return
         try:
-            today_str = datetime.now(timezone.utc).date().isoformat()
-            now_iso = datetime.now(timezone.utc).isoformat()
+            now = datetime.now(timezone.utc)
+            today_str = now.date().isoformat()
+            now_iso = now.isoformat()
+            cutoff_90_days = (now - timedelta(days=90)).strftime("%Y-%m-%d")
+            current_year = now.year
             
             # 1. Süresi dolan aktif ilanları pasife al
             self.client.table("job_posts").update({
@@ -261,7 +265,27 @@ class BaseScraper(ABC):
                 "updated_at": now_iso
             }).eq("is_active", True).ilike("title", "%iptal%").execute()
 
-            self.logger.info("Süresi dolan ve iptal edilen ilanlar başarıyla pasife alındı.")
+            # 3. Son başvuru tarihi boş olup yayın tarihi 90 günden eski olanları pasife al
+            self.client.table("job_posts").update({
+                "is_active": False,
+                "updated_at": now_iso
+            }).eq("is_active", True).is_("deadline_at", "null").lt("published_at", cutoff_90_days).execute()
+
+            # 4. Son başvuru tarihi boş olup başlığında geçmiş yıl bulunan (örn. 2013-2025 atama kurası) eski duyuruları pasife al
+            past_years = [str(y) for y in range(2000, current_year)]
+            year_pattern = re.compile(r'\b(' + '|'.join(past_years) + r')\b')
+            active_null_deadline = self.client.table("job_posts").select("id, title").eq("is_active", True).is_("deadline_at", "null").execute().data or []
+            old_ids = [j["id"] for j in active_null_deadline if year_pattern.search(j.get("title", ""))]
+
+            if old_ids:
+                for i in range(0, len(old_ids), 50):
+                    batch = old_ids[i:i+50]
+                    self.client.table("job_posts").update({
+                        "is_active": False,
+                        "updated_at": now_iso
+                    }).in_("id", batch).execute()
+
+            self.logger.info("Süresi dolan, iptal edilen ve geçmiş yıllara ait atıl ilanlar başarıyla pasife alındı.")
         except Exception as e:
             self.logger.warning(f"Süresi dolan ilanları pasife alma uyarısı: {e}")
 

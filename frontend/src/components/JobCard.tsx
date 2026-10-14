@@ -132,7 +132,7 @@ export function JobCard({ job, onSelect }: JobCardProps) {
               {job.sources?.name || "Resmî Gazete"} · {categoryInfo?.label || "Genel"}
             </span>
             {meta.isToday && (
-              <span className="inline-flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30">
+              <span className="inline-flex items-center gap-1 text-xs px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-950 border border-emerald-300 font-bold dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30">
                 <Sparkles className="w-3 h-3 text-emerald-700 dark:text-sky-400" />
                 <span>Bugün</span>
               </span>

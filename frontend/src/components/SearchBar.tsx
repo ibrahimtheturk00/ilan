@@ -99,7 +99,7 @@ export function SearchBar() {
               <X className="w-4 h-4" />
             </button>
           ) : (
-            <div className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-[10px] font-mono text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">
+            <div className="hidden sm:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-xs font-mono text-zinc-500 dark:text-zinc-400 select-none pointer-events-none">
               <span>Ctrl</span>
               <span>K</span>
             </div>
@@ -110,7 +110,7 @@ export function SearchBar() {
       {/* Hızlı Arama Etiketleri - Sadece odaklanıldığında veya tıklandığında açılır */}
       {isFocused && (
         <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-1 animate-fadeIn">
-          <span className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 shrink-0 pl-0.5">
+          <span className="text-xs font-semibold text-zinc-400 dark:text-zinc-500 shrink-0 pl-0.5">
             Kategoriler:
           </span>
           {QUICK_SEARCH_TAGS.map((tag) => {
@@ -120,7 +120,7 @@ export function SearchBar() {
                 key={tag}
                 type="button"
                 onClick={() => setSearchQuery(isSelected ? "" : tag)}
-                className={`shrink-0 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors border ${
+                className={`shrink-0 px-2.5 py-1 rounded-md text-xs font-medium transition-colors border ${
                   isSelected
                     ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-semibold"
                     : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"

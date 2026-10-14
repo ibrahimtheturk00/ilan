@@ -121,7 +121,7 @@ export function PostTypeQuickFilter() {
         {/* Açılır Sıralama Menüsü */}
         {isSortOpen && (
           <div className="absolute right-0 mt-1.5 w-60 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg shadow-xl z-30 py-1.5 animate-fadeIn overflow-hidden">
-            <div className="px-3 py-1 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-700/60">
+            <div className="px-3 py-1 text-xs font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider border-b border-zinc-100 dark:border-zinc-700/60">
               İlanları Sırala
             </div>
             <div className="p-1 space-y-0.5">
@@ -143,7 +143,7 @@ export function PostTypeQuickFilter() {
                   >
                     <div>
                       <div className="leading-tight">{opt.label}</div>
-                      <div className="text-[10px] text-zinc-400 dark:text-zinc-500 mt-0.5 font-normal">
+                      <div className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5 font-normal">
                         {opt.desc}
                       </div>
                     </div>
