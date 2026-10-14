@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { fetchEmploymentStats, EmploymentReportData } from "@/lib/supabase";
 import { JobCard } from "./JobCard";
 import { JobModal } from "./JobModal";
 import { JobPost } from "@/types";
 import { cleanInstitution } from "@/lib/utils";
+import { normalizeTurkish } from "@/lib/jobParser";
+import { detectInstitutionVisual } from "@/lib/institutionIcons";
 import {
   TrendingUp,
   Users,
@@ -40,6 +42,20 @@ export function EmploymentReport({
   const [viewMode, setViewMode] = useState<"overview" | "institutions">("overview");
   const [institutionSearch, setInstitutionSearch] = useState("");
   const [selectedJob, setSelectedJob] = useState<JobPost | null>(null);
+  const [isAutocompleteOpen, setIsAutocompleteOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  // Dışarı tıklandığında öneri kutusunu kapat
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target as Node)) {
+        setIsAutocompleteOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     fetchEmploymentStats()
@@ -72,15 +88,46 @@ export function EmploymentReport({
       .sort((a, b) => b.count - a.count || a.institution.localeCompare(b.institution, "tr-TR"));
   }, [stats?.allJobs]);
 
-  // Arama filtresi uygulanan kurumlar
+  // Arama filtresi uygulanan kurumlar (Türkçe toleranslı & akıllı kelime bazlı)
   const filteredInstitutions = useMemo(() => {
     if (!institutionSearch.trim()) return groupedByInstitution;
-    const q = institutionSearch.toLocaleLowerCase("tr-TR");
-    return groupedByInstitution.filter(
-      (item) =>
-        item.institution.toLocaleLowerCase("tr-TR").includes(q) ||
-        item.jobs.some((j) => j.title.toLocaleLowerCase("tr-TR").includes(q))
-    );
+    const qNorm = normalizeTurkish(institutionSearch);
+    const qTokens = qNorm.split(/\s+/).filter((t) => t.length >= 2);
+
+    return groupedByInstitution.filter((item) => {
+      const instNorm = normalizeTurkish(item.institution);
+      // Kurum adında doğrudan veya parça eşleşme
+      if (instNorm.includes(qNorm)) return true;
+
+      // Kelime bazlı eşleşme (örn: "marmara uni" -> "marmara universitesi")
+      if (qTokens.length > 0 && qTokens.every((token) => instNorm.includes(token))) {
+        return true;
+      }
+
+      // Kurumun ilan başlıklarında arama
+      return item.jobs.some((j) => {
+        const titleNorm = normalizeTurkish(j.title);
+        if (titleNorm.includes(qNorm)) return true;
+        return qTokens.length > 0 && qTokens.every((token) => titleNorm.includes(token));
+      });
+    });
+  }, [groupedByInstitution, institutionSearch]);
+
+  // Autocomplete için önerilen kurumlar listesi
+  const autocompleteSuggestions = useMemo(() => {
+    if (!institutionSearch.trim()) {
+      return groupedByInstitution.slice(0, 6);
+    }
+    const qNorm = normalizeTurkish(institutionSearch);
+    const qTokens = qNorm.split(/\s+/).filter((t) => t.length >= 2);
+
+    return groupedByInstitution
+      .filter((item) => {
+        const instNorm = normalizeTurkish(item.institution);
+        if (instNorm.includes(qNorm)) return true;
+        return qTokens.length > 0 && qTokens.every((token) => instNorm.includes(token));
+      })
+      .slice(0, 8);
   }, [groupedByInstitution, institutionSearch]);
 
   if (loading) {
@@ -127,23 +174,96 @@ export function EmploymentReport({
             </p>
           </div>
 
-          {/* Kurum Arama Çubuğu */}
-          <div className="relative w-full sm:w-80">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+          {/* Kurum Arama Çubuğu & Autocomplete */}
+          <div className="relative w-full sm:w-80" ref={searchContainerRef}>
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 z-10" />
             <input
               type="text"
               value={institutionSearch}
-              onChange={(e) => setInstitutionSearch(e.target.value)}
-              placeholder="Kurum ara (örn: Sağlık, Rize, Ankara)..."
-              className="w-full pl-9 pr-8 py-2 text-xs bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:outline-none focus:ring-1 focus:ring-brand-500"
+              onChange={(e) => {
+                setInstitutionSearch(e.target.value);
+                setIsAutocompleteOpen(true);
+                setActiveIndex(-1);
+              }}
+              onFocus={() => setIsAutocompleteOpen(true)}
+              onKeyDown={(e) => {
+                if (!isAutocompleteOpen) {
+                  if (e.key === "ArrowDown") setIsAutocompleteOpen(true);
+                  return;
+                }
+                if (e.key === "ArrowDown") {
+                  e.preventDefault();
+                  setActiveIndex((prev) => (prev < autocompleteSuggestions.length - 1 ? prev + 1 : 0));
+                } else if (e.key === "ArrowUp") {
+                  e.preventDefault();
+                  setActiveIndex((prev) => (prev > 0 ? prev - 1 : autocompleteSuggestions.length - 1));
+                } else if (e.key === "Enter") {
+                  if (activeIndex >= 0 && activeIndex < autocompleteSuggestions.length) {
+                    e.preventDefault();
+                    setInstitutionSearch(autocompleteSuggestions[activeIndex].institution);
+                    setIsAutocompleteOpen(false);
+                  }
+                } else if (e.key === "Escape") {
+                  setIsAutocompleteOpen(false);
+                }
+              }}
+              placeholder="Kurum ara (örn: Marmara, Sağlık, Rize)..."
+              className="w-full pl-9 pr-8 py-2.5 text-xs bg-white/90 dark:bg-slate-800/90 backdrop-blur border border-slate-300 dark:border-slate-700 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all text-slate-800 dark:text-slate-100"
             />
             {institutionSearch && (
               <button
-                onClick={() => setInstitutionSearch("")}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                type="button"
+                onClick={() => {
+                  setInstitutionSearch("");
+                  setIsAutocompleteOpen(false);
+                }}
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 z-10 p-1"
+                title="Aramayı Temizle"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
+            )}
+
+            {/* Autocomplete Açılır Kutusu */}
+            {isAutocompleteOpen && autocompleteSuggestions.length > 0 && (
+              <div className="absolute left-0 right-0 top-full mt-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl z-50 overflow-hidden divide-y divide-slate-100 dark:divide-slate-800/60 animate-fadeIn">
+                <div className="px-3 py-1.5 bg-slate-50/70 dark:bg-slate-800/50 text-[10px] font-semibold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                  <span>{institutionSearch.trim() ? "Önerilen Kurumlar" : "Popüler Kurumlar"}</span>
+                  <span>{autocompleteSuggestions.length} Kurum</span>
+                </div>
+                <div className="max-h-64 overflow-y-auto py-1">
+                  {autocompleteSuggestions.map((item, idx) => {
+                    const instVisual = detectInstitutionVisual(item.institution);
+                    const InstIcon = instVisual.icon;
+                    const isActive = idx === activeIndex;
+                    return (
+                      <button
+                        key={item.institution}
+                        type="button"
+                        onClick={() => {
+                          setInstitutionSearch(item.institution);
+                          setIsAutocompleteOpen(false);
+                        }}
+                        className={`w-full px-3 py-2 text-left flex items-center justify-between gap-2.5 text-xs transition-colors ${
+                          isActive
+                            ? "bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 font-semibold"
+                            : "hover:bg-slate-100/70 dark:hover:bg-slate-800/70 text-slate-700 dark:text-slate-300"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2 truncate">
+                          <div className={`w-5 h-5 rounded-md flex items-center justify-center shrink-0 ${instVisual.bgColor} ${instVisual.iconColor}`}>
+                            <InstIcon className="w-3 h-3" />
+                          </div>
+                          <span className="truncate">{item.institution}</span>
+                        </div>
+                        <span className="shrink-0 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700/60">
+                          {item.count} İlan
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
             )}
           </div>
         </div>
