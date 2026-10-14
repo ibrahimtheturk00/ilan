@@ -23,13 +23,13 @@ const POST_TYPES: PostTypeOption[] = [
     key: "memur",
     label: "Memur",
     activeColor: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100",
-    dotColor: "bg-sky-500",
+    dotColor: "bg-emerald-600 dark:bg-sky-400",
   },
   {
     key: "sozlesmeli",
     label: "Sözleşmeli",
     activeColor: "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100",
-    dotColor: "bg-teal-500",
+    dotColor: "bg-blue-600 dark:bg-indigo-400",
   },
   {
     key: "isci",

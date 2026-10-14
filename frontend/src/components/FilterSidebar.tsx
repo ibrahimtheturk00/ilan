@@ -165,7 +165,7 @@ export function FilterSidebar() {
           className={`w-full flex items-center justify-between p-2.5 rounded-lg border text-sm font-semibold transition-colors ${
             onlyToday
               ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100"
-              : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 hover:border-zinc-300 dark:hover:bg-zinc-800 dark:hover:border-zinc-600"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -182,7 +182,7 @@ export function FilterSidebar() {
           className={`w-full flex items-center justify-between p-2.5 rounded-lg border text-sm font-semibold transition-colors ${
             onlyUrgent
               ? "bg-rose-600 text-white border-rose-700"
-              : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+              : "bg-zinc-50 dark:bg-zinc-800/60 text-zinc-700 dark:text-zinc-300 border-zinc-200 dark:border-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 hover:border-zinc-300 dark:hover:bg-zinc-800 dark:hover:border-zinc-600"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -196,14 +196,14 @@ export function FilterSidebar() {
       {/* Şehir Seçimi & GPS Butonu */}
       <div className="space-y-2.5">
         <div className="flex items-center justify-between">
-          <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300">
+          <label className="block text-sm font-semibold text-zinc-800 dark:text-zinc-200">
             Şehir / İl
           </label>
           <button
             type="button"
             onClick={handleDetectLocation}
             disabled={isLocating}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-sky-400 hover:text-emerald-800 dark:hover:text-sky-300 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-sky-400 hover:text-emerald-800 dark:hover:text-sky-300 hover:bg-emerald-50 dark:hover:bg-sky-500/10 px-2 py-1 rounded-md transition-colors"
             title="GPS ile yakınımdaki ilanları filtrele"
           >
             {isLocating ? (
@@ -224,7 +224,7 @@ export function FilterSidebar() {
         <select
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="w-full text-sm py-2 px-3 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-1 focus:ring-brand-500 font-medium"
+          className="w-full text-sm py-2 px-3 bg-zinc-50 dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-brand-500 font-medium hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-600 transition-colors"
         >
           <option value="">
             Tüm Türkiye {cityCounts["Tüm Türkiye"] ? `(${cityCounts["Tüm Türkiye"]})` : ""}
@@ -242,7 +242,7 @@ export function FilterSidebar() {
 
       {/* KPSS Puan Türü Filtresi */}
       <div>
-        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
+        <label className="block text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2 flex items-center gap-1.5">
           <Award className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
           <span>KPSS Puan Türü</span>
         </label>
@@ -257,7 +257,7 @@ export function FilterSidebar() {
                 className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                   isSelected
                     ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 font-medium"
                 }`}
               >
                 <span>{opt.label}</span>
@@ -270,8 +270,8 @@ export function FilterSidebar() {
 
       {/* Eğitim Düzeyi Filtresi */}
       <div>
-        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-          <GraduationCap className="w-4 h-4 text-teal-600 dark:text-cyan-400" />
+        <label className="block text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2 flex items-center gap-1.5">
+          <GraduationCap className="w-4 h-4 text-blue-600 dark:text-indigo-400" />
           <span>Eğitim Düzeyi</span>
         </label>
         <div className="space-y-1">
@@ -284,12 +284,12 @@ export function FilterSidebar() {
                 onClick={() => setEducationLevel(opt.key)}
                 className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                   isSelected
-                    ? "bg-teal-50 text-teal-950 border border-teal-300/80 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-400/30 font-bold"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                    ? "bg-blue-50 text-blue-950 border border-blue-300/80 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-400/35 font-bold"
+                    : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 font-medium"
                 }`}
               >
                 <span>{opt.label}</span>
-                {isSelected && <span className="w-2 h-2 rounded-full bg-teal-600 dark:bg-cyan-400" />}
+                {isSelected && <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-indigo-400" />}
               </button>
             );
           })}
@@ -298,7 +298,7 @@ export function FilterSidebar() {
 
       {/* Kadro Türü */}
       <div>
-        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">
           Kadro Türü
         </label>
         <div className="space-y-1">
@@ -307,7 +307,7 @@ export function FilterSidebar() {
             className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
               !postType
                 ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 font-medium"
             }`}
           >
             Tüm Kadrolar
@@ -319,7 +319,7 @@ export function FilterSidebar() {
               className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                 postType === key
                   ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                  : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 font-medium"
               }`}
             >
               <span>{info.label}</span>
@@ -331,7 +331,7 @@ export function FilterSidebar() {
 
       {/* Meslek Alanı / Kategori */}
       <div>
-        <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+        <label className="block text-sm font-semibold text-zinc-800 dark:text-zinc-200 mb-2">
           Meslek / Alan
         </label>
         <div className="space-y-1">
@@ -340,7 +340,7 @@ export function FilterSidebar() {
             className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
               !category
                 ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
-                : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 font-medium"
             }`}
           >
             Tüm Alanlar
@@ -352,7 +352,7 @@ export function FilterSidebar() {
               className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                 category === key
                   ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
-                  : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                  : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 font-medium"
               }`}
             >
               <span>{info.label}</span>
@@ -363,13 +363,13 @@ export function FilterSidebar() {
       </div>
 
       {/* Sadece Aktif İlanlar */}
-      <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60">
-        <label className="flex items-center gap-2.5 cursor-pointer text-sm font-medium text-slate-700 dark:text-slate-300">
+      <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+        <label className="flex items-center gap-2.5 cursor-pointer text-sm font-medium text-zinc-700 dark:text-zinc-300 px-3 py-2 rounded-lg hover:bg-zinc-100 hover:text-zinc-950 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 transition-colors">
           <input
             type="checkbox"
             checked={onlyActive}
             onChange={(e) => setOnlyActive(e.target.checked)}
-            className="w-4 h-4 rounded text-emerald-600 dark:text-sky-500 focus:ring-emerald-500 dark:focus:ring-sky-400 border-slate-300 dark:border-slate-600 dark:bg-slate-700"
+            className="w-4 h-4 rounded text-emerald-600 dark:text-sky-500 focus:ring-emerald-500 dark:focus:ring-sky-400 border-zinc-300 dark:border-zinc-600 dark:bg-zinc-700"
           />
           <span>Sadece Yayında Olanlar</span>
         </label>

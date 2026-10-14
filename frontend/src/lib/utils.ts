@@ -663,13 +663,13 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
 export const POST_TYPE_LABELS: Record<string, { label: string; color: string }> = {
   memur: {
     label: "Memur",
-    // Beyaz temada yeşil, koyu temada mavi
-    color: "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30",
+    // Beyaz temada zümrüt yeşil, koyu temada elektrik mavi
+    color: "bg-emerald-50 text-emerald-950 border border-emerald-300/90 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30",
   },
   sozlesmeli: {
     label: "Sözleşmeli",
-    // Beyaz temada teal-yeşil, koyu temada cyan-mavi
-    color: "bg-teal-50 text-teal-950 border border-teal-300/80 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-400/30",
+    // Beyaz temada kobalt mavi, koyu temada derin indigo - Memur'dan tamamen farklı ve belirgin
+    color: "bg-blue-50 text-blue-950 border border-blue-300/90 dark:bg-indigo-500/20 dark:text-indigo-300 dark:border-indigo-400/35",
   },
   isci: {
     label: "İşçi",

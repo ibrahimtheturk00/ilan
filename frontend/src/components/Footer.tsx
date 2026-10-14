@@ -59,18 +59,18 @@ export function Footer() {
         Tıpkı verilen template'teki "Trusted by Industry Leaders" gibi maskelenmiş ve kesintisiz kayan kart
       */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
-        <div className="relative overflow-hidden rounded-3xl border border-zinc-200/60 dark:border-white/10 bg-white/25 dark:bg-white/[0.03] py-6 sm:py-7 backdrop-blur-xs shadow-lg shadow-zinc-950/2 dark:shadow-black/20">
+        <div className="relative overflow-hidden rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 py-6 sm:py-7 shadow-lg shadow-zinc-950/5 dark:shadow-black/40">
           <div className="flex items-center justify-between px-6 sm:px-8 mb-5">
             <div className="flex items-center gap-2">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              <h3 className="text-sm sm:text-base font-semibold tracking-wide uppercase text-zinc-700 dark:text-zinc-300">
+              <h3 className="text-sm sm:text-base font-bold tracking-wide uppercase text-zinc-900 dark:text-zinc-100">
                 37 Canlı Doğrulanan Resmî Devlet & Kamu Kaynağı
               </h3>
             </div>
-            <span className="text-xs sm:text-sm font-medium text-zinc-400 dark:text-zinc-500 hidden sm:inline">
+            <span className="text-xs sm:text-sm font-medium text-zinc-600 dark:text-zinc-400 hidden sm:inline">
               7/24 Kesintisiz resmî devlet portallarından senkronize edilir
             </span>
           </div>
@@ -90,17 +90,17 @@ export function Footer() {
                 return (
                   <div 
                     key={i}
-                    className="flex items-center gap-3 px-4 py-2.5 rounded-2xl border border-zinc-200/70 dark:border-white/10 bg-white/70 dark:bg-white/5 opacity-80 transition-all hover:opacity-100 hover:scale-105 cursor-default hover:border-blue-500/40 shadow-xs"
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-2xl border border-zinc-200 dark:border-zinc-700/80 bg-zinc-50 dark:bg-zinc-800/90 transition-all hover:scale-105 cursor-default hover:border-blue-500/50 hover:bg-white dark:hover:bg-zinc-800 shadow-xs"
                   >
                     <div className="w-9 h-9 rounded-xl bg-blue-500/10 dark:bg-blue-400/10 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
                       <IconComponent className="w-4 h-4" />
                     </div>
                     <div className="text-left">
-                      <div className="text-sm sm:text-base font-bold text-zinc-900 dark:text-zinc-100 tracking-tight flex items-center gap-1.5">
+                      <div className="text-sm sm:text-base font-bold text-zinc-950 dark:text-zinc-50 tracking-tight flex items-center gap-1.5">
                         <span>{src.name}</span>
                         <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
                       </div>
-                      <div className="text-xs text-zinc-400 dark:text-zinc-500 font-medium font-mono">
+                      <div className="text-xs text-zinc-600 dark:text-zinc-400 font-medium font-mono">
                         {src.sub}
                       </div>
                     </div>

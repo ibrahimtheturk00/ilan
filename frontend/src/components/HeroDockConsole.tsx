@@ -47,7 +47,7 @@ interface PostTypeOption {
 const POST_TYPES: PostTypeOption[] = [
   { key: "", label: "Tüm Kadrolar", dotColor: "bg-zinc-400 dark:bg-zinc-500" },
   { key: "memur", label: "Memur", dotColor: "bg-emerald-600 dark:bg-sky-400" },
-  { key: "sozlesmeli", label: "Sözleşmeli", dotColor: "bg-teal-600 dark:bg-cyan-400" },
+  { key: "sozlesmeli", label: "Sözleşmeli", dotColor: "bg-blue-600 dark:bg-indigo-400" },
   { key: "isci", label: "İşçi", dotColor: "bg-amber-600 dark:bg-amber-400" },
   { key: "akademik", label: "Akademik", dotColor: "bg-purple-600 dark:bg-indigo-400" },
 ];
