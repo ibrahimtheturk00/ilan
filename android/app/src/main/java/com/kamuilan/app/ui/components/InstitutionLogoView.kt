@@ -169,6 +169,11 @@ object NativeLogoResolver {
             .replace("ğ", "g")
             .replace("ı", "i")
             .replace("i̇", "i")
+            .replace("î", "i")
+            .replace("ï", "i")
+            .replace("â", "a")
+            .replace("ä", "a")
+            .replace("û", "u")
             .replace("ö", "o")
             .replace("ş", "s")
             .replace("ü", "u")
@@ -212,19 +217,19 @@ object NativeLogoResolver {
         loadRules(context)
         val n = normalize(name)
 
-        // 1. SBB exact/substring
-        for ((key, file) in sbbEntries) {
-            if (file == "BEL2.png") continue
-            if (n.contains(key) || key.contains(n)) {
-                return file
-            }
-        }
-
-        // 2. Extra rules
+        // 1. Extra rules first (specific municipalities like Şile, Rize, Kuşadası and specific ministries)
         for ((keys, file) in extraRules) {
             if (file == "BEL2.png") continue
             for (k in keys) {
                 if (n.contains(k)) return file
+            }
+        }
+
+        // 2. SBB exact/substring
+        for ((key, file) in sbbEntries) {
+            if (file == "BEL2.png") continue
+            if (n.contains(key) || key.contains(n)) {
+                return file
             }
         }
 

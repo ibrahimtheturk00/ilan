@@ -57,18 +57,6 @@
       "file": "A1034.png"
     },
     {
-      "key": "ortahisar belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "sariidris belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "kesan belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
       "key": "jandarma genel komutanligi",
       "file": "804.png"
     },
@@ -131,14 +119,6 @@
     {
       "key": "artvin coruh universitesi",
       "file": "571.png"
-    },
-    {
-      "key": "rize belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "malazgirt belediye baskanligi",
-      "file": "BEL2.png"
     },
     {
       "key": "yargitay baskanligi",
@@ -213,32 +193,12 @@
       "file": "408.png"
     },
     {
-      "key": "posof belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "sile belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
       "key": "tapu ve kadastro genel mudurlugu",
       "file": "250.png"
     },
     {
-      "key": "celtik belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
       "key": "eskisehir teknik universitesi",
       "file": "407.png"
-    },
-    {
-      "key": "atalan belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "eleskirt belediye baskanligi",
-      "file": "BEL2.png"
     },
     {
       "key": "dogu marmara kalkinma ajansi",
@@ -253,44 +213,12 @@
       "file": "10065.png"
     },
     {
-      "key": "cukurkuyu nigde belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
       "key": "ozellestirme idaresi baskanligi",
       "file": "289.png"
     },
     {
-      "key": "elmakaya belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
       "key": "bati akdeniz kalkinma ajansi",
       "file": "A1032.png"
-    },
-    {
-      "key": "mucur belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "didim belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "gerede belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "pursaklar belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "aralik belediye baskanligi",
-      "file": "BEL2.png"
-    },
-    {
-      "key": "taskesti belediye baskanligi",
-      "file": "BEL2.png"
     },
     {
       "key": "gelir idaresi baskanligi",
@@ -298,6 +226,180 @@
     }
   ],
   "extraRules": [
+    {
+      "keys": [
+        "sile belediye",
+        "sile belediyesi",
+        "sile"
+      ],
+      "file": "sile.png"
+    },
+    {
+      "keys": [
+        "rize belediye",
+        "rize belediyesi",
+        "rize"
+      ],
+      "file": "rize.png"
+    },
+    {
+      "keys": [
+        "kusadasi belediye",
+        "kusadasi belediyesi",
+        "kusadasi"
+      ],
+      "file": "kusadasi.png"
+    },
+    {
+      "keys": [
+        "didim belediye",
+        "didim belediyesi",
+        "didim"
+      ],
+      "file": "didim.png"
+    },
+    {
+      "keys": [
+        "yenimahalle belediye",
+        "yenimahalle belediyesi",
+        "yenimahalle"
+      ],
+      "file": "yenimahalle.png"
+    },
+    {
+      "keys": [
+        "pursaklar belediye",
+        "pursaklar belediyesi",
+        "pursaklar"
+      ],
+      "file": "pursaklar.png"
+    },
+    {
+      "keys": [
+        "osmangazi belediye",
+        "osmangazi belediyesi",
+        "osmangazi"
+      ],
+      "file": "osmangazi.png"
+    },
+    {
+      "keys": [
+        "denizli buyuksehir",
+        "denizli bueyueksehir",
+        "denizli belediye",
+        "denizli"
+      ],
+      "file": "denizli.png"
+    },
+    {
+      "keys": [
+        "aydin buyuksehir",
+        "aydin bueyueksehir",
+        "aydin belediye",
+        "aydin"
+      ],
+      "file": "aydin.png"
+    },
+    {
+      "keys": [
+        "zonguldak belediye",
+        "zonguldak belediyesi",
+        "zonguldak"
+      ],
+      "file": "zonguldak.png"
+    },
+    {
+      "keys": [
+        "gerede belediye",
+        "gerede belediyesi",
+        "gerede"
+      ],
+      "file": "gerede.png"
+    },
+    {
+      "keys": [
+        "erzurum buyuksehir",
+        "erzurum belediye",
+        "uzundere belediye"
+      ],
+      "file": "erzurum.png"
+    },
+    {
+      "keys": [
+        "konya buyuksehir",
+        "konya belediye",
+        "celtik belediye"
+      ],
+      "file": "celtik.png"
+    },
+    {
+      "keys": [
+        "bursa buyuksehir",
+        "bursa belediye"
+      ],
+      "file": "bursa.png"
+    },
+    {
+      "keys": [
+        "edirne belediye",
+        "kesan belediye"
+      ],
+      "file": "kesan.png"
+    },
+    {
+      "keys": [
+        "ortahisar belediye"
+      ],
+      "file": "ortahisar.png"
+    },
+    {
+      "keys": [
+        "malazgirt belediye"
+      ],
+      "file": "malazgirt.png"
+    },
+    {
+      "keys": [
+        "eleskirt belediye"
+      ],
+      "file": "eleskirt.png"
+    },
+    {
+      "keys": [
+        "mucur belediye"
+      ],
+      "file": "mucur.png"
+    },
+    {
+      "keys": [
+        "sariidris belediye"
+      ],
+      "file": "sariidris.png"
+    },
+    {
+      "keys": [
+        "erzin belediye"
+      ],
+      "file": "erzin.png"
+    },
+    {
+      "keys": [
+        "ankara buyuksehir",
+        "ankara belka",
+        "belka a s",
+        "belka"
+      ],
+      "file": "ankara.png"
+    },
+    {
+      "keys": [
+        "istanbul buyuksehir",
+        "istanbul bld",
+        "iett",
+        "iski"
+      ],
+      "file": "istanbul.png"
+    },
     {
       "keys": [
         "adalet",
@@ -489,32 +591,6 @@
     },
     {
       "keys": [
-        "rize belediye",
-        "rize belediyesi"
-      ],
-      "file": "rize.png"
-    },
-    {
-      "keys": [
-        "ankara buyuksehir",
-        "ankara belka",
-        "belka a s",
-        "yenimahalle belediye",
-        "pursaklar belediye"
-      ],
-      "file": "ankara.png"
-    },
-    {
-      "keys": [
-        "istanbul buyuksehir",
-        "iett",
-        "iski",
-        "sile belediye"
-      ],
-      "file": "istanbul.png"
-    },
-    {
-      "keys": [
         "igdir universite"
       ],
       "file": "igdir.png"
@@ -544,12 +620,6 @@
         "gaziosmanpasa universite"
       ],
       "file": "gop.png"
-    },
-    {
-      "keys": [
-        "kusadasi"
-      ],
-      "file": "BEL2.png"
     },
     {
       "keys": [
