@@ -162,14 +162,20 @@ class BaseScraper(ABC):
             scraped_val = raw_post.get("scraped_at")
             published_at = str(scraped_val)[:10] if scraped_val else now_dt.date().isoformat()
 
+        valid_post_types = {'memur', 'sozlesmeli', 'isci', 'akademik', 'askeri', 'diger'}
+        valid_categories = {'bilisim', 'saglik', 'egitim', 'muhendislik', 'hukuk', 'maliye', 'diger'}
+
+        safe_post_type = post_type if post_type in valid_post_types else 'diger'
+        safe_category = category if category in valid_categories else 'diger'
+
         return {
             "source_id": raw_post.get("source_id") or self.source_id,
             "title": title,
             "institution": institution,
             "city": city,
             "district": raw_post.get("district"),
-            "post_type": post_type,
-            "category": category,
+            "post_type": safe_post_type,
+            "category": safe_category,
             "position_count": pos_count,
             "published_at": published_at,
             "deadline_at": deadline_at,
@@ -314,8 +320,12 @@ class BaseScraper(ABC):
             # Eski veya iptal ilanları temizle
             self.deactivate_expired_and_cancelled_jobs()
 
-            self.logger.info(f"Tarama başarıyla bitti. Yeni/Güncellenen: {posts_new}, Bulunan: {posts_found}")
-            self.end_log(status="success", posts_found=posts_found, posts_new=posts_new, posts_updated=posts_updated)
+            if posts_found == 0:
+                self.logger.warning(f"Tarama tamamlandı ancak 0 ilan bulundu! (Parser veya kaynak sayfası kontrol edilmeli)")
+                self.end_log(status="partial", posts_found=0, posts_new=0, posts_updated=0, error_message="0 ilan bulundu - parser çıktısı boş veya site yapısı değişmiş")
+            else:
+                self.logger.info(f"Tarama başarıyla bitti. Yeni: {posts_new}, Güncellenen: {posts_updated}, Bulunan: {posts_found}")
+                self.end_log(status="success", posts_found=posts_found, posts_new=posts_new, posts_updated=posts_updated)
         except Exception as e:
             self.logger.error(f"Tarama sırasında kritik hata: {e}", exc_info=True)
             self.end_log(status="failed", posts_found=0, posts_new=0, posts_updated=0, error_message=str(e))

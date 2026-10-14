@@ -69,13 +69,6 @@ CATEGORY_PATTERNS = {
         r'\bhastane\b', r'\bsağlık\b', r'\bsaglik\b', r'\blaborant\b', r'\bdiyetisyen\b',
         r'\bacil\s+tıp', r'\btıp\s+fakültesi', r'\bveteriner\b', r'\bparamedik\b', r'\bmedikal\b'
     ],
-    'buro': [
-        r'\bbüro\s+personeli', r'\bburo\s+personeli', r'\bbüro\b', r'\bburo\b',
-        r'\bv\.?h\.?k\.?i\b', r'\bveri\s+hazırlama', r'\bsekreter\b', r'\bsekreterlik\b',
-        r'\bidari\s+personel\b', r'\bidari\s+memur\b', r'\bzabıt\s+katibi\b', r'\bkatip\b',
-        r'\byazı\s+işleri\b', r'\barşiv\b', r'\bkütüphaneci\b', r'\bveznedar\b',
-        r'\bambar\s+memuru\b', r'\bsantral\b', r'\bdanışma\s+görevlisi\b', r'\bmemur\s+kadroları\b'
-    ],
     'egitim': [
         r'\böğretim\s+üyesi', r'\bogretim\s+uyesi', r'\böğretim\s+elemanı', r'\böğretim\s+görevlisi',
         r'\bogretim\s+gorevlisi', r'\baraştırma\s+görevlisi', r'\böğretmen\b', r'\bogretmen\b',

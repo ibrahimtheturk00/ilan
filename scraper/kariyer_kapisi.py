@@ -24,7 +24,7 @@ class KariyerKapisiScraper(BaseScraper):
         }
         
         try:
-            with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True) as client:
+            with httpx.Client(timeout=30.0, headers=headers, follow_redirects=True, verify=False) as client:
                 url = "https://api.kariyerkapisi.gov.tr/api/ilan/SearchIlanPublic"
                 payload = {
                     "krM_ID": 0,
@@ -80,7 +80,7 @@ class KariyerKapisiScraper(BaseScraper):
             with sync_playwright() as p:
                 browser = p.chromium.launch(headless=True)
                 page = browser.new_page()
-                page.goto("https://kariyerkapisi.cbiko.gov.tr", timeout=45000, wait_until="domcontentloaded")
+                page.goto("https://kariyerkapisi.gov.tr/isealim", timeout=45000, wait_until="domcontentloaded")
                 
                 # İlan kartlarını tara
                 cards = page.query_selector_all(".announcement-card, .job-item, .card")
@@ -93,7 +93,7 @@ class KariyerKapisiScraper(BaseScraper):
                     if title_elem and link_elem:
                         href = link_elem.get_attribute("href") or ""
                         if not href.startswith("http"):
-                            href = f"https://kariyerkapisi.cbiko.gov.tr{href}"
+                            href = f"https://kariyerkapisi.gov.tr{href}"
                         
                         posts.append({
                             "title": title_elem.inner_text().strip(),

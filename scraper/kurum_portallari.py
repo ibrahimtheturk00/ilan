@@ -186,29 +186,58 @@ class GIBScraper(BaseScraper):
     def scrape(self) -> List[Dict[str, Any]]:
         posts: List[Dict[str, Any]] = []
         try:
-            with httpx.Client(timeout=25.0, headers=HEADERS, follow_redirects=True, verify=False) as client:
-                self.logger.info("Gelir İdaresi Başkanlığı taranıyor...")
-                res = client.get("https://www.gib.gov.tr/kurumsal/duyurular")
+            api_url = "https://gib.gov.tr/api/gibportal/duyuru/listPublish?preview=false&page=0&size=50&sortFieldName=startdate&sortType=DESC"
+            headers = {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+                "Content-Type": "application/json",
+                "Referer": "https://www.gib.gov.tr/duyuru-arsivi/guncel",
+                "Accept": "application/json, text/plain, */*"
+            }
+            with httpx.Client(timeout=25.0, headers=headers, follow_redirects=True, verify=False) as client:
+                self.logger.info("Gelir İdaresi Başkanlığı resmi API'si taranıyor...")
+                res = client.post(api_url, json={})
                 if res.status_code == 200:
-                    soup = BeautifulSoup(res.text, "html.parser")
-                    for a in soup.find_all("a", href=True):
-                        title = a.get_text(separator=" ", strip=True)
-                        norm = normalize_tr(title)
-                        if any(k in norm for k in ["uzman", "yardimcisi", "alim", "sinav", "giris", "kadro"]):
-                            href = a["href"]
-                            full_url = href if href.startswith("http") else f"https://www.gib.gov.tr{href}"
-                            if len(title) >= 15:
-                                posts.append({
-                                    "title": f"Gelir İdaresi Başkanlığı - {title}",
-                                    "institution": "Gelir İdaresi Başkanlığı (GİB)",
-                                    "city": None,
-                                    "published_at": None,
-                                    "deadline_at": None,
-                                    "original_url": full_url,
-                                    "description": title,
-                                    "post_type": "memur",
-                                    "category": "maliye"
-                                })
+                    data = res.json()
+                    content = data.get("resultContainer", {}).get("content", [])
+                    self.logger.info(f"GİB API'den {len(content)} adet duyuru kaydı alındı.")
+
+                    kw_pattern = re.compile(r'\b(alim|alimi|alimlari|sinav|sinavi|sinavlari|kadro|kadrolari|uzman|personel|sozlesmeli|memur|yeterlik|mudurluk|mudur\s+yardimciligi|giris\s+sinavi|gorevde\s+yukselme|unvan\s+degisikligi)\b')
+
+                    for item in content:
+                        raw_title = (item.get("title") or "").strip()
+                        norm = normalize_tr(raw_title)
+
+                        # Valimiz/ziyaret gibi ilgisiz duyuruları ele, sadece alım ve sınav odaklı olanları al
+                        if not kw_pattern.search(norm):
+                            continue
+                        if "ziyaret" in norm and not any(k in norm for k in ["sinav", "alim", "kadro", "personel"]):
+                            continue
+
+                        slug = item.get("slug") or str(item.get("id"))
+                        full_url = f"https://www.gib.gov.tr/duyuru-arsivi/guncel/{slug}"
+
+                        ts = item.get("ts") or item.get("startdate")
+                        pub_date = ts.split("T")[0] if ts else None
+
+                        desc_html = item.get("description") or ""
+                        clean_desc = raw_title
+                        if desc_html:
+                            s = BeautifulSoup(desc_html, "html.parser")
+                            text_desc = s.get_text(separator=" ", strip=True)
+                            if len(text_desc) > 20:
+                                clean_desc = text_desc[:800]
+
+                        posts.append({
+                            "title": f"Gelir İdaresi Başkanlığı - {raw_title}",
+                            "institution": "Gelir İdaresi Başkanlığı (GİB)",
+                            "city": "Ankara",
+                            "published_at": pub_date,
+                            "deadline_at": None,
+                            "original_url": full_url,
+                            "description": clean_desc,
+                            "post_type": "memur",
+                            "category": "maliye"
+                        })
         except Exception as e:
             self.logger.warning(f"GİB tarama uyarısı: {e}")
 
