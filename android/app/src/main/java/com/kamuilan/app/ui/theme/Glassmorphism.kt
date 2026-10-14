@@ -1,7 +1,13 @@
-﻿package com.kamuilan.app.ui.theme
+package com.kamuilan.app.ui.theme
 
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
@@ -51,63 +58,152 @@ fun GlassBox(
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// AmbientGlassBackground  (enhanced 2026)
-// Full-screen layered ambient: a primary radial blue glow centred top-left,
-// a secondary purple glow offset bottom-right, and a neutral white base.
+// AmbientGlassBackground (2026 Ethereal Animated Background)
+// High-performance hardware-accelerated animated aurora background with:
+// - 4 floating luminous ambient orbs (Sky, Purple, Emerald, Rose)
+// - Crisp Dot Matrix Grid overlay (Vercel / Linear aesthetic)
 // ─────────────────────────────────────────────────────────────────────────────
 @Composable
 fun AmbientGlassBackground(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
-    // Base layer: pure white → very light slate
-    val baseGradient = Brush.verticalGradient(
-        colors = listOf(
-            Color(0xFFFFFFFF),
-            Color(0xFFF1F5F9)
-        )
-    )
+    val infiniteTransition = rememberInfiniteTransition(label = "ambient_anim")
 
-    // Primary glow: brand blue radial, top-start quadrant
-    val primaryGlow = Brush.radialGradient(
-        colorStops = arrayOf(
-            0.00f to Color(0x4A2563EB),   // ~29% blue
-            0.40f to Color(0x1A2563EB),   // ~10% blue mid-fade
-            0.75f to Color(0x052563EB),   // near-transparent
-            1.00f to Color(0x002563EB)    // fully transparent
+    // Orb 1: Sky / Blue Float
+    val orb1X by infiniteTransition.animateFloat(
+        initialValue = -50f,
+        targetValue = 65f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(15000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
         ),
-        radius = 900f
+        label = "orb1X"
+    )
+    val orb1Y by infiniteTransition.animateFloat(
+        initialValue = -40f,
+        targetValue = 55f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(19000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "orb1Y"
     )
 
-    Box(modifier = modifier.fillMaxSize()) {
-        // Layer 1 – base gradient
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(baseGradient)
-        )
-        // Layer 2 – primary blue glow (top-start)
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(primaryGlow)
-        )
-        // Layer 3 – secondary purple glow (bottom-end)
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(
-                    Brush.radialGradient(
-                        colorStops = arrayOf(
-                            0.00f to Color(0x267C3AED),
-                            0.50f to Color(0x0D7C3AED),
-                            1.00f to Color(0x007C3AED)
-                        ),
-                        radius = 1200f
+    // Orb 2: Purple / Violet Float
+    val orb2X by infiniteTransition.animateFloat(
+        initialValue = 40f,
+        targetValue = -55f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(17000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "orb2X"
+    )
+    val orb2Y by infiniteTransition.animateFloat(
+        initialValue = -30f,
+        targetValue = 65f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(16000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "orb2Y"
+    )
+
+    // Orb 3: Emerald / Teal Float
+    val orb3X by infiniteTransition.animateFloat(
+        initialValue = -35f,
+        targetValue = 55f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(21000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "orb3X"
+    )
+    val orb3Y by infiniteTransition.animateFloat(
+        initialValue = 25f,
+        targetValue = -35f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(18000, easing = LinearEasing),
+            repeatMode = RepeatMode.Reverse
+        ),
+        label = "orb3Y"
+    )
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .drawBehind {
+                // 1. Base clean background
+                drawRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(Color(0xFFFFFFFF), Color(0xFFF8FAFC), Color(0xFFF1F5F9))
                     )
                 )
-        )
-        // Content on top of all glow layers
+
+                // 2. Orb 1: Sky Blue Aura (top start)
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0x3838BDF8), Color(0x180284C7), Color(0x00000000)),
+                        center = Offset(size.width * 0.15f + orb1X, size.height * 0.10f + orb1Y),
+                        radius = size.width * 0.75f
+                    ),
+                    radius = size.width * 0.75f,
+                    center = Offset(size.width * 0.15f + orb1X, size.height * 0.10f + orb1Y)
+                )
+
+                // 3. Orb 2: Royal Purple / Violet (top end)
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0x2E8B5CF6), Color(0x147C3AED), Color(0x00000000)),
+                        center = Offset(size.width * 0.85f + orb2X, size.height * 0.15f + orb2Y),
+                        radius = size.width * 0.70f
+                    ),
+                    radius = size.width * 0.70f,
+                    center = Offset(size.width * 0.85f + orb2X, size.height * 0.15f + orb2Y)
+                )
+
+                // 4. Orb 3: Emerald / Teal (mid-height start)
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0x2210B981), Color(0x0C059669), Color(0x00000000)),
+                        center = Offset(size.width * 0.10f + orb3X, size.height * 0.55f + orb3Y),
+                        radius = size.width * 0.65f
+                    ),
+                    radius = size.width * 0.65f,
+                    center = Offset(size.width * 0.10f + orb3X, size.height * 0.55f + orb3Y)
+                )
+
+                // 5. Orb 4: Coral / Rose Warmth (bottom end)
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        colors = listOf(Color(0x1CF43F5E), Color(0x08E11D48), Color(0x00000000)),
+                        center = Offset(size.width * 0.85f, size.height * 0.80f),
+                        radius = size.width * 0.60f
+                    ),
+                    radius = size.width * 0.60f,
+                    center = Offset(size.width * 0.85f, size.height * 0.80f)
+                )
+
+                // 6. Dot Matrix Pattern (Apple / Linear style fine dots)
+                val dotSpacing = 28.dp.toPx()
+                val dotRadius = 1.0.dp.toPx()
+                val dotColor = Color(0x1564748B)
+
+                val cols = (size.width / dotSpacing).toInt() + 1
+                val rows = (size.height / dotSpacing).toInt() + 1
+
+                for (c in 0 until cols) {
+                    for (r in 0 until rows) {
+                        drawCircle(
+                            color = dotColor,
+                            radius = dotRadius,
+                            center = Offset(c * dotSpacing, r * dotSpacing)
+                        )
+                    }
+                }
+            }
+    ) {
         content()
     }
 }

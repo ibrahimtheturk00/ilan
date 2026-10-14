@@ -61,6 +61,7 @@ import com.kamuilan.app.data.model.InstitutionLogoDetector
 import com.kamuilan.app.data.model.JobParser
 import com.kamuilan.app.data.model.JobPost
 import com.kamuilan.app.ui.theme.BrandPrimary
+import com.kamuilan.app.ui.theme.PressScaleBox
 import com.kamuilan.app.ui.theme.CancelledRed
 import com.kamuilan.app.ui.theme.Slate200
 import com.kamuilan.app.ui.theme.Slate400
@@ -108,32 +109,36 @@ fun JobCard(
         else -> Slate200
     }
 
-    val cardShape = RoundedCornerShape(16.dp)
+    val cardShape = RoundedCornerShape(20.dp)
 
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(cardShape)
-            .clickable(onClick = onClick)
-            .border(
-                width = 1.dp,
-                color = cardBorderColor,
-                shape = cardShape
-            )
-            .drawBehind {
-                drawRect(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(accentColor, accentColor.copy(alpha = 0.4f))
-                    ),
-                    topLeft = Offset.Zero,
-                    size = Size(4.dp.toPx(), size.height)
-                )
-            },
-        shape = cardShape,
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 0.dp,
-        shadowElevation = 1.dp
+    PressScaleBox(
+        onClick = onClick,
+        modifier = modifier.fillMaxWidth(),
+        pressedScale = 0.985f
     ) {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(cardShape)
+                .border(
+                    width = 1.dp,
+                    color = cardBorderColor,
+                    shape = cardShape
+                )
+                .drawBehind {
+                    drawRect(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(accentColor, accentColor.copy(alpha = 0.45f))
+                        ),
+                        topLeft = Offset.Zero,
+                        size = Size(4.5.dp.toPx(), size.height)
+                    )
+                },
+            shape = cardShape,
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 0.dp,
+            shadowElevation = 2.dp
+        ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -462,32 +467,40 @@ fun JobCard(
                         }
                     }
 
-                    // İncele Linki (Her zaman görünür, shrink-0)
-                    Row(
+                    // İncele Pill Butonu (Web ile birebir modern tasarım)
+                    Box(
                         modifier = Modifier
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(Color(0xFFEFF6FF))
+                            .border(1.dp, Color(0xFFDBEAFE), RoundedCornerShape(10.dp))
                             .clickable { onClick() }
-                            .padding(vertical = 3.dp, horizontal = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(2.dp)
+                            .padding(horizontal = 9.dp, vertical = 5.dp),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = "İncele",
-                            fontSize = 11.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = BrandPrimary,
-                            maxLines = 1
-                        )
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null,
-                            tint = BrandPrimary,
-                            modifier = Modifier.size(12.dp)
-                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            Text(
+                                text = "İncele",
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = BrandPrimary,
+                                maxLines = 1
+                            )
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                                contentDescription = null,
+                                tint = BrandPrimary,
+                                modifier = Modifier.size(12.dp)
+                            )
+                        }
                     }
                 }
             }
         }
     }
+}
 }
 
 // ── Web Tarzı Rozetler ──────────────────────────────────────────────────────────

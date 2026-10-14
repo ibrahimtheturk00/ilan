@@ -80,6 +80,13 @@ import com.kamuilan.app.ui.theme.Slate500
 import com.kamuilan.app.ui.theme.Slate700
 import com.kamuilan.app.ui.theme.Slate900
 import com.kamuilan.app.ui.theme.SozlesmeliTeal
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.graphics.graphicsLayer
 
 @Composable
 fun HomeScreen(
@@ -121,7 +128,79 @@ fun HomeScreen(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
+
+            // ── Canlı Eşzamanlanma Telemetri Rozeti (2026 Web Paritesi) ────
+            val beaconTransition = rememberInfiniteTransition(label = "beacon_trans")
+            val beaconScale by beaconTransition.animateFloat(
+                initialValue = 0.9f,
+                targetValue = 1.4f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(1100, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "beacon_scale"
+            )
+            val beaconAlpha by beaconTransition.animateFloat(
+                initialValue = 0.8f,
+                targetValue = 0.2f,
+                animationSpec = infiniteRepeatable(
+                    animation = tween(1100, easing = FastOutSlowInEasing),
+                    repeatMode = RepeatMode.Reverse
+                ),
+                label = "beacon_alpha"
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Row(
+                    modifier = Modifier
+                        .background(Color(0xE6FFFFFF), RoundedCornerShape(20.dp))
+                        .border(1.dp, Color(0xFFE2E8F0), RoundedCornerShape(20.dp))
+                        .padding(horizontal = 11.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Box(contentAlignment = Alignment.Center) {
+                        Box(
+                            modifier = Modifier
+                                .size(10.dp)
+                                .graphicsLayer {
+                                    scaleX = beaconScale
+                                    scaleY = beaconScale
+                                    alpha = beaconAlpha
+                                }
+                                .background(Color(0xFF34D399), RoundedCornerShape(5.dp))
+                        )
+                        Box(
+                            modifier = Modifier
+                                .size(6.dp)
+                                .background(Color(0xFF059669), RoundedCornerShape(3.dp))
+                        )
+                    }
+                    Text(
+                        text = "6 Resmî Kaynak Canlı Eşzamanlanıyor",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Slate700
+                    )
+                    Text(
+                        text = "•",
+                        fontSize = 10.sp,
+                        color = Slate400
+                    )
+                    Text(
+                        text = "2026 Güncel",
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = BrandPrimary
+                    )
+                }
+            }
 
             // ── Üst Header ──────────────────────────────────────────────────
             Row(
@@ -133,11 +212,14 @@ fun HomeScreen(
                     // Gradient logo kutusu
                     Box(
                         modifier = Modifier
-                            .size(42.dp)
+                            .size(44.dp)
                             .background(
-                                brush = Brush.linearGradient(listOf(BrandDark, Color(0xFF6D28D9))),
-                                shape = RoundedCornerShape(13.dp)
-                            ),
+                                brush = Brush.linearGradient(
+                                    listOf(BrandPrimary, BrandDark, Color(0xFF7C3AED))
+                                ),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                            .border(1.dp, Color(0x40FFFFFF), RoundedCornerShape(14.dp)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -159,7 +241,7 @@ fun HomeScreen(
                             letterSpacing = (-0.4).sp
                         )
                         Text(
-                            text = "Resmî Kaynaklar • Canlı Güncelleme",
+                            text = "Resmî Portallar • Anlık Veri Akışı",
                             fontSize = 11.sp,
                             color = Slate500
                         )
@@ -201,7 +283,7 @@ fun HomeScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             // ── Arama Çubuğu ─────────────────────────────────────────────────
             OutlinedTextField(
@@ -212,7 +294,7 @@ fun HomeScreen(
                     .height(52.dp),
                 placeholder = {
                     Text(
-                        "Unvan, kurum veya şehir ara...",
+                        "Unvan, kurum veya şehir ara (örn. Mühendis)...",
                         color = Slate400,
                         fontSize = 13.sp
                     )
@@ -246,6 +328,68 @@ fun HomeScreen(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface
                 )
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // ── Hızlı Arama Etiketleri (Website ile Birebir Renk & Filtre Eşleşmesi) ──
+            val quickSearchTags = listOf(
+                Triple("Sağlık", Color(0xFF059669), Color(0xFFECFDF5)),
+                Triple("Büro Personeli", Color(0xFF4338CA), Color(0xFFEEF2FF)),
+                Triple("Mühendis", Color(0xFFD97706), Color(0xFFFFFBEB)),
+                Triple("Bilişim", Color(0xFF0284C7), Color(0xFFF0F9FF)),
+                Triple("Öğretim Görevlisi", Color(0xFF7C3AED), Color(0xFFFAF5FF)),
+                Triple("KPSS Şartsız", Color(0xFFE11D48), Color(0xFFFFF1F2)),
+                Triple("Temizlik", Color(0xFF0D9488), Color(0xFFF0FDFA)),
+                Triple("Belediye", Color(0xFF2563EB), Color(0xFFEFF6FF))
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Hızlı:",
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Slate400,
+                    modifier = Modifier.padding(end = 2.dp)
+                )
+                quickSearchTags.forEach { (tag, brandCol, bgCol) ->
+                    val isSelected = uiState.searchQuery.equals(tag, ignoreCase = true)
+                    val shape = RoundedCornerShape(12.dp)
+
+                    Box(
+                        modifier = Modifier
+                            .clickable {
+                                if (isSelected) viewModel.onSearchQueryChanged("")
+                                else viewModel.onSearchQueryChanged(tag)
+                            }
+                            .then(
+                                if (isSelected) {
+                                    Modifier
+                                        .background(brandCol, shape)
+                                        .border(1.dp, brandCol, shape)
+                                } else {
+                                    Modifier
+                                        .background(bgCol, shape)
+                                        .border(1.dp, brandCol.copy(alpha = 0.25f), shape)
+                                }
+                            )
+                            .padding(horizontal = 11.dp, vertical = 6.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = tag,
+                            fontSize = 11.sp,
+                            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium,
+                            color = if (isSelected) Color.White else brandCol
+                        )
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(10.dp))
 

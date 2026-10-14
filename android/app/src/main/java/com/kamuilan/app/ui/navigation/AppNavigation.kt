@@ -1,4 +1,4 @@
-﻿package com.kamuilan.app.ui.navigation
+package com.kamuilan.app.ui.navigation
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -138,14 +138,16 @@ fun AppNavigation(
                         )
                 ) {
                     NavigationBar(
-                        containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.97f),
+                        containerColor = Color(0xF4FFFFFF),
                         tonalElevation = 0.dp,
                         modifier = Modifier
                             .fillMaxWidth()
+                            .padding(horizontal = 14.dp, vertical = 6.dp)
+                            .clip(RoundedCornerShape(26.dp))
                             .border(
                                 width = 1.dp,
-                                color = Slate200.copy(alpha = 0.7f),
-                                shape = RoundedCornerShape(topStart = 0.dp, topEnd = 0.dp)
+                                color = Color(0xFFE2E8F0),
+                                shape = RoundedCornerShape(26.dp)
                             )
                     ) {
                         bottomNavItems.forEach { screen ->
