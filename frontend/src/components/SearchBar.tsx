@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Search, X, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Search, X } from "lucide-react";
 import { useFilters } from "@/hooks/useFilters";
 
 const QUICK_SEARCH_TAGS = [
@@ -18,6 +18,8 @@ const QUICK_SEARCH_TAGS = [
 export function SearchBar() {
   const searchQuery = useFilters((s) => s.searchQuery);
   const setSearchQuery = useFilters((s) => s.setSearchQuery);
+  const [isFocused, setIsFocused] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Ctrl+K veya Cmd+K ile hızlı arama odağı
@@ -26,10 +28,22 @@ export function SearchBar() {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         inputRef.current?.focus();
+        setIsFocused(true);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
+  // Dışarı tıklandığında kategorileri kapat
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsFocused(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   const getTagHoverStyle = (tag: string) => {
@@ -56,7 +70,7 @@ export function SearchBar() {
   };
 
   return (
-    <div className="space-y-2.5 w-full">
+    <div ref={containerRef} className="space-y-2 w-full">
       <div className="relative w-full group">
         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
           <Search className="w-4 h-4" />
@@ -65,6 +79,8 @@ export function SearchBar() {
           ref={inputRef}
           type="text"
           value={searchQuery}
+          onFocus={() => setIsFocused(true)}
+          onClick={() => setIsFocused(true)}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Unvan, kurum veya şehir ara (örn. Mühendis, Büro, Sağlık, İTÜ, Ankara)..."
           className="w-full pl-10 pr-20 py-2.5 sm:py-3 text-xs sm:text-sm bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none focus:ring-1 focus:ring-zinc-400 dark:focus:ring-zinc-600 focus:border-zinc-400 transition-all text-zinc-900 dark:text-zinc-100 shadow-xs"
@@ -91,29 +107,31 @@ export function SearchBar() {
         </div>
       </div>
 
-      {/* Hızlı Arama Etiketleri */}
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-0.5">
-        <span className="text-[11px] font-medium text-zinc-400 dark:text-zinc-500 shrink-0 pl-0.5">
-          Hızlı:
-        </span>
-        {QUICK_SEARCH_TAGS.map((tag) => {
-          const isSelected = searchQuery.toLowerCase() === tag.toLowerCase();
-          return (
-            <button
-              key={tag}
-              type="button"
-              onClick={() => setSearchQuery(isSelected ? "" : tag)}
-              className={`shrink-0 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors border ${
-                isSelected
-                  ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-semibold"
-                  : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
-              }`}
-            >
-              {tag}
-            </button>
-          );
-        })}
-      </div>
+      {/* Hızlı Arama Etiketleri - Sadece odaklanıldığında veya tıklandığında açılır */}
+      {isFocused && (
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar text-xs py-1 animate-fadeIn">
+          <span className="text-[11px] font-semibold text-zinc-400 dark:text-zinc-500 shrink-0 pl-0.5">
+            Kategoriler:
+          </span>
+          {QUICK_SEARCH_TAGS.map((tag) => {
+            const isSelected = searchQuery.toLowerCase() === tag.toLowerCase();
+            return (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => setSearchQuery(isSelected ? "" : tag)}
+                className={`shrink-0 px-2.5 py-1 rounded-md text-[11px] font-medium transition-colors border ${
+                  isSelected
+                    ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-semibold"
+                    : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                }`}
+              >
+                {tag}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
