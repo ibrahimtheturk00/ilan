@@ -46,10 +46,10 @@ interface PostTypeOption {
 
 const POST_TYPES: PostTypeOption[] = [
   { key: "", label: "Tüm Kadrolar", dotColor: "bg-zinc-400 dark:bg-zinc-500" },
-  { key: "memur", label: "Memur", dotColor: "bg-sky-500" },
-  { key: "sozlesmeli", label: "Sözleşmeli", dotColor: "bg-teal-500" },
-  { key: "isci", label: "İşçi", dotColor: "bg-amber-500" },
-  { key: "akademik", label: "Akademik", dotColor: "bg-purple-500" },
+  { key: "memur", label: "Memur", dotColor: "bg-emerald-600 dark:bg-sky-400" },
+  { key: "sozlesmeli", label: "Sözleşmeli", dotColor: "bg-teal-600 dark:bg-cyan-400" },
+  { key: "isci", label: "İşçi", dotColor: "bg-amber-600 dark:bg-amber-400" },
+  { key: "akademik", label: "Akademik", dotColor: "bg-purple-600 dark:bg-indigo-400" },
 ];
 
 const SORT_OPTIONS: { key: SortOption; label: string; desc: string }[] = [
@@ -169,9 +169,9 @@ export function HeroDockConsole({
                 : "text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-white/80 dark:hover:bg-zinc-800/80"
             }`}
           >
-            <Sparkles className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
+            <Sparkles className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
             <span>Bugün Eklenenler</span>
-            <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-100 dark:bg-emerald-950/80 text-emerald-700 dark:text-emerald-300">
+            <span className="ml-0.5 px-1.5 py-0.5 rounded-full text-[11px] font-bold tracking-wide uppercase bg-emerald-100 text-emerald-950 border border-emerald-300 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30">
               Yeni
             </span>
           </button>
@@ -195,14 +195,14 @@ export function HeroDockConsole({
             <Target
               className={`w-4 h-4 transition-colors ${
                 activeTab === "personalized"
-                  ? "text-emerald-400 dark:text-emerald-600"
-                  : "text-emerald-500"
+                  ? "text-emerald-700 dark:text-sky-400"
+                  : "text-emerald-600 dark:text-sky-400"
               }`}
             />
             <span>Sana Özel</span>
             {isPersonalizedConfigured && (
               <span
-                className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse ml-0.5"
+                className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-sky-400 animate-pulse ml-0.5"
                 title="Kişiselleştirilmiş profil aktif"
               />
             )}
@@ -327,7 +327,7 @@ export function HeroDockConsole({
                     onClick={() => handleTagClick(tag)}
                     className={`shrink-0 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-colors border ${
                       isSelected
-                        ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900 border-zinc-900 dark:border-zinc-100 font-semibold"
+                        ? "bg-emerald-700 text-white border-emerald-700 dark:bg-sky-500 dark:text-zinc-950 dark:border-sky-400 font-semibold shadow-xs"
                         : "bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800"
                     }`}
                   >

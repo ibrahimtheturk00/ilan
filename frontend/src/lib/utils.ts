@@ -292,7 +292,7 @@ export function getJobApplicationStatus(
       statusTitle: isIptal ? "İptal İlanı" : "Düzeltme İlanı",
       daysText: isIptal ? "Başvuru İptal Edildi" : "Şartlar Güncellendi",
       fullBadgeText: isIptal ? "İptal Edildi" : "Düzeltme İlanı",
-      badgeClass: "bg-red-600 text-white font-bold shadow-sm ring-1 ring-red-700",
+      badgeClass: "bg-red-50 text-red-900 border border-red-300 dark:bg-red-950/60 dark:text-red-300 dark:border-red-500/40 font-bold shadow-xs",
       isCancelled: true,
       isUpcoming: false,
       isActive: false,
@@ -315,7 +315,8 @@ export function getJobApplicationStatus(
         statusTitle: "Gelecek Başvuru",
         daysText: `${diffToStart} gün sonra başlıyor`,
         fullBadgeText: `Gelecek Başvuru • ${diffToStart} gün sonra`,
-        badgeClass: "bg-emerald-50 text-emerald-700 border border-emerald-200/80 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-800/50 font-medium",
+        // Beyaz temada yeşil, koyu temada mavi
+        badgeClass: "bg-emerald-50 text-emerald-900 border border-emerald-300/90 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-semibold",
         isCancelled: false,
         isUpcoming: true,
         isActive: false,
@@ -331,7 +332,7 @@ export function getJobApplicationStatus(
       statusTitle: "Başvuru Aktif",
       daysText: "Süresiz / Belirtilmemiş",
       fullBadgeText: "Başvuru Aktif",
-      badgeClass: "bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700",
+      badgeClass: "bg-emerald-50/70 text-emerald-900 border border-emerald-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-500/25 font-medium",
       isCancelled: false,
       isUpcoming: false,
       isActive: true,
@@ -349,7 +350,7 @@ export function getJobApplicationStatus(
       statusTitle: "Süresi Doldu",
       daysText: "Başvuru Kapandı",
       fullBadgeText: "Süresi Doldu",
-      badgeClass: "bg-slate-100 text-slate-500 border border-slate-200 dark:bg-slate-800/60 dark:text-slate-400 dark:border-slate-700",
+      badgeClass: "bg-zinc-100 text-zinc-600 border border-zinc-200 dark:bg-zinc-800/70 dark:text-zinc-400 dark:border-zinc-700/60 font-medium",
       isCancelled: false,
       isUpcoming: false,
       isActive: false,
@@ -361,7 +362,7 @@ export function getJobApplicationStatus(
       statusTitle: "Son 3 Gün",
       daysText: diffDays === 0 ? "Bugün Son Gün" : `${diffDays} gün kaldı`,
       fullBadgeText: diffDays === 0 ? "Bugün Son Gün" : `${diffDays} gün kaldı`,
-      badgeClass: "bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800 font-medium",
+      badgeClass: "bg-rose-50 text-rose-900 border border-rose-300 dark:bg-rose-500/20 dark:text-rose-300 dark:border-rose-400/30 font-bold",
       isCancelled: false,
       isUpcoming: false,
       isActive: true,
@@ -373,7 +374,7 @@ export function getJobApplicationStatus(
       statusTitle: "Aktif",
       daysText: `${diffDays} gün kaldı`,
       fullBadgeText: `${diffDays} gün kaldı`,
-      badgeClass: "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800 font-medium",
+      badgeClass: "bg-amber-50 text-amber-950 border border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-400/30 font-semibold",
       isCancelled: false,
       isUpcoming: false,
       isActive: true,
@@ -385,7 +386,8 @@ export function getJobApplicationStatus(
       statusTitle: "Aktif",
       daysText: `${diffDays} gün kaldı`,
       fullBadgeText: `${diffDays} gün kaldı`,
-      badgeClass: "bg-zinc-100 text-zinc-600 border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700 font-normal",
+      // Beyaz temada yeşil, koyu temada mavi
+      badgeClass: "bg-emerald-50/80 text-emerald-900 border border-emerald-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-500/25 font-medium",
       isCancelled: false,
       isUpcoming: false,
       isActive: true,
@@ -610,23 +612,25 @@ export function resolveApplicationUrl(institution: string | null | undefined, or
 export const POST_TYPE_LABELS: Record<string, { label: string; color: string }> = {
   memur: {
     label: "Memur",
-    color: "bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-950/40 dark:text-sky-300 dark:border-sky-800",
-  },
-  isci: {
-    label: "İşçi",
-    color: "bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800",
-  },
-  akademik: {
-    label: "Akademik",
-    color: "bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-300 dark:border-purple-800",
+    // Beyaz temada yeşil, koyu temada mavi
+    color: "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30",
   },
   sozlesmeli: {
     label: "Sözleşmeli",
-    color: "bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-950/40 dark:text-teal-300 dark:border-teal-800",
+    // Beyaz temada teal-yeşil, koyu temada cyan-mavi
+    color: "bg-teal-50 text-teal-950 border border-teal-300/80 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-400/30",
+  },
+  isci: {
+    label: "İşçi",
+    color: "bg-amber-50 text-amber-950 border border-amber-300/80 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-400/30",
+  },
+  akademik: {
+    label: "Akademik",
+    color: "bg-purple-50 text-purple-950 border border-purple-300/80 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-400/30",
   },
   diger: {
     label: "Genel",
-    color: "bg-zinc-100 text-zinc-700 border border-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700",
+    color: "bg-zinc-100 text-zinc-900 border border-zinc-300/80 dark:bg-zinc-800/80 dark:text-zinc-200 dark:border-white/15",
   },
 };
 

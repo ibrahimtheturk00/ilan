@@ -215,13 +215,13 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
                   </span>
                 </div>
 
-                {/* Yeşil Sayaç Rozeti */}
+                {/* Sayaç Rozeti */}
                 <span
                   className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 shadow-xs group-hover/dept:scale-105 transition-all ${
                     isSelected
-                      ? "bg-emerald-500 text-white shadow-emerald-500/30"
+                      ? "bg-emerald-600 text-white dark:bg-sky-500 dark:text-zinc-950 shadow-emerald-500/30 dark:shadow-sky-500/30"
                       : count > 0
-                      ? "bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 group-hover/dept:bg-emerald-500 group-hover/dept:text-white group-hover/dept:border-emerald-500"
+                      ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 group-hover/dept:bg-emerald-600 group-hover/dept:text-white dark:group-hover/dept:bg-sky-500 dark:group-hover/dept:text-zinc-950"
                       : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"
                   }`}
                   title={`${count} aktif ilan`}
@@ -239,10 +239,10 @@ export function DepartmentSearch({ onSwitchToAll }: { onSwitchToAll: () => void 
         <div className="space-y-4">
           <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-slate-800 px-1">
             <div className="text-sm font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-sky-400" />
               <span>
                 {selectedDept.name} için{" "}
-                <strong className="text-emerald-600 dark:text-emerald-400">
+                <strong className="text-emerald-700 dark:text-sky-400">
                   {results.length}
                 </strong>{" "}
                 ilan listeleniyor

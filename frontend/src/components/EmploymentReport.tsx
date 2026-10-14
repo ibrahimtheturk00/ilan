@@ -325,8 +325,8 @@ export function EmploymentReport({
     <div className="space-y-8 animate-fadeIn">
       {/* Rapor Başlığı */}
       <div className="text-center max-w-2xl mx-auto space-y-2">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
-          <TrendingUp className="w-3.5 h-3.5 text-brand-600 dark:text-brand-400" />
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30">
+          <TrendingUp className="w-3.5 h-3.5 text-emerald-600 dark:text-sky-400" />
           <span>Haftalık Resmi İstatistikler</span>
         </div>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
@@ -344,19 +344,19 @@ export function EmploymentReport({
           onClick={onGoToAllJobs}
           role="button"
           tabIndex={0}
-          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-brand-500/80 dark:hover:border-brand-500 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between transition-all"
+          className="group bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-slate-200/80 dark:border-slate-700/80 hover:border-emerald-500/80 dark:hover:border-sky-500 rounded-2xl p-4 sm:p-5 shadow-sm cursor-pointer flex flex-col justify-between transition-all"
         >
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Aktif İlan Sayısı</span>
-              <Briefcase className="w-4 h-4 text-brand-600 group-hover:scale-105 transition-transform duration-200" />
+              <Briefcase className="w-4 h-4 text-emerald-600 dark:text-sky-400 group-hover:scale-105 transition-transform duration-200" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">
+            <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white mt-1 group-hover:text-emerald-700 dark:group-hover:text-sky-400 transition-colors">
               {stats.totalActiveJobs.toLocaleString("tr-TR")}
             </div>
             <span className="text-[11px] text-slate-500 dark:text-slate-400 block">Resmi portallardan güncel</span>
           </div>
-          <span className="text-[11px] text-brand-600 dark:text-brand-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-1 transition-transform">
+          <span className="text-[11px] text-emerald-700 dark:text-sky-400 font-bold flex items-center gap-1 pt-2 group-hover:translate-x-1 transition-transform">
             <span>İlanları Gör</span>
             <ArrowRight className="w-3 h-3" />
           </span>
@@ -367,9 +367,9 @@ export function EmploymentReport({
           <div>
             <div className="flex items-center justify-between text-slate-400">
               <span className="text-xs font-semibold">Toplam Kadro Kontenjanı</span>
-              <Users className="w-4 h-4 text-emerald-600" />
+              <Users className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
             </div>
-            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 mt-1">
+            <div className="text-2xl sm:text-3xl font-extrabold text-emerald-700 dark:text-sky-400 mt-1">
               {stats.totalPositions.toLocaleString("tr-TR")}
             </div>
             <span className="text-[11px] text-slate-500 dark:text-slate-400 block">İstihdam edilecek kişi sayısı</span>
@@ -458,13 +458,13 @@ export function EmploymentReport({
                     <span className="font-semibold text-slate-800 dark:text-slate-200 truncate pr-2 max-w-[260px] sm:max-w-[340px]">
                       {index + 1}. {inst.name}
                     </span>
-                    <span className="text-brand-600 dark:text-brand-400 font-bold shrink-0">
+                    <span className="text-emerald-700 dark:text-sky-400 font-bold shrink-0">
                       {inst.positions.toLocaleString("tr-TR")} Kadro
                     </span>
                   </div>
                   <div className="w-full bg-slate-100 dark:bg-slate-700/60 h-2 rounded-full overflow-hidden">
                     <div
-                      className="bg-brand-600 h-2 rounded-full transition-all duration-500"
+                      className="bg-emerald-600 dark:bg-sky-500 h-2 rounded-full transition-all duration-500"
                       style={{ width: `${barPercent}%` }}
                     />
                   </div>
@@ -478,7 +478,7 @@ export function EmploymentReport({
         <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-700/60 pb-3">
             <div className="flex items-center gap-2 font-bold text-slate-900 dark:text-white text-sm">
-              <Briefcase className="w-4 h-4 text-purple-600" />
+              <Briefcase className="w-4 h-4 text-purple-600 dark:text-purple-400" />
               <span>Sektörel / Branş Dağılımı</span>
             </div>
             <span className="text-xs text-slate-400 font-medium">Toplam İlan İçi Pay</span>
@@ -492,7 +492,7 @@ export function EmploymentReport({
                 className="group cursor-pointer space-y-1.5"
               >
                 <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 group-hover:text-brand-600 transition-colors">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-sky-400 transition-colors">
                     {cat.label}
                   </span>
                   <span className="text-slate-500 dark:text-slate-400 font-medium">
@@ -501,7 +501,7 @@ export function EmploymentReport({
                 </div>
                 <div className="w-full bg-slate-100 dark:bg-slate-700/60 h-2 rounded-full overflow-hidden">
                   <div
-                    className="bg-purple-600 h-2 rounded-full transition-all duration-500"
+                    className="bg-purple-600 dark:bg-indigo-500 h-2 rounded-full transition-all duration-500"
                     style={{ width: `${cat.percentage}%` }}
                   />
                 </div>
@@ -516,7 +516,7 @@ export function EmploymentReport({
         {/* Kadro Türü Oranları */}
         <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/60 pb-3 font-bold text-slate-900 dark:text-white text-sm">
-            <GraduationCap className="w-4 h-4 text-emerald-600" />
+            <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
             <span>Kadro Statüsü Dağılımı</span>
           </div>
 
@@ -532,7 +532,7 @@ export function EmploymentReport({
                 <div className="text-lg font-extrabold text-slate-900 dark:text-white">
                   {t.count} İlan
                 </div>
-                <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold block">
+                <span className="text-[11px] text-emerald-700 dark:text-sky-400 font-bold block">
                   %{t.percentage} Pay
                 </span>
               </div>
@@ -543,7 +543,7 @@ export function EmploymentReport({
         {/* En Çok İlan Bulunan Şehirler */}
         <div className="bg-white dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-2xl p-5 sm:p-6 shadow-sm space-y-4">
           <div className="flex items-center gap-2 border-b border-slate-100 dark:border-slate-700/60 pb-3 font-bold text-slate-900 dark:text-white text-sm">
-            <MapPin className="w-4 h-4 text-rose-600" />
+            <MapPin className="w-4 h-4 text-rose-600 dark:text-rose-400" />
             <span>En Çok İlan Alan Şehirler</span>
           </div>
 
@@ -552,12 +552,12 @@ export function EmploymentReport({
               <button
                 key={item.city}
                 onClick={() => onFilterCity?.(item.city)}
-                className="text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700/60 hover:border-brand-500 hover:bg-brand-50/40 dark:hover:bg-slate-800 transition-all group"
+                className="text-left p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200/80 dark:border-slate-700/60 hover:border-emerald-500 hover:bg-emerald-50/40 dark:hover:border-sky-500 dark:hover:bg-slate-800 transition-all group"
               >
-                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 group-hover:text-brand-600 block">
+                <span className="text-xs font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-700 dark:group-hover:text-sky-400 block">
                   {item.city}
                 </span>
-                <span className="text-xs text-brand-600 dark:text-brand-400 font-bold mt-0.5 block">
+                <span className="text-xs text-emerald-700 dark:text-sky-400 font-bold mt-0.5 block">
                   {item.count} İlan
                 </span>
               </button>
@@ -567,8 +567,8 @@ export function EmploymentReport({
       </div>
 
       {/* Bilgi Kutusu */}
-      <div className="flex items-center gap-3 p-4 rounded-2xl bg-brand-50 dark:bg-slate-900/40 border border-brand-200 dark:border-slate-700 text-xs text-brand-900 dark:text-slate-300">
-        <CheckCircle2 className="w-5 h-5 text-brand-600 dark:text-brand-400 shrink-0" />
+      <div className="flex items-center gap-3 p-4 rounded-2xl bg-emerald-50/70 dark:bg-sky-950/30 border border-emerald-200/80 dark:border-sky-500/25 text-xs text-emerald-950 dark:text-sky-200">
+        <CheckCircle2 className="w-5 h-5 text-emerald-700 dark:text-sky-400 shrink-0" />
         <span>
           Bu rapordaki veriler Kamu İlan Merkezi robotları tarafından her 60 dakikada bir taranan resmi kaynaklardan çekilerek anlık üretilmektedir.
         </span>

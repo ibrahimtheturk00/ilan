@@ -180,7 +180,7 @@ export function PersonalizedCriteriaModal({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">
-                <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
                 <span>Mezuniyet Alanı / Branşın (Birden fazla seçebilirsin)</span>
               </label>
               <span className="text-xs text-zinc-400 font-mono">
@@ -204,7 +204,7 @@ export function PersonalizedCriteriaModal({
                   >
                     <span className="truncate pr-1">{dept.name}</span>
                     {isSelected && (
-                      <Check className="w-3.5 h-3.5 shrink-0 ml-1 text-emerald-400 dark:text-emerald-600 stroke-[3]" />
+                      <Check className="w-3.5 h-3.5 shrink-0 ml-1 text-emerald-400 dark:text-sky-400 stroke-[3]" />
                     )}
                   </button>
                 );
@@ -216,7 +216,7 @@ export function PersonalizedCriteriaModal({
           <div className="space-y-3 pt-3 border-t border-zinc-100 dark:border-zinc-800">
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2 font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">
-                <MapPin className="w-4 h-4 text-sky-600 dark:text-sky-400" />
+                <MapPin className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
                 <span>İkamet / Başvurmak İstediğin İller</span>
               </label>
               {selectedCities.length > 0 ? (
@@ -228,7 +228,7 @@ export function PersonalizedCriteriaModal({
                   Tüm Türkiye Olarak Sıfırla
                 </button>
               ) : (
-                <span className="text-xs text-emerald-600 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-emerald-950/60 px-2 py-0.5 rounded-full">
+                <span className="text-xs text-emerald-950 dark:text-sky-300 font-semibold bg-emerald-50 dark:bg-sky-500/15 border border-emerald-300/80 dark:border-sky-400/30 px-2 py-0.5 rounded-full">
                   Tüm Türkiye İlanları Açık
                 </span>
               )}
@@ -256,7 +256,7 @@ export function PersonalizedCriteriaModal({
                     onClick={() => toggleCity(c)}
                     className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all flex items-center gap-1 ${
                       isSelected
-                        ? "bg-sky-600 text-white dark:bg-sky-500 dark:text-zinc-950 font-bold"
+                        ? "bg-emerald-700 text-white dark:bg-sky-500 dark:text-zinc-950 font-bold"
                         : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 hover:bg-zinc-200 dark:hover:bg-zinc-700"
                     }`}
                   >
@@ -287,7 +287,7 @@ export function PersonalizedCriteriaModal({
                         toggleCity(c);
                         setCitySearch("");
                       }}
-                      className="px-2.5 py-1 rounded-lg text-xs bg-zinc-100 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-sky-500 hover:text-white"
+                      className="px-2.5 py-1 rounded-lg text-xs bg-zinc-100 dark:bg-zinc-700 text-zinc-800 dark:text-zinc-200 hover:bg-emerald-600 dark:hover:bg-sky-500 hover:text-white dark:hover:text-zinc-950"
                     >
                       + {c}
                     </button>
@@ -302,7 +302,7 @@ export function PersonalizedCriteriaModal({
                 {selectedCities.map((c) => (
                   <span
                     key={c}
-                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 text-xs font-semibold"
+                    className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 text-xs font-semibold"
                   >
                     {c}
                     <button
@@ -354,7 +354,7 @@ export function PersonalizedCriteriaModal({
                       </div>
                     </div>
                     {isSelected && (
-                      <Check className="w-4 h-4 shrink-0 text-emerald-400 dark:text-emerald-600 stroke-[3]" />
+                      <Check className="w-4 h-4 shrink-0 text-emerald-400 dark:text-sky-400 stroke-[3]" />
                     )}
                   </button>
                 );
@@ -376,7 +376,7 @@ export function PersonalizedCriteriaModal({
               type="button"
               onClick={() => setIncludeNoKpss(!includeNoKpss)}
               className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden ${
-                includeNoKpss ? "bg-emerald-500" : "bg-zinc-300 dark:bg-zinc-700"
+                includeNoKpss ? "bg-emerald-600 dark:bg-sky-500" : "bg-zinc-300 dark:bg-zinc-700"
               }`}
             >
               <span
@@ -411,9 +411,9 @@ export function PersonalizedCriteriaModal({
             <button
               type="button"
               onClick={handleSave}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-100 shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all"
+              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-zinc-900 text-white hover:bg-emerald-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-sky-400 dark:hover:text-zinc-950 shadow-sm hover:scale-[1.02] active:scale-[0.98] transition-all"
             >
-              <Sparkles className="w-4 h-4 text-emerald-400 dark:text-emerald-600" />
+              <Sparkles className="w-4 h-4 text-emerald-400 dark:text-sky-400" />
               <span>Kriterleri Kaydet ve İlanları Gör</span>
             </button>
           </div>

@@ -203,7 +203,7 @@ export function FilterSidebar() {
             type="button"
             onClick={handleDetectLocation}
             disabled={isLocating}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors"
+            className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 dark:text-sky-400 hover:text-emerald-800 dark:hover:text-sky-300 transition-colors"
             title="GPS ile yakınımdaki ilanları filtrele"
           >
             {isLocating ? (
@@ -216,7 +216,7 @@ export function FilterSidebar() {
         </div>
 
         {locationMessage && (
-          <div className="text-xs p-2 rounded-lg bg-brand-50 dark:bg-brand-950/50 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+          <div className="text-xs p-2 rounded-lg bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30">
             {locationMessage}
           </div>
         )}
@@ -243,7 +243,7 @@ export function FilterSidebar() {
       {/* KPSS Puan Türü Filtresi */}
       <div>
         <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-          <Award className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          <Award className="w-4 h-4 text-emerald-600 dark:text-sky-400" />
           <span>KPSS Puan Türü</span>
         </label>
         <div className="space-y-1">
@@ -256,12 +256,12 @@ export function FilterSidebar() {
                 onClick={() => setKpssType(opt.key)}
                 className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                   isSelected
-                    ? "bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 font-bold"
+                    ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
                 }`}
               >
                 <span>{opt.label}</span>
-                {isSelected && <span className="w-2 h-2 rounded-full bg-blue-600 dark:bg-blue-400" />}
+                {isSelected && <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-sky-400" />}
               </button>
             );
           })}
@@ -271,7 +271,7 @@ export function FilterSidebar() {
       {/* Eğitim Düzeyi Filtresi */}
       <div>
         <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2 flex items-center gap-1.5">
-          <GraduationCap className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+          <GraduationCap className="w-4 h-4 text-teal-600 dark:text-cyan-400" />
           <span>Eğitim Düzeyi</span>
         </label>
         <div className="space-y-1">
@@ -284,12 +284,12 @@ export function FilterSidebar() {
                 onClick={() => setEducationLevel(opt.key)}
                 className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                   isSelected
-                    ? "bg-purple-50 dark:bg-purple-950/60 text-purple-700 dark:text-purple-400 font-bold"
+                    ? "bg-teal-50 text-teal-950 border border-teal-300/80 dark:bg-cyan-500/15 dark:text-cyan-300 dark:border-cyan-400/30 font-bold"
                     : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
                 }`}
               >
                 <span>{opt.label}</span>
-                {isSelected && <span className="w-2 h-2 rounded-full bg-purple-600 dark:bg-purple-400" />}
+                {isSelected && <span className="w-2 h-2 rounded-full bg-teal-600 dark:bg-cyan-400" />}
               </button>
             );
           })}
@@ -306,7 +306,7 @@ export function FilterSidebar() {
             onClick={() => setPostType("")}
             className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
               !postType
-                ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
+                ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
             }`}
           >
@@ -318,12 +318,12 @@ export function FilterSidebar() {
               onClick={() => setPostType(postType === key ? "" : key)}
               className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                 postType === key
-                  ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
+                  ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
                   : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
               }`}
             >
               <span>{info.label}</span>
-              {postType === key && <span className="w-2 h-2 rounded-full bg-brand-600 dark:bg-brand-400" />}
+              {postType === key && <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-sky-400" />}
             </button>
           ))}
         </div>
@@ -339,7 +339,7 @@ export function FilterSidebar() {
             onClick={() => setCategory("")}
             className={`w-full text-left text-sm px-3 py-2 rounded-lg transition-colors ${
               !category
-                ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
+                ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
                 : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
             }`}
           >
@@ -351,12 +351,12 @@ export function FilterSidebar() {
               onClick={() => setCategory(category === key ? "" : key)}
               className={`w-full text-left text-sm px-3 py-2 rounded-lg flex items-center justify-between transition-colors ${
                 category === key
-                  ? "bg-brand-50 dark:bg-brand-950/60 text-brand-700 dark:text-brand-400 font-semibold"
+                  ? "bg-emerald-50 text-emerald-950 border border-emerald-300/80 dark:bg-sky-500/15 dark:text-sky-300 dark:border-sky-400/30 font-bold"
                   : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700/50"
               }`}
             >
               <span>{info.label}</span>
-              {category === key && <span className="w-2 h-2 rounded-full bg-brand-600 dark:bg-brand-400" />}
+              {category === key && <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-sky-400" />}
             </button>
           ))}
         </div>
@@ -369,7 +369,7 @@ export function FilterSidebar() {
             type="checkbox"
             checked={onlyActive}
             onChange={(e) => setOnlyActive(e.target.checked)}
-            className="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300 dark:border-slate-600 dark:bg-slate-700"
+            className="w-4 h-4 rounded text-emerald-600 dark:text-sky-500 focus:ring-emerald-500 dark:focus:ring-sky-400 border-slate-300 dark:border-slate-600 dark:bg-slate-700"
           />
           <span>Sadece Yayında Olanlar</span>
         </label>
