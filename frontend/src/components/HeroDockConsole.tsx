@@ -128,15 +128,15 @@ export function HeroDockConsole({
   const currentSort = SORT_OPTIONS.find((s) => s.key === sortBy) || SORT_OPTIONS[0];
 
   return (
-    <div className="relative max-w-4xl mx-auto mb-6">
+    <div className="relative w-full mb-6">
       {/* Ambient Halo Glow */}
       <div className="absolute -inset-1 bg-gradient-to-r from-zinc-300/30 via-zinc-200/10 to-zinc-300/30 dark:from-white/10 dark:via-white/5 dark:to-white/10 rounded-[32px] blur-xl opacity-70 pointer-events-none transition-all duration-500" />
 
       {/* Hero Dock Glass Container */}
-      <div className="relative rounded-2xl sm:rounded-[30px] border border-zinc-200/90 dark:border-white/10 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl shadow-xl dark:shadow-2xl p-3 sm:p-4 space-y-3 transition-all before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-zinc-300/60 dark:before:via-white/20 before:to-transparent">
+      <div className="relative rounded-2xl sm:rounded-[30px] border border-zinc-200/90 dark:border-white/10 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-2xl shadow-xl dark:shadow-2xl p-3 sm:p-5 space-y-3.5 transition-all before:absolute before:inset-x-6 before:top-0 before:h-px before:bg-gradient-to-r before:from-transparent before:via-zinc-300/60 dark:before:via-white/20 before:to-transparent">
         
         {/* 1. Üst Sekme Navigasyonu (Dock Tabs) */}
-        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-zinc-100/70 dark:bg-zinc-950/60 border border-zinc-200/60 dark:border-white/5">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto sm:overflow-x-visible no-scrollbar p-1 sm:p-1.5 rounded-xl sm:rounded-2xl bg-zinc-100/70 dark:bg-zinc-950/60 border border-zinc-200/60 dark:border-white/5">
           {/* Tüm İlanlar */}
           <button
             onClick={() => {
@@ -305,7 +305,7 @@ export function HeroDockConsole({
         {/* 3. Kadro Filtreleri (Tüm Kadrolar, Memur, Sözleşmeli, İşçi, Akademik) & Sıralama */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 pt-2 border-t border-zinc-200/60 dark:border-white/5">
           {/* Sol: Kadro Türü Butonları */}
-          <div className="flex items-center gap-1.5 overflow-x-auto py-0.5 no-scrollbar flex-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto sm:overflow-x-visible py-0.5 no-scrollbar flex-1">
             {POST_TYPES.map((item) => {
               const isSelected = postType === item.key;
               return (
