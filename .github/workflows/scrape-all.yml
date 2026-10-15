@@ -5,7 +5,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  scrape-all:
+  # 1. Bulutta (Ubuntu Runner) Engeli Olmayan Resmî Kaynakların Taranması
+  scrape-cloud:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,22 +21,6 @@ jobs:
         run: |
           pip install -r scraper/requirements.txt
           playwright install chromium --with-deps
-
-      - name: Run Kamu Ilan SBB
-        continue-on-error: true
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-        run: python scraper/kamu_ilan_sbb.py
-
-      - name: Run Kariyer Kapisi
-        continue-on-error: true
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-        run: python scraper/kariyer_kapisi.py
 
       - name: Run ISKUR
         continue-on-error: true
@@ -53,14 +38,6 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: python scraper/resmi_gazete.py
 
-      - name: Run Yerel Yonetimler
-        continue-on-error: true
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-        run: python scraper/yerel_yonetimler.py
-
       - name: Run Ilan Gov
         continue-on-error: true
         env:
@@ -68,14 +45,6 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: python scraper/ilan_gov.py
-
-      - name: Run MSB Pertem
-        continue-on-error: true
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
-          GITHUB_RUN_ID: ${{ github.run_id }}
-        run: python scraper/msb_pertem.py
 
       - name: Run Adalet PGM
         continue-on-error: true
@@ -93,10 +62,24 @@ jobs:
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: python scraper/icisleri_bakanligi.py
 
-      - name: Run Kurum Portallari (OSYM, Saglik, MEB, Aile, GIB)
+      - name: Run Kurum Portallari (OSYM, Saglik, MEB, Aile, GIB, Diyanet)
         continue-on-error: true
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           GITHUB_RUN_ID: ${{ github.run_id }}
         run: python scraper/kurum_portallari.py
+
+  # 2. Türkiye IP'si Gerektiren Geoblock'lu 4 Kaynağın Self-Hosted Runner Üzerinden Taranması
+  scrape-geoblocked:
+    runs-on: [self-hosted, windows]
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Geoblocked Turkish Scrapers
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: python scraper/run_local_scrapers.py
