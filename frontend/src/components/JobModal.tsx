@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { JobPost } from "@/types";
 import { formatDate, getJobApplicationStatus, resolveApplicationUrl, POST_TYPE_LABELS, CATEGORY_LABELS, cleanJobTitle, cleanInstitution } from "@/lib/utils";
 import { getJobMetaDetails } from "@/lib/jobParser";
@@ -31,6 +32,11 @@ interface JobModalProps {
 export function JobModal({ job, onClose }: JobModalProps) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -46,7 +52,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
     };
   }, [job, onClose]);
 
-  if (!job) return null;
+  if (!mounted || !job) return null;
 
   const isFav = isFavorite(job.id);
   const displayTitle = cleanJobTitle(job.title, job.city, job.original_url);
@@ -81,13 +87,13 @@ export function JobModal({ job, onClose }: JobModalProps) {
     window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`, "_blank");
   };
 
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 bg-black/60 dark:bg-black/80 backdrop-blur-sm animate-fadeIn">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-6 bg-black/60 dark:bg-black/80 animate-fadeIn overflow-y-auto">
       {/* Arka plan tıklama */}
       <div className="fixed inset-0" onClick={onClose} />
 
       {/* Modal Kartı */}
-      <div className="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-xl shadow-2xl border border-zinc-200 dark:border-zinc-800 max-h-[90vh] flex flex-col z-10 overflow-hidden transition-colors">
+      <div className="relative w-full max-w-2xl my-auto bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl border border-zinc-200 dark:border-zinc-800 max-h-[88vh] flex flex-col z-10 overflow-hidden transition-colors">
         {/* Modal Üst Başlık */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-100 dark:border-zinc-800">
           <div className="flex flex-wrap items-center gap-1.5 flex-1 pr-3">
@@ -303,6 +309,7 @@ export function JobModal({ job, onClose }: JobModalProps) {
           </a>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
