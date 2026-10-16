@@ -62,10 +62,22 @@ def run_all_local():
     # 4. MSB Pertem (Millî Savunma Bakanlığı)
     try:
         from msb_pertem import MsbPertemScraper
-        logger.info("[4/4] MSB PERTEM taranıyor...")
+        logger.info("[4/5] MSB PERTEM taranıyor...")
         MsbPertemScraper().run()
     except Exception as e:
         logger.error(f"MSB PERTEM yerel tarama hatası: {e}", exc_info=True)
+
+    # 5. Kurum Portalları (Diyanet, Polis Akademisi, Jandarma, TÜBİTAK, YÖK vb.)
+    try:
+        from kurum_portallari import scrapers
+        logger.info("[5/5] Kurum Portalları (Diyanet, PA, Jandarma, TÜBİTAK, YÖK vb.) taranıyor...")
+        for s in scrapers:
+            try:
+                s.run()
+            except Exception as e:
+                logger.error(f"Kurum portalı '{s.source_slug}' yerel tarama hatası: {e}")
+    except Exception as e:
+        logger.error(f"Kurum portalları genel hatası: {e}", exc_info=True)
 
     logger.info("==================================================")
     logger.info("Yerel Tarama Tamamlandı. Veriler Supabase'e İşlendi.")
